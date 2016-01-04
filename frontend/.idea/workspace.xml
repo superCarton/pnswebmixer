@@ -24,8 +24,33 @@
       <file leaf-file-name="loopBrowser.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views/loopBrowser.html">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+            <state vertical-scroll-proportion="-1.25">
+              <caret line="2" column="29" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/scripts/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-8.416667">
+              <caret line="15" column="49" selection-start-line="15" selection-start-column="49" selection-end-line="15" selection-end-column="49" />
+=======
             <state vertical-scroll-proportion="0.024311183">
               <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
               <folding />
             </state>
           </provider>
@@ -41,11 +66,29 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
+      <file leaf-file-name="mainTrack.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/mainTrack.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.916666">
+              <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mainTrack.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/styles/mainTrack.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.24408284">
+              <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+=======
       <file leaf-file-name="Gruntfile.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Gruntfile.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
               <folding />
             </state>
           </provider>
@@ -79,8 +122,13 @@
         <option value="$PROJECT_DIR$/app/views/main.html" />
         <option value="$PROJECT_DIR$/app/styles/main.css" />
         <option value="$PROJECT_DIR$/app/index.html" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/app/views/mainTrack.html" />
+        <option value="$PROJECT_DIR$/app/styles/mainTrack.css" />
+=======
         <option value="$PROJECT_DIR$/app/views/loopBrowser.html" />
         <option value="$PROJECT_DIR$/app/scripts/controllers/loopBrowser.js" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
       </list>
     </option>
   </component>
@@ -306,6 +354,27 @@
     <frame x="-1366" y="24" width="1366" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
+<<<<<<< HEAD
+      <window_info id="Grunt " active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+=======
       <window_info id="Grunt " active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24963397" sideWeight="0.5052161" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -325,6 +394,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -459,42 +529,70 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/styles/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/app/scripts/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/styles/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="48" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
+        <state vertical-scroll-proportion="-8.416667">
+          <caret line="15" column="49" selection-start-line="15" selection-start-column="49" selection-end-line="15" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/views/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.25">
+          <caret line="2" column="29" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="29" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="48" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/views/mainTrack.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.916666">
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+=======
     <entry file="file://$PROJECT_DIR$/app/views/main.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.5">
           <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/styles/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35502958">
+          <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="20" />
+=======
     <entry file="file://$PROJECT_DIR$/Gruntfile.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
           <folding />
         </state>
       </provider>
@@ -502,15 +600,26 @@
     <entry file="file://$PROJECT_DIR$/app/scripts/controllers/loopBrowser.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+<<<<<<< HEAD
+          <caret line="10" column="27" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+=======
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/styles/mainTrack.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.24408284">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+=======
     <entry file="file://$PROJECT_DIR$/app/views/loopBrowser.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.024311183">
           <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
+>>>>>>> 5d820e8efa9c067142134650bbcf3ae6b3a60fda
           <folding />
         </state>
       </provider>

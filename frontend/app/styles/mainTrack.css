@@ -1,3 +1,24 @@
+.mainTrack{
+  height: 220px;
+}
+.mtrule {
+  height: 20px;
+}
+.row {
+  margin: 0 0 0 0;
+}
+.mtsongscontainer {
+  height: 170px;
+  overflow: hidden;
+}
 .mtsongs {
+  height: 100%;
   background-color: grey;
+  overflow: auto;
+}
+.mtsong {
+  border: 1px solid black;
+}
+.mtplay {
+  height: 30px;
 }
