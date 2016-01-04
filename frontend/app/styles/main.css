@@ -3,12 +3,19 @@ body {
   background-color: #FFFFFF;
   color: black;
 }
+
 .topFloor, .middleFloor, .bottomFloor {
   margin-top: 10px;
 }
 .section {
+  padding: 0 0 0 0;
+}
+section {
+
   min-height: 220px;
   padding: 20px;
+  margin:0 0 0 0;
+
   background-color: #FFFFFF;
   border: 1px solid black;
 }
