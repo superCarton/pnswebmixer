@@ -9,5 +9,5 @@
  */
 angular.module('frontendApp')
   .controller('LoopBrowserCtrl', function () {
-    
+
   });
