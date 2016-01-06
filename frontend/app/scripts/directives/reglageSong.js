@@ -27,6 +27,9 @@ angular.module('frontendApp')
                 reglagePlay.css({'display' : 'inline-block'});
                 reglagePause.css({'display' : 'none'});
             });
+            $('.reglage-volume').on('click', function() {
+                alert('hello');
+            })
 
         }
         return {
