@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('MainTrackCtrl', function () {
+  .controller('MainTrackCtrl', function ($scope) {
 
     var tracks = [];
     var buffers = []; // audio buffers decoded
@@ -17,7 +17,6 @@ angular.module('frontendApp')
     // Master volume
     var masterVolumeNode;
     var trackVolumeNodes = [];
-
 
     // Init audio context
     var context = initAudioContext();
@@ -43,7 +42,7 @@ angular.module('frontendApp')
 
 
       buildGraph(buffers);
-      playFrom(0);
+      //playFrom(0);
     }
 
     function initAudioContext() {
@@ -90,7 +89,7 @@ angular.module('frontendApp')
 
       // Read current master volume slider position and set the volume
       //setMasterVolume();
-      masterVolumeNode.gain.value = 100;
+      masterVolumeNode.gain.value = 1;
 
       samples.forEach(function(s) {
         // First parameter is the delay before playing the sample
@@ -107,6 +106,10 @@ angular.module('frontendApp')
       console.log("start all tracks startTime =" + startTime);
       /*lastTime = context.currentTime;
        paused = false;*/
+    };
+
+    $scope.play = function(){
+      playFrom(0);
     };
 
   });
