@@ -11,7 +11,7 @@ angular.module('frontendApp')
   .controller('MainTrackCtrl', function () {
 
     var elapsedTimeSinceStart;
-
+/*
     // Create a second canvas
     var frontCanvas = document.createElement('canvas');
     frontCanvas.id = 'canvasFront';
@@ -38,6 +38,6 @@ angular.module('frontendApp')
       var startTime = (mousePos.x * totalTime) / frontCanvas.width;
       elapsedTimeSinceStart = startTime;
       playAllTracks(startTime);
-    }
+    } */
 
   });
