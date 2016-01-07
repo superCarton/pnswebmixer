@@ -1,10 +1,20 @@
 <div class="mtrule">
-    Div règle de temps
+  <table>
+    <tr>
+      <td class="mtonesecondrule" ng-repeat="n in [42, 42, 43, 43] track by $index">
+        {{}}
+      </td>
+    </tr>
+  </table>
+
 </div>
 <div class="mtsongscontainer">
   <div class="mtsongs">
   <div class="row mtsong">
-    <div class="col-sm-11">
+    <div class="col-sm-1">
+      Basse
+    </div>
+    <div class="col-sm-10">
       <img src="images/basse.png" width="100%" height="50px">
     </div>
     <div class="col-sm-1">
@@ -12,7 +22,10 @@
     </div>
   </div>
   <div class="row mtsong">
-    <div class="col-sm-11">
+    <div class="col-sm-1">
+      Basse
+    </div>
+    <div class="col-sm-10">
       <img src="images/basse.png" width="100%" height="50px">
     </div>
     <div class="col-sm-1">
@@ -20,7 +33,10 @@
     </div>
   </div>
   <div class="row mtsong">
-    <div class="col-sm-11">
+    <div class="col-sm-1">
+      Basse
+    </div>
+    <div class="col-sm-10">
       <img src="images/basse.png" width="100%" height="50px">
     </div>
     <div class="col-sm-1">
@@ -28,7 +44,10 @@
     </div>
   </div>
   <div class="row mtsong">
-    <div class="col-sm-11">
+    <div class="col-sm-1">
+      Basse
+    </div>
+    <div class="col-sm-10">
       <img src="images/basse.png" width="100%" height="50px">
     </div>
     <div class="col-sm-1">
@@ -36,7 +55,10 @@
     </div>
   </div>
   <div class="row mtsong">
-    <div class="col-sm-11">
+    <div class="col-sm-1">
+      Basse
+    </div>
+    <div class="col-sm-10">
       <img src="images/basse.png" width="100%" height="50px">
     </div>
     <div class="col-sm-1">
@@ -47,7 +69,7 @@
 </div>
 
 <div class="mtplay">
-    Play/pause
+  <i class="fa fa-play-circle pull-left" ng-click="play()"></i>
 </div>
 
 
