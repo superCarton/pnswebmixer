@@ -4,6 +4,12 @@
 .mtrule {
   height: 20px;
 }
+.mtonesecondrule { /* une seconde sur la regle de temps */
+  width:100px;
+  border-right: 1px solid blue;
+  height:100%;
+}
+
 .row {
   margin: 0 0 0 0;
 }
