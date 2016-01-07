@@ -1,0 +1,8 @@
+i.fa-play-circle.reglage-play,
+i.fa-pause-circle.reglage-pause,
+i.fa-pause-circle.reglage-volume{
+    font-size: 15px;
+}
+i.fa-pause-circle.reglage-pause {
+    display: none;
+}
