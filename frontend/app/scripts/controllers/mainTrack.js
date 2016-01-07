@@ -60,7 +60,6 @@ angular.module('frontendApp')
       return ctx;
     }
 
-
     function buildGraph(bufferList) {
       var sources = [];
       // Create a single gain node for master volume
