@@ -1,0 +1,19 @@
+{
+  "samples" : [
+    {
+      "name" : "basse",
+      "file" : "basse.mp3",
+      "path" : "http://localhost:4000/samples/download/basse.mp3"
+    },
+    {
+      "name" : "kick",
+      "file" : "kick.mp3",
+      "path" : "http://localhost:4000/samples/download/kick.mp3"
+    },
+    {
+      "name" : "snare",
+      "file" : "snare.mp3",
+      "path" : "http://localhost:4000/samples/download/snare.mp3"
+    }
+  ]
+}
