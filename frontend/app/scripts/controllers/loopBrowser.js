@@ -13,11 +13,13 @@ angular.module('frontendApp')
 
     $http.get('../assets/loops.json')
       .then(function (res) {
-        $scope.loopList = res.data;
+        tracks = res.data;
+        tracksToString = res.data;
       })
       .then(function () {
-        tracks = $scope.loopList;
         loadAllSoundSamples();
+        splitLoopsNames(tracksToString);
+        $scope.loopList = tracksToString;
       });
 
     $scope.playSample = function ($index) {
@@ -31,23 +33,16 @@ angular.module('frontendApp')
     };
 
     var lastPlayed;
-
     var tracks;
-    var buffers = []; // audio buffers decoded
-    var samples = []; // audiograph nodes
-
-    // Master volume
+    var tracksToString;
+    var buffers = [];
+    var samples = [];
     var masterVolumeNode;
     var trackVolumeNodes = [];
-
-
-    // Init audio context
     var context = initAudioContext();
-
     var bufferLoader;
 
     function loadAllSoundSamples() {
-
       bufferLoader = new BufferLoader(
         context,
         tracks,
@@ -109,4 +104,10 @@ angular.module('frontendApp')
       samples[index].stop(0);
     };
 
+    function splitLoopsNames(arr) {
+      arr.forEach(function (part, index) {
+        var tmp = arr[index].split("/")[2];
+        arr[index] = tmp;
+      });
+    };
   });
