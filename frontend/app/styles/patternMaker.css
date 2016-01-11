@@ -1,0 +1,22 @@
+[ng-drop] {
+  width: 100%;
+  height: 200px;
+  display: block;
+  position: relative;
+  padding: 10px;
+}
+
+[ng-drop].drag-enter {
+  border: solid 5px red;
+}
+
+.step-sequencer-button > .fa
+{
+  font-size: x-large;
+  color: deepskyblue;
+}
+
+.patterns
+{
+  margin-bottom: 15px;
+}
