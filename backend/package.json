@@ -9,12 +9,11 @@
 
     "express" : "^4.13.3",
     "body-parser" : "^1.14.1",
-    "multer" : "^1.1.0",
+    "multer" : "latest",
 
     "mongodb" : "^2.1.x",
     "mongoose" : "latest",
     "kerberos" : "0.0.17",
-    "node-uuid": "^1.4.7",
 
     "lodash": "^3.10.1",
     "grunt": "^0.4.5",

@@ -4,7 +4,6 @@
 'use strict';
 
 var express = require('express');
-var uuid = require('node-uuid');
 
 var router = express.Router();
 
