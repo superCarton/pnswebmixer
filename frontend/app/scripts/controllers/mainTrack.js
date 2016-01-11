@@ -18,6 +18,8 @@ angular.module('frontendApp')
     var masterVolumeNode;
     var trackVolumeNodes = [];
 
+    var firstTime =true;
+
     // Init audio context
     var context = initAudioContext();
 
@@ -41,7 +43,7 @@ angular.module('frontendApp')
       buffers = bufferList;
 
 
-      buildGraph(buffers);
+     // buildGraph(buffers);
       //playFrom(0);
     }
 
@@ -109,7 +111,20 @@ angular.module('frontendApp')
     };
 
     $scope.play = function(){
+      if (!firstTime){
+        stopAllTracks();
+      } else {
+        firstTime = false;
+      }
+      buildGraph(buffers);
       playFrom(0);
     };
+
+    function stopAllTracks() {
+      samples.forEach(function(s) {
+        // destroy the nodes
+        s.stop(0);
+      });
+    }
 
   });

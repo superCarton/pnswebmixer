@@ -1,8 +1,8 @@
 <table class="table table-hover" id="loopList">
   <tbody>
-  <tr ng-repeat="loop in fakeLoopList">
+  <tr ng-repeat="loop in loopList">
     <td>{{loop}}</td>
-    <td><i class="fa fa-play-circle pull-right"></i></td>
+    <td><i class="fa fa-play-circle pull-right" ng-click="playSample($index)"></i></td>
   </tr>
   </tbody>
 </table>

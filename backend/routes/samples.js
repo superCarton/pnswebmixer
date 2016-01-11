@@ -4,11 +4,13 @@
 
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
 
 var mongoose = require('../server/mongodb');
 
 router.get('/collection', getAllFiles);
 router.post('/test', testAddMongo);
+router.post('/save', multer({dest:'./uploads/'}).single('upl'), saveFile);
 
 function getAllFiles(req, res){
     console.log(req.body);
@@ -26,6 +28,10 @@ function testAddMongo(req, res){
         }
         res.send({status: 'success'})
     });
+}
+
+function saveFile(req, res){
+    res.send('ok');
 }
 
 var sampleSchema = mongoose.Schema({name : String, path : String}, {collection : 'samples'});
