@@ -1,5 +1,7 @@
 'use strict';
 
+var CONVERSION_SECONDS_TO_PIXEL = 50; // 1 sec = 20px
+
 /**
  * @ngdoc function
  * @name frontendApp.controller:MainTrackCtrl
@@ -9,6 +11,7 @@
  */
 angular.module('frontendApp')
   .controller('MainTrackCtrl', function ($scope) {
+
 
     var tracks = [];
     var buffers = []; // audio buffers decoded
@@ -82,7 +85,8 @@ angular.module('frontendApp')
         masterVolumeNode.connect(context.destination);
         // On active les boutons start et stop
         samples = sources;
-      })
+      });
+
     }
 
     // Same as previous one except that we not rebuild the graph. Useful for jumping from one
@@ -93,31 +97,45 @@ angular.module('frontendApp')
       //setMasterVolume();
       masterVolumeNode.gain.value = 1;
 
-      samples.forEach(function(s) {
+      samples.forEach(function (s) {
         // First parameter is the delay before playing the sample
         // second one is the offset in the song, in seconds, can be 2.3456
         // very high precision !
         s.start(0, startTime);
       });
-      /*buttonPlay.disabled = true;
-       buttonStop.disabled = false;
-       buttonPause.disabled = false;*/
+      //buttonPlay.disabled = true;
+      // buttonStop.disabled = false;
+      // buttonPause.disabled = false;
 
       // Note : we memorise the current time, context.currentTime always
       // goes forward, it's a high precision timer
       console.log("start all tracks startTime =" + startTime);
-      /*lastTime = context.currentTime;
-       paused = false;*/
+    }
+      //lastTime = context.currentTime;
+       //paused = false;
+
+
+      //maxWidth = $("#sample-board").width();
+      //var maxWidth = 2000;
+      //$("#mttimeline").css('max-width', maxWidth);
+      //createTimeline();
+
+      $scope.play = function(){
+        if (!firstTime){
+          stopAllTracks();
+        } else {
+          firstTime = false;
+        }
+        buildGraph(buffers);
+        playFrom(0);
+      };
+
+    $scope.pause = function(){
+      stopAllTracks();
     };
 
-    $scope.play = function(){
-      if (!firstTime){
-        stopAllTracks();
-      } else {
-        firstTime = false;
-      }
-      buildGraph(buffers);
-      playFrom(0);
+    $scope.stop = function(){
+      stopAllTracks();
     };
 
     function stopAllTracks() {
@@ -126,5 +144,61 @@ angular.module('frontendApp')
         s.stop(0);
       });
     }
+
+    $scope.number = 3;
+    $scope.getNumber = function(num) {
+      return new Array(num);
+    };
+
+    //  var timeline = $("#mttimeline");
+      //$("#sample-board").scroll(function() {
+        //timeline.prop("scrollLeft", this.scrollLeft);
+      //});
+
+    $scope.functionThatReturnsStyle = function(index) {
+      var style = "position:absolute; left=" + index * (CONVERSION_SECONDS_TO_PIXEL * 5) + "px; bottom:0px; border-left: 1px solid black"
+      return style;
+    };
+
+    $scope.getTimeForTimeline = function(sec){
+      var minutes = Math.floor(sec / 60);
+      if (minutes < 10)
+        minutes = "0" + minutes;
+      var seconds = sec - (minutes * 60);
+      if (seconds < 10)
+        seconds = "0" + seconds.toFixed(2);
+      else
+        seconds = seconds.toFixed(2);
+      return minutes + ":" + seconds;
+    };
+
+    $scope.getSecondsFromTime = function (time){
+      var aTime = time.split(':');
+      var minute = parseInt(aTime[0]);
+      var seconds = parseFloat(aTime[1]);
+      return (minute * 60) + seconds;
+    };
+
+
+    $scope.drawSong = function(canvas, index){
+
+      // Object that draws a sample waveform in a canvas
+     /* var waveformDrawer = new WaveformDrawer();
+
+      waveformDrawer.init(buffers[0], canvas, 'green');
+
+      // First parameter = Y position (top left corner)
+      // second = height of the sample drawing
+      waveformDrawer.drawWave(0, canvas.height); */
+    };
+
+
+
+    $scope.addTrack = function(){
+
+
+
+      $scope.apply();
+    };
 
   });
