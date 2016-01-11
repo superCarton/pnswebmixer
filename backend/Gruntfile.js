@@ -29,7 +29,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('serv', function(){
+    grunt.registerTask('serve', function(){
         grunt.task.run(['express:build','watch']);
     });
 };

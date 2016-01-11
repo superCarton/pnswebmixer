@@ -4,7 +4,7 @@
 
 var express = require("express");
 var bodyParser = require("body-parser");
-var multer = require('multer');
+//var multer = require('multer');
 
 var health = require('./../routes/health');
 var users = require('./../routes/users');
@@ -14,7 +14,7 @@ var app = express();
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(multer({dest:'./uploads/'}).single('singleInputFileName')); // for parsing multipart/form-data
+//app.use(multer({dest:'./uploads/'}).single('upl')); // for parsing multipart/form-data
 // dest origin begin where server is launch.
 
 app.use(function(req, res, next) {
