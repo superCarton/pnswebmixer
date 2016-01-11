@@ -11,16 +11,6 @@ angular.module('frontendApp')
   .controller('LoopBrowserCtrl', function ($scope, $http) {
     $scope.awesomeThings = ['HTML5 Boilerplate', 'AngularJS', 'Karma'];
 
-    window.onkeyup = function(e) {
-      var key = e.keyCode ? e.keyCode : e.which;
-
-      if (key == 68) {
-        $scope.playSample(1);
-      }else if (key == 75) {
-        $scope.playSample(2);
-      }
-    }
-
     $http.get('../assets/loops.json')
       .then(function (res) {
         $scope.loopList = res.data;
