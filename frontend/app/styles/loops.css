@@ -1,15 +1,15 @@
 .loop-play
 {
   font-size: large;
-  -webkit-transition: 0.1s ease-in-out;
-  -moz-transition: 0.1s ease-in-out;
-  -o-transition: 0.1s ease-in-out;
-  -ms-transition: 0.1s ease-in-out;
-  transition: 0.1s ease-in-out;
+  -webkit-transition: 0.2s ease-in-out;
+  -moz-transition: 0.2s ease-in-out;
+  -o-transition: 0.2s ease-in-out;
+  -ms-transition: 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
 }
 
 .loop-play:hover {
-  color: green;
+  color: #00c800;
 }
 
 #loopList td
