@@ -1,11 +1,15 @@
-.fa-play-circle
+.loop-play
 {
-  font-size: x-large;
+  font-size: large;
+  -webkit-transition: 0.3s ease-in-out;
+  -moz-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  -ms-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
-.fa-stop-circle
-{
-  font-size: x-large;
+.loop-play:hover {
+  color: green;
 }
 
 #loopList td
