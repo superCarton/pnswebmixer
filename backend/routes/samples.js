@@ -8,69 +8,78 @@ var fs = require('fs');
 var multer = require('multer');
 
 var upload = multer({dest: './uploads/'});
-var samples = require('./../uploads/samples.json');
-
 var mongoose = require('../server/mongodb');
+
 const path = 'http://localhost:4000/samples/download/';
+const view = 'http://localhost:4000/commentary/view/';
+const post = 'http://localhost:4000/commentary/post/';
 
 router.get('/collection', getAllFiles);
-router.post('/test', testAddMongo);
 router.post('/upload', upload.single('file'), saveFile);
-router.get('/download/:name', download);
+router.get('/download/:encoding/:id', download);
+router.delete('/dropDB', removeAll);
 
 function getAllFiles(req, res) {
     Sample.find(function (err, samples){
         if (err){
-            res.status(500).send({status:'error'})
+            res.send({status: 'fail', value: err})
         } else  {
-            res.send(samples)
+            res.send({status: 'success', value: samples})
         }
     })
 }
 
-function testAddMongo(req, res) {
-    console.log(req.body);
-    var sample = new Sample({name: req.body.name, path: path+req.body.name});
-    sample.save(function (err, sample) {
-        if (err) {
-            console.log('fail to save');
+function saveFile(req, res) {
+    var extansion = (req.file.mimetype.split('/'))[1];
+    fs.rename(__dirname+'/../uploads/'+req.file.filename, __dirname+'/../uploads/'+req.file.filename+'.'+extansion);
+    var url = 'http://localhost:4000/samples/download/' + extansion + '/'+ req.file.filename;
+
+    var sample = new Sample({name: req.body.name, original_name: req.file.originalname, encoding: extansion,
+        download: url});
+    sample.save(function(err, result){
+        if (err){
+            console.log('fail to save : ');
+            console.log(err);
+            res.send({status:'fail', value:'fail to save file in MongoDB'})
         } else {
-            sample.ok();
+            res.send({status:'success', value:'successfully saved in MongoDB'})
         }
-        res.send({status: 'success'})
     });
 }
 
-function saveFile(req, res) {
-    // TODO save with fs
-    console.log(req.headers);
-    console.log(req.file);
-    console.log(req.body);
-    res.send("ok");
-
-    // Save in bdd
-    /*var sample = new Sample({name: req.body.name, file: req.body.file, path: req.body.file});
-    sample.save(function (err, sample) {
-        if (err) {
-            console.log('fail to save');
-            res.status(500).send({status:'fail'})
-        } else {
-            sample.ok();
-            res.send({status: 'success'})
-        }
-    })*/
-}
-
 function download(req, res){
-    var sample = fs.readFileSync(__dirname +'/../uploads/'+ req.params.name);
-    res.writeHead(200, { 'Content-Type':'audio/mpeg' });
+    var sample = fs.readFileSync(__dirname +'/../uploads/'+ req.params.id + '.' + req.params.encoding);
+    var contentType = {'Content-Type': null};
+    if (req.params.encoding == 'mp3' || req.params.encoding == 'mpeg'){
+        contentType['Content-Type'] = 'audio/'+req.params.encoding;
+    } else {
+        contentType['Content-Type'] = 'image/'+req.params.encoding;
+    }
+    console.log(contentType);
+    res.writeHead(200, contentType);
     res.end(sample, 'binary');
 }
 
-var sampleSchema = mongoose.Schema({name: String, file:String, path: String}, {collection: 'samples'});
+function removeAll(req, res){
+    Sample.remove({}, function(err){
+        if (err){
+            res.send({status:'fail', value:'fail to drop database'})
+        } else {
+            res.send({status:'success', value:'database successfully dropped'})
+        }
+    })
+}
+
+var sampleSchema = mongoose.Schema({name: String,
+    original_name:String,
+    encoding: String,
+    download: String,
+    view_comment: String,
+    post_comment: String}
+);
 sampleSchema.methods.ok = function () {
     console.log('file ' + this.name + ' successfuly save with path : ' + this.path);
 };
-var Sample = mongoose.model('Sample', sampleSchema);
+var Sample = mongoose.model('samples', sampleSchema);
 
 module.exports = router;

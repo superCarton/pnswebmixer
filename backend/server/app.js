@@ -9,6 +9,7 @@ var bodyParser = require("body-parser");
 var health = require('./../routes/health');
 var users = require('./../routes/users');
 var samples = require('./../routes/samples');
+var commentary = require('./../routes/commentary')
 
 var app = express();
 
@@ -32,5 +33,6 @@ app.get('/', function(req, res){
 app.use('/health', health);
 app.use('/users', users);
 app.use('/samples', samples);
+app.use('/commentary', commentary);
 
 module.exports = app;
