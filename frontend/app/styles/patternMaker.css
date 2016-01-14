@@ -1,13 +1,14 @@
 [ng-drop] {
   width: 100%;
-  height: 200px;
+  min-height: 100px;
   display: block;
   position: relative;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 1px;
 }
 
 [ng-drop].drag-enter {
-  border: solid 5px red;
+  border: solid 2px red;
 }
 
 .step-sequencer-button > .fa
@@ -23,6 +24,6 @@
 
 .round-corners
 {
-  border-radius: 25px;
+  border-radius: 15px;
   background-color: #ebebeb;
 }
