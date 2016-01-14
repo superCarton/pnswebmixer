@@ -1,14 +1,21 @@
 <div ng-controller="SongSettingsCtrl" ng-init="init();">
     <h4>Réglages sur le son</h4>
-  <button class="reglage-play" ng-click="playTrack();">Play</button>
-<!-- <my-test>
-    <i class="fa fa-play-circle reglage-play"></i>
-
-    <i class="fa fa-pause-circle reglage-pause"></i>
-  </my-test>-->
-  <!--<audio controls>
-    <source src="assets/loops/basse.mp3" type="audio/mpeg">
-    <source src="assets/loops/kick.ogg" type="audio/ogg">
-    Your browser does not support the audio element.
-  </audio>-->
+  <i class="fa fa-play-circle" ng-click="playTrack()"></i>
+  Volume: <input type="range" min="0" max="100" value="50" id="song-volume"  ng-model="song.volume" ng-change="changeVolume()">
+  <div class="song-frequency">
+    Frequency:
+              <select class="form-control frequency-ctrl" ng-init="frequency.type='lowpass'" ng-model = "frequency.type" ng-change="frequencyType()">
+                <option >lowpass</option>
+                <option>highpass</option>
+                <option>bandpass</option>
+                <option>lowshelf</option>
+                <option>highshelf</option>
+                <option>peaking</option>
+                <option>notch</option>
+                <option>allpass</option>
+              </select>
+              <input type="range" min="0" max="100" value="50" ng-model="song.frequency" ng-init = "song.frequency=50" ng-change="setFrequency()"> Frenquency
+              <input type="range" min="1" max="100" ng-model="song.quality" ng-init="song.quality=1" ng-change="setQuality()"> Quality</div>
+  <div class="cross-fade"> CrossFade: <input type="range" min="0" max="100" value="50"  ng-model="song.quality" ng-change="changeVolume()"></div>
+  <button type="button" class="btn btn-default" ng-click="save()">Save</button>
 </div>

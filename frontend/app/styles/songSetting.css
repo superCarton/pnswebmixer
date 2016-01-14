@@ -6,3 +6,21 @@ i.fa-pause-circle.reglage-volume{
 i.fa-pause-circle.reglage-pause {
     display: none;
 }
+input#song-volume {
+  width: 30%;
+  display: inline-block;
+}
+div.song-frequency input,
+div.song-quality{
+  display: inline-block;
+  width: 30%;
+}
+select.frequency-ctrl {
+  width: 20%;
+}
+div.song-frequency {
+  border: 1px solid black;
+}
+div.cross-fade {
+  display: none;
+}
