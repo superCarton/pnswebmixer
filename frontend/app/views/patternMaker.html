@@ -1,7 +1,33 @@
-<div class="round-corners" ng-drop="true" ng-drop-success="onDropComplete1($data)" class="">
+<div class="round-corners" ng-drop="true" ng-drop-success="onDropComplete1($data)">
+  <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row patterns" ng-repeat="obj in droppedObjects1">
-    <div class="col-md-2 col-md-offset-2 section">{{obj}}</div>
+    <div class="col-md-2 section buttons-mute-solo">
+      <button>Mute</button>
+      <button>Solo</button>
+    </div>
+    <div class="col-md-2 section name">{{obj}}</div>
     <div ng-repeat="button in [1,2,3,4,5,6,7,8]" class="col-md-1 section step-sequencer-button"><i
       ng-click="toggleButton($event)" class="fa fa-circle-thin"></i></div>
   </div>
 </div>
+
+<div class="row tools">
+  <div class="col-md-6 play-stop-buttons">
+    <button><i class="fa fa-play"></i></button>
+    <button><i class="fa fa-stop"></i></button>
+  </div>
+
+  <div class="col-md-6">
+    <span id="range">120</span>
+    <input type="range" min="80" max="170" value="120" oninput="showValue(this.value)"/>
+    <span id="tempo" class="pull-right">TEMPO</span>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function showValue(newValue) {
+    document.getElementById("range").innerHTML = newValue;
+  }
+</script>
+
+
