@@ -9,75 +9,17 @@
  */
 angular.module('frontendApp')
   .controller('SongSettingsCtrl', ['$scope', function ($scope) {
-    function BufferLoader(context, urlList, callback) {
-      this.context = context;
-      this.urlList = urlList;
-      this.onload = callback;
-      this.bufferList = new Array();
-      this.loadCount = 0;
-    }
-
-    BufferLoader.prototype.loadBuffer = function(url, index) {
-      // Load buffer asynchronously
-      console.log('file : ' + url + "loading and decoding");
-
-      var request = new XMLHttpRequest();
-      request.open("GET", url, true);
-
-      request.responseType = "arraybuffer";
-
-      var loader = this;
-
-      request.onload = function() {
-
-        // Asynchronously decode the audio file data in request.response
-        loader.context.decodeAudioData(
-          request.response,
-          function(buffer) {
-            if (!buffer) {
-              alert('error decoding file data: ' + url);
-              return;
-            }
-            loader.bufferList[index] = buffer;
-            console.log("In bufferLoader.onload bufferList size is " + loader.bufferList.length + " index =" + index);
-            if (++loader.loadCount == loader.urlList.length)
-              loader.onload(loader.bufferList);
-          },
-          function(error) {
-            console.error('decodeAudioData error', error);
-          }
-        );
-      }
-
-      request.onprogress = function(e) {
-        //console.log("loaded : " + e.loaded + " total : " + e.total);
-
-      }
-      request.onerror = function() {
-        alert('BufferLoader: XHR error');
-      }
-
-      request.send();
-    }
-
-    BufferLoader.prototype.load = function() {
-      // M.BUFFA added these two lines.
-      this.bufferList = new Array();
-      this.loadCount = 0;
-      console.log("BufferLoader.prototype.load urlList size = " + this.urlList.length);
-      for (var i = 0; i < this.urlList.length; ++i)
-        this.loadBuffer(this.urlList[i], i);
-    }
-
-
 
     $scope.masterVolumeNode = '';
+    $scope.filter = '';
     $scope.bufferList = '';
     $scope.trackVolumeNodes = [];
     $scope.tracks = ['../../assets/loops/kick.mp3', '../../assets/loops/snare.mp3'];
+    $scope.volume = 1;
     $scope.init = function() {
       $scope.context = initAudioContext();
       loadAllSoundSamples();
+
     }
 
     function initAudioContext() {
@@ -102,6 +44,9 @@ angular.module('frontendApp')
         var sources = [];
         // Create a single gain node for master volume
         $scope.masterVolumeNode = $scope.context.createGain();
+        $scope.filter = $scope.context.createBiquadFilter();
+        $scope.filter.frequency.value = 5000;
+        $scope.filter.Q.value = 1;
         $scope.buffers.forEach(function(sample, i) {
         // each sound sample is the  source of a graph
         sources[i] = $scope.context.createBufferSource();
@@ -112,8 +57,13 @@ angular.module('frontendApp')
         sources[i].connect( $scope.trackVolumeNodes[i]);
         // Connects all track volume nodes a single master volume node
           $scope.trackVolumeNodes[i].connect($scope.masterVolumeNode);
+          $scope.masterVolumeNode.connect($scope.filter);
         // Connect the master volume to the speakers
-          $scope.masterVolumeNode.connect($scope.context.destination);
+          $scope.filter.connect($scope.context.destination);
+          // Connect source to filter, filter to destination.
+
+          /*sources[i].connect($scope.filter);
+          $scope.filter.connect($scope.context.destination);*/
         // On active les boutons start et stop
         $scope.samples = sources;
       })
@@ -135,7 +85,10 @@ angular.module('frontendApp')
 
     function playFrom() {
       // Read current master volume slider position and set the volume
-
+      $scope.setMasterVolume();
+      $scope.setFrequency();
+      $scope.setFrequencyType();
+      $scope.setQuality();
       $scope.samples.forEach(function(s) {
       // First parameter is the delay before playing the sample
       // second one is the offset in the song, in seconds, can be 2.3456
@@ -143,6 +96,38 @@ angular.module('frontendApp')
         s.start(0, 0);
       })
 
+    }
+
+    $scope.changeVolume = function() {
+      $scope.volume = $scope.song.volume / 100;
+      $scope.setMasterVolume();
+    }
+    $scope.setFrequency = function() {
+      var minValue = 40;
+      var maxValue = $scope.context.sampleRate / 2;
+      var unitRate = (maxValue - minValue) / 100;
+      var currentRate = unitRate *  $scope.song.frequency + minValue;
+      if( $scope.filter.frequency != undefined) {
+        $scope.filter.frequency.value = currentRate;
+      }
+    }
+    $scope.setFrequencyType = function() {
+      if( $scope.filter.frequency != undefined) {
+        $scope.filter.frequency.type = $scope.frequency.type;
+      }
+    }
+    $scope.setQuality = function() {
+      if( $scope.filter.Q != undefined) {
+        $scope.filter.Q.value = $scope.song.quality;
+      }
+    }
+    $scope.setMasterVolume = function () {
+      if( $scope.masterVolumeNode.gain != undefined) {
+        $scope.masterVolumeNode.gain.value = $scope.volume * $scope.volume;
+      }
+    }
+    $scope.save = function() {
+      console.log("save");
     }
 
   }]);
