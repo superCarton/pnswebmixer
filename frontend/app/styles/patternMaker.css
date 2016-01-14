@@ -20,3 +20,9 @@
 {
   margin-bottom: 15px;
 }
+
+.round-corners
+{
+  border-radius: 25px;
+  background-color: #ebebeb;
+}

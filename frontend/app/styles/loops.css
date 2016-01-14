@@ -17,3 +17,9 @@
   width: 50%;
   border: 0px;
 }
+
+#loopList
+{
+  border-radius: 15px;
+  background-color: #ebebeb;
+}
