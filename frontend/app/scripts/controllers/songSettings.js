@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('SongSettingsCtrl', ['$scope', function ($scope) {
+  .controller('SongSettingsCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.masterVolumeNode = '';
     $scope.filter = '';
@@ -127,7 +127,20 @@ angular.module('frontendApp')
       }
     }
     $scope.save = function() {
-      console.log("save");
+      var formdata = new FormData();
+      formdata.append('name', 'test-test');
+      formdata.append('file', file);
+      $http({
+        method: 'POST',
+        url: 'http://localhost:4000/samples/upload',
+        data: formdata
+      }).success(function(data) {
+          console.log(data);
+        })
+        .error(function(err) {
+          console.log(err);
+        });
     }
+
 
   }]);
