@@ -44,6 +44,11 @@
   font-size: x-small;
 }
 
+.buttons-mute-solo, .name
+{
+  margin-top: 6px;
+}
+
 .buttons-mute-solo button
 {
   margin-right: 3px;

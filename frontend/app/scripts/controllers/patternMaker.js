@@ -25,21 +25,79 @@ angular.module('frontendApp')
       angular.element(event.currentTarget).toggleClass("fa-circle");
     };
 
-    $scope.playBeat = function () {
-      $("#play").toggleClass("playing");
-      setTimeout(function () {
-        for (var i = 0; i < lightsIDs.length; i++) {
-          $(lightsIDs[i]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-          console.log(lightsIDs[i]);
-        }
-      }, 1000);
-    };
+    var i = 0;
+    var stopPlaying = false;
+    var timer;
+    var metronome = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8751.mp3");
+    var kick = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8692.mp3");
+    var snare = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8717.mp3");
 
-    $scope.stopBeat = function () {
-      if ($("#play").hasClass("playing")) {
-        $("#play").toggleClass("playing");
-        $("#light-1").toggleClass("fa-circle-thin").toggleClass("fa-circle");
+    var animateLights = function () {
+      metronome.pause();
+      metronome.currentTime = 0;
+      kick.pause();
+      kick.currentTime = 0;
+      snare.pause();
+      snare.currentTime = 0;
+
+      metronome.play();
+
+      if(i == 0 || i == 4) {
+        kick.play();
+      }
+
+      if(i == 2 || i == 6) {
+        snare.play();
+      }
+
+      animateLight(i++);
+      if (stopPlaying) {
+        i = 0;
+        return;
+      } else if (i <= lightsIDs.length) {
+        timer = setTimeout(animateLights, 30000 / document.getElementById("myTempo").value);
+      } else {
+        i = 0;
+        animateLights();
       }
     };
 
+    var animateLight = function (index) {
+      if (index == 0) {
+        $(lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      } else {
+        $(lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $(lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      }
+
+    };
+
+    $scope.playBeat = function () {
+      $("#play").attr("disabled", true);
+      stopPlaying = false;
+      timer = 0;
+      i = 0;
+      $("#play").toggleClass("playing")
+      animateLights();
+    };
+
+    $scope.stopBeat = function () {
+      $("#play").attr("disabled", false);
+      metronome.pause();
+      metronome.currentTime = 0;
+      kick.pause();
+      kick.currentTime = 0;
+      snare.pause();
+      snare.currentTime = 0
+      if ($("#play").hasClass("playing")) {
+        clearTimeout(timer);
+        stopPlaying = true;
+        $("#play").toggleClass("playing");
+        lightsIDs.forEach(function (light) {
+          if ($(light).hasClass("fa-circle")) {
+            $(light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
+          }
+        });
+      }
+    };
   });
