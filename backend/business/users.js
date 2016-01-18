@@ -17,38 +17,62 @@ function getAllUsers(callback) {
 }
 
 function createAccount(body, callback){
-    // TODO Check if email is no already taken
-    if (body.last_name != null && body.first_name != null && body.email != null && body.password != null){
-        var user = new User({last_name: body.last_name, first_name: body.first_name, birth_date: body.birth_date, email: body.email, password:body.password })
-        user.save(function(err, user){
-            if (err){
-                callback({status: 'fail', value: err})
-            } else {
-                user.description = url+user._id;
-                user.save(function(err, new_user){
-                    var result = new_user;
+    // TODO tester email
+    checkEmailValidity(body.email, function(result){
+        if (result){
+            callback({status: 'fail', value: 'email already taken'})
+        } else {
+            if (body.last_name != null && body.first_name != null && body.email != null && body.password != null){
+                var user = new User({last_name: body.last_name, first_name: body.first_name, birth_date: body.birth_date, email: body.email, password:body.password })
+                user.save(function(err, user){
                     if (err){
                         callback({status: 'fail', value: err})
                     } else {
-                        // Whaaaat the fuuuuck ??
-                        delete result['password'];
-                        callback({status: 'success', value: result})
+                        user.description = url+user._id;
+                        user.save(function(err, new_user){
+                            var result = new_user;
+                            if (err){
+                                callback({status: 'fail', value: err})
+                            } else {
+                                // Whaaaat the fuuuuck ??
+                                delete result['password'];
+                                callback({status: 'success', value: result})
+                            }
+                        })
                     }
                 })
+            } else {
+                callback({status: 'fail', value: 'body params are incorrect'})
             }
-        })
-    } else {
-        callback({status: 'fail', value: 'body params are incorrect'})
-    }
+        }
+    })
 }
 
-function connection(body, callback){
-    User.findOne({email: body.email, password: body.password}, function(err, result){
+function checkEmailValidity(email, callback){
+    User.findOne({email: email}, function(err, user){
         if (err){
             callback({status: 'fail', value: err})
         } else {
-            delete result.password;
-            callback({status: 'success', value: result})
+            if (user == null){
+                callback(false)
+            } else {
+                callback(true)
+            }
+        }
+    })
+}
+
+function connection(body, callback){
+    User.findOne({email: body.email, password: body.password}, function(err, user){
+        if (err){
+            callback({status: 'fail', value: err})
+        } else {
+            if (user == null){
+                callback({status: 'fail', value: 'wrong email or password'})
+            } else {
+                delete result.password;
+                callback({status: 'success', value: user})
+            }
         }
     })
 }
