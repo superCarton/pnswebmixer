@@ -17,7 +17,6 @@ function getAllUsers(callback) {
 }
 
 function createAccount(body, callback){
-    // TODO tester email
     checkEmailValidity(body.email, function(result){
         if (result){
             callback({status: 'fail', value: 'email already taken'})
@@ -70,7 +69,7 @@ function connection(body, callback){
             if (user == null){
                 callback({status: 'fail', value: 'wrong email or password'})
             } else {
-                delete result.password;
+                delete user.password;
                 callback({status: 'success', value: user})
             }
         }

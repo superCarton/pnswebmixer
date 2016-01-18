@@ -14,6 +14,7 @@
     "mongodb" : "^2.1.x",
     "mongoose" : "latest",
     "kerberos" : "0.0.17",
+    "async": "1.5.2",
 
     "mocha": "2.3.4",
 

@@ -58,8 +58,18 @@ function viewCommentary(params, callback){
     })
 }
 
-function testViewAllSimpleCommentary(callback){
-    Commentary.find(function(err, result){
+function removeOneHandler(handler_id, callback){
+    Handler.remove({_id: handler_id}, function(err){
+        if (err){
+            callback({status: 'fail', value: err})
+        } else {
+            callback({status: 'success', value: 'Commentaries successfully removed'})
+        }
+    })
+}
+
+function removeAllHandler(callback){
+    Handler.remove({}, function(err, result){
         if (err){
             callback({status: 'fail', value: err})
         } else {
@@ -98,6 +108,7 @@ var Handler = mongoose.model('commentaryHandler', commentaryHandlerSchema);
 module.exports = {
     write: writeCommentary,
     view: viewCommentary,
-    simpleCommentary: testViewAllSimpleCommentary,
-    bigCommentary: testViewAllBigCommentary
+    bigCommentary: testViewAllBigCommentary,
+    drop: removeAllHandler,
+    remove: removeOneHandler
 };

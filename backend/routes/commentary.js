@@ -10,8 +10,9 @@ var commentary = require('../business/commentary');
 
 router.post('/post/:sample_id', writeCommentary);
 router.get('/view/:sample_id', viewCommentary);
-router.get('/simple', simpleCommetary);
-router.get('/big', bigCommetary);
+router.get('/collection', bigCommetary);
+router.delete('remove/:commentary_id', removeOne);
+router.delete('/drop', removeAllHandler);
 
 function writeCommentary(req, res) {
     commentary.write(req.body, req.params, function(result){
@@ -25,14 +26,20 @@ function viewCommentary(req, res){
     })
 }
 
-function simpleCommetary(req, res){
-    commentary.simpleCommentary(function(result){
+function bigCommetary(req, res){
+    commentary.bigCommentary(function(result){
         res.send(result)
     })
 }
 
-function bigCommetary(req, res){
-    commentary.bigCommentary(function(result){
+function removeAllHandler(req, res){
+    commentary.drop(function(result){
+        res.send(result)
+    })
+}
+
+function removeOne(req, res){
+    commentary.remove(req.params.commentary_id, function(result){
         res.send(result)
     })
 }

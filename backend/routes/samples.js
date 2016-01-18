@@ -10,7 +10,8 @@ var samples = require('../business/samples');
 router.get('/collection', getAllFiles);
 router.post('/upload', saveFile);
 router.get('/download/:encoding/:id', download);
-router.delete('/dropDB', removeAll);
+router.delete('/drop', removeAll);
+router.delete('/remove/:id', removeOne);
 
 function getAllFiles(req, res) {
     samples.getAll(function(result){
@@ -38,6 +39,12 @@ function download(req, res){
 function removeAll(req, res){
     samples.drop(function(result){
         res.send(result)
+    })
+}
+
+function removeOne(req, res){
+    samples.remove(req.params.id, function(result){
+        res.send({status: result})
     })
 }
 
