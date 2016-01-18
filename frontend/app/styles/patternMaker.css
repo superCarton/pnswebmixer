@@ -1,19 +1,28 @@
 [ng-drop] {
   width: 100%;
-  height: 200px;
   display: block;
   position: relative;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 1px;
 }
 
 [ng-drop].drag-enter {
-  border: solid 5px red;
+  border: solid 2px red;
+}
+
+[ng-drop].drag-enter p {
+  font-size: large;
 }
 
 .step-sequencer-button > .fa
 {
   font-size: x-large;
   color: deepskyblue;
+}
+
+.step-sequencer-button
+{
+  text-align: center;
 }
 
 .patterns
@@ -23,6 +32,87 @@
 
 .round-corners
 {
-  border-radius: 25px;
+  border-radius: 10px;
   background-color: #ebebeb;
+  padding-left: 10px;
+  overflow-y: auto;
+  max-height: 140px;
+}
+
+.round-corners p
+{
+  text-align: center;
+}
+
+.buttons-mute-solo
+{
+  font-size: x-small;
+}
+
+.buttons-mute-solo button
+{
+  margin-right: 3px;
+}
+
+.patterns .name
+{
+  text-align: center;
+  color: #fafafa;
+  font-size: small;
+  background: linear-gradient(#d3d3d3,black);
+  border: 1px solid black;
+  border-radius: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tools
+{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.play-stop-buttons
+{
+  text-align: center;
+  font-size: x-large;
+}
+
+.play-stop-buttons button
+{
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: lightgrey;
+  width: 60px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.play-stop-buttons button:hover {
+  background-color: lightgrey;
+  border:1px outset black;
+  color:#fcffdf;
+}
+.play-stop-buttons button:active {
+  background-color:#67b4cf;
+  border:1px inset #1d659f;
+  color:#e0ffaf;
+  text-decoration:none;
+}
+
+#range
+{
+  font-family: digital-love;
+
+}
+
+@font-face {
+  font-family: 'digital-love';
+  src: url('../assets/fonts/digital-7.ttf');
+}
+
+#tempo
+{
+  font-size: 10px;
 }

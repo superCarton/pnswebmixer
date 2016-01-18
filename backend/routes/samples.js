@@ -32,7 +32,7 @@ function getAllFiles(req, res) {
 function saveFile(req, res) {
     var extansion = (req.file.mimetype.split('/'))[1];
     fs.rename(__dirname+'/../uploads/'+req.file.filename, __dirname+'/../uploads/'+req.file.filename+'.'+extansion);
-    var url = 'http://localhost:4000/samples/download/' + extansion + '/'+ req.file.filename;
+    var url = path + extansion + '/'+ req.file.filename;
 
     var sample = new Sample({name: req.body.name, original_name: req.file.originalname, encoding: extansion,
         download: url});
@@ -42,7 +42,15 @@ function saveFile(req, res) {
             console.log(err);
             res.send({status:'fail', value:'fail to save file in MongoDB'})
         } else {
-            res.send({status:'success', value:'successfully saved in MongoDB'})
+            result.view_comment = view+result._id;
+            result.post_comment = post+result._id;
+            result.save(function(err, result){
+                if (err){
+                    res.send({status:'fail', value: err})
+                } else {
+                    res.send({status:'success', value: result})
+                }
+            })
         }
     });
 }
