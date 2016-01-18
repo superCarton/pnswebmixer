@@ -4,7 +4,7 @@
 
 'use strict';
 
-var app = require('../server/app');
+var app = require('../app');
 var http = require('http');
 
 var port = process.env.PORT || '3000';

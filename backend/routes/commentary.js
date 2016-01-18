@@ -4,7 +4,7 @@
 
 
 var express = require('express');
-var mongoose = require('../server/mongodb');
+var mongoose = require('../connector/mongodb');
 
 var router = express.Router();
 

@@ -8,7 +8,7 @@ var fs = require('fs');
 var multer = require('multer');
 
 var upload = multer({dest: './uploads/'});
-var mongoose = require('../server/mongodb');
+var mongoose = require('../connector/mongodb');
 
 const path = 'http://localhost:4000/samples/download/';
 const view = 'http://localhost:4000/commentary/view/';

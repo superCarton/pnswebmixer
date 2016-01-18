@@ -4,7 +4,7 @@
 'use strict';
 
 var express = require('express');
-var mongoose = require('../server/mongodb');
+var mongoose = require('../connector/mongodb');
 
 var router = express.Router();
 const url = 'http://localhost:4000/users/description/';
