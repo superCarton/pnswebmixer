@@ -2,7 +2,6 @@
   width: 100%;
   display: block;
   position: relative;
-  padding-top: 10px;
   padding-bottom: 1px;
 }
 
@@ -14,15 +13,11 @@
   font-size: large;
 }
 
-.step-sequencer-button > .fa
-{
-  font-size: x-large;
-  color: deepskyblue;
-}
-
 .step-sequencer-button
 {
   text-align: center;
+  font-size: x-large;
+  color: deepskyblue;
 }
 
 .patterns
@@ -36,7 +31,7 @@
   background-color: #ebebeb;
   padding-left: 10px;
   overflow-y: auto;
-  max-height: 140px;
+  max-height: 149px;
 }
 
 .round-corners p
@@ -83,36 +78,45 @@
 {
   margin-left: 10px;
   margin-right: 10px;
-  background-color: lightgrey;
+  background-image:linear-gradient(lightgrey, #424242);
   width: 60px;
   border-radius: 5px;
   border: 1px solid black;
 }
 
-.play-stop-buttons button:hover {
-  background-color: lightgrey;
-  border:1px outset black;
-  color:#fcffdf;
-}
-.play-stop-buttons button:active {
-  background-color:#67b4cf;
-  border:1px inset #1d659f;
-  color:#e0ffaf;
-  text-decoration:none;
+.play-stop-buttons .playing {
+  background-image:radial-gradient(lightgrey, #424242);
+  text-decoration: none;
 }
 
-#range
+.play-stop-buttons #stop:active {
+  background-image:radial-gradient(lightgrey, #424242);
+  text-decoration: none;
+}
+
+.range-block
 {
+  border: 2px solid black;
+  text-align: center;
   font-family: digital-love;
-
-}
-
-@font-face {
-  font-family: 'digital-love';
-  src: url('../assets/fonts/digital-7.ttf');
+  font-size: 20px;
+  background-color: #acbdbd;
+  border-radius: 5px;
 }
 
 #tempo
 {
   font-size: 10px;
+}
+
+.light-tempo
+{
+  text-align: center;
+  font-size: small;
+  color: green;
+}
+
+@font-face {
+  font-family: 'digital-love';
+  src: url('../assets/fonts/digital-7.ttf');
 }
