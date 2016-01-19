@@ -17,5 +17,7 @@
               <input type="range" min="0" max="100" value="50" ng-model="song.frequency" ng-init = "song.frequency=50" ng-change="setFrequency()"> Frenquency
               <input type="range" min="1" max="100" ng-model="song.quality" ng-init="song.quality=1" ng-change="setQuality()"> Quality</div>
   <div class="cross-fade"> CrossFade: <input type="range" min="0" max="100" value="50"  ng-model="song.quality" ng-change="changeVolume()"></div>
+  <canvas id="song-visualize"></canvas>
+  <canvas id="song-visualize-bar"></canvas>
   <button type="button" class="btn btn-default" ng-click="save()">Save</button>
 </div>

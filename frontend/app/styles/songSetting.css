@@ -24,3 +24,13 @@ div.song-frequency {
 div.cross-fade {
   display: none;
 }
+canvas#song-visualize {
+  height: 55px;
+  width: 400px;
+  border: 1px solid black;
+}
+canvas#song-visualize-bar {
+  border: 1px solid black;
+  width: 400px;
+  height: 200px;
+}

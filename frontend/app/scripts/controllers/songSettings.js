@@ -14,10 +14,12 @@ angular.module('frontendApp')
     $scope.filter = '';
     $scope.bufferList = '';
     $scope.trackVolumeNodes = [];
-    $scope.tracks = ['../../assets/loops/kick.mp3', '../../assets/loops/snare.mp3'];
+    $scope.tracks = ['../../assets/loops/clarinet.mp3'];
     $scope.volume = 1;
     $scope.init = function() {
       $scope.context = initAudioContext();
+      $scope.analyser = $scope.context.createAnalyser();
+      initAnalyser();
       loadAllSoundSamples();
 
     }
@@ -35,10 +37,78 @@ angular.module('frontendApp')
 
       return ctx;
     }
+    function initAnalyser() {
+      $scope.analyser.fftSize = 2048;
+      $scope.dataArray = new Uint8Array($scope.analyser.frequencyBinCount);
+      $scope.canvasCtx =document.getElementById("song-visualize").getContext("2d");
+      $scope.canvasCtx.clearRect(0, 0, 400, 55);
+
+
+
+      $scope.canvasBar = document.getElementById("song-visualize-bar");
+      $scope.canvasBarCtx = $scope.canvasBar.getContext("2d");
+      $scope.canvasBarHeight = $scope.canvasBar.height;
+      $scope.canvasBarWidth = $scope.canvasBar.width;
+      $scope.canvasBarCtx.clearRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);
+    }
 
     $scope.playTrack = function() {
       buildGraph();
       playFrom();
+    }
+    function draw() {
+     requestAnimationFrame(draw);
+      $scope.analyser.getByteTimeDomainData($scope.dataArray);
+      $scope.canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+      $scope.canvasCtx.fillRect(0, 0, 400, 155);
+      $scope.canvasCtx.lineWidth = 2;
+      $scope.canvasCtx.strokeStyle = 'rgb(30, 30, 30)';
+
+      $scope.canvasCtx.beginPath();
+      $scope.sliceWidth = 400 * 1.0 / $scope.analyser.frequencyBinCount;
+      var x = 0;
+      for(var i = 0; i < $scope.analyser.frequencyBinCount; i++) {
+
+        var v = $scope.dataArray[i] / 128.0;
+        var y = v * 55/2;
+
+        if(i === 0) {
+          $scope.canvasCtx.moveTo(x, y);
+        } else {
+          $scope.canvasCtx.lineTo(x, y);
+        }
+        x += $scope.sliceWidth;
+      }
+      $scope.canvasCtx.lineTo(400, 55/2);
+      $scope.canvasCtx.stroke();
+    }
+    function drawBar() {
+
+      requestAnimationFrame(drawBar);
+      $scope.analyser.getByteTimeDomainData($scope.dataArray);
+     /* $scope.grdBar = $scope.canvasBarCtx.createLinearGradient(0, 0, $scope.canvasBarWidth, 0);
+      $scope.grdBar.addColorStop(0, "#FA6B67");
+      $scope.grdBar.addColorStop(0.2, "#70CA5D");
+      $scope.grdBar.addColorStop(0.4, "#3CC9E4");
+      $scope.grdBar.addColorStop(0.6, "#EC945E");
+      $scope.grdBar.addColorStop(0.8, "#7189DE");
+      $scope.grdBar.addColorStop(1, "#E798DC");
+      $scope.canvasBarCtx.fillStyle = $scope.grdBar;
+      $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);*/
+      $scope.canvasBarCtx.fillStyle = 'rgb(0, 0, 0)';
+      $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);
+      var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount) * 2.5;
+      var barHeight;
+      var x = 0;
+      for(var i = 0; i <  $scope.analyser.frequencyBinCount; i++) {
+        barHeight = $scope.dataArray[i]/2;
+
+        $scope.canvasBarCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+        $scope.canvasBarCtx.fillRect(x,$scope.canvasBarHeight-barHeight/2,barWidth,barHeight);
+
+        x += barWidth + 1;
+      }
+
     }
     function buildGraph() {
         var sources = [];
@@ -58,8 +128,11 @@ angular.module('frontendApp')
         // Connects all track volume nodes a single master volume node
           $scope.trackVolumeNodes[i].connect($scope.masterVolumeNode);
           $scope.masterVolumeNode.connect($scope.filter);
+          //Connect the master volume to the analyser
+          $scope.filter.connect($scope.analyser);
         // Connect the master volume to the speakers
-          $scope.filter.connect($scope.context.destination);
+          $scope.analyser.connect($scope.context.destination);
+          //$scope.filter.connect($scope.context.destination);
           // Connect source to filter, filter to destination.
 
           /*sources[i].connect($scope.filter);
@@ -94,9 +167,12 @@ angular.module('frontendApp')
       // second one is the offset in the song, in seconds, can be 2.3456
       // very high precision !
         s.start(0, 0);
-      })
 
+      });
+      draw();
+      drawBar();
     }
+
 
     $scope.changeVolume = function() {
       $scope.volume = $scope.song.volume / 100;
