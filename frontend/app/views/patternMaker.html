@@ -1,5 +1,11 @@
 <div class="round-corners" ng-drop="true" ng-drop-success="onDropComplete1($data)">
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
+  <div class="row">
+    <div class="col-md-1 col-md-offset-4 section light-tempo"><i
+      id="light-1" class="fa fa-circle-thin"></i></div>
+    <div ng-repeat="light in [2,3,4,5,6,7,8]" class="col-md-1 section light-tempo">
+      <i id="light-{{light}}" class="fa fa-circle-thin"></i></div>
+  </div>
   <div class="row patterns" ng-repeat="obj in droppedObjects1">
     <div class="col-md-2 section buttons-mute-solo">
       <button>Mute</button>
@@ -13,14 +19,22 @@
 
 <div class="row tools">
   <div class="col-md-6 play-stop-buttons">
-    <button><i class="fa fa-play"></i></button>
-    <button><i class="fa fa-stop"></i></button>
+    <button id="play" ng-click="playBeat()"><i class="fa fa-play"></i></button>
+    <button id="stop" ng-click="stopBeat()"><i class="fa fa-stop"></i></button>
   </div>
 
   <div class="col-md-6">
-    <span id="range">120</span>
-    <input type="range" min="80" max="170" value="120" oninput="showValue(this.value)"/>
-    <span id="tempo" class="pull-right">TEMPO</span>
+    <div class="row">
+      <div class="col-md-3 range-block">
+        <span id="range">120</span>
+      </div>
+      <div class="col-md-9">
+        <input id="myTempo" type="range" min=70 max="180" value=120 oninput="showValue(this.value)">
+      </div>
+    </div>
+    <div class="row">
+      <span id="tempo" class="pull-right">TEMPO</span>
+    </div>
   </div>
 </div>
 

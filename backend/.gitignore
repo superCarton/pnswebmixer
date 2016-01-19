@@ -96,3 +96,6 @@ dist/
 .tmp/
 
 
+## Multer directory
+uploads/
+

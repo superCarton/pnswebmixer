@@ -4,80 +4,51 @@
 
 
 var express = require('express');
-var mongoose = require('../server/mongodb');
-
 var router = express.Router();
 
-const userDescription = 'http://localhost:4000/users/description/';
+var commentary = require('../business/commentary');
 
 router.post('/post/:sample_id', writeCommentary);
 router.get('/view/:sample_id', viewCommentary);
+router.get('/collection', bigCommetary);
+router.delete('/remove/:topic_id', removeOneHandler);
+router.delete('/remove/:topic_id/:com_id', removeOneCommentary);
+router.delete('/drop', removeAllHandler);
 
 function writeCommentary(req, res) {
-    var body = req.body;
-    Handler.findOne({sample_id: req.params.sample_id}, function (err, handler) {
-        if (err) {
-            res.send({status: 'fail', value: err})
-        } else {
-            var commentary = new Commentary({
-                date: new Date(),
-                text: body.text,
-                user_id: body.user_id,
-                profile: userDescription + body.user_id
-            });
-
-            if (handler == null || handler == []) {
-                // Create a new commentaryHandler
-                var new_handler = new Handler({
-                    sample_id: req.params.sample_id,
-                    contents: [commentary]
-                });
-                new_handler.save(function (err, result) {
-                    if (err) {
-                        res.send({status: 'fail', value: err})
-                    } else {
-                        res.send({status: 'success', value: result})
-                    }
-                })
-
-            } else {
-                // Add a commentary to a commentaryHandler
-                handler.contents.push(commentary);
-                handler.save(function(err, result){
-                    if (err) {
-                        res.send({status: 'fail', value: err})
-                    } else {
-                        res.send({status: 'success', value: result})
-                    }
-                })
-            }
-        }
+    commentary.write(req.body, req.params, function(result){
+        res.send(result)
     })
 }
 
 function viewCommentary(req, res){
-    Handler.findOne({sample_id: req.params.sample_id}, function(err, result){
-        if (err){
-            res.send({status: 'fail', value: err})
-        } else {
-            res.send({status: 'success', value: result})
-        }
+    commentary.view(req.params, function(result){
+        res.send(result)
     })
 }
 
-var commentarySchema = mongoose.Schema({
-    date: Date,
-    text: String,
-    user_id: mongoose.Schema.Types.ObjectId,
-    profile: String
-});
+function bigCommetary(req, res){
+    commentary.bigCommentary(function(result){
+        res.send(result)
+    })
+}
 
-var commentaryHandlerSchema = mongoose.Schema({
-    sample_id: mongoose.Schema.Types.ObjectId,
-    contents: [commentarySchema]
-});
+function removeAllHandler(req, res){
+    commentary.drop(function(result){
+        res.send(result)
+    })
+}
 
-var Commentary = mongoose.model('commentary', commentarySchema);
-var Handler = mongoose.model('commentaryHandler', commentaryHandlerSchema);
+function removeOneHandler(req, res){
+    commentary.remove(req.params.topic_id, function(result){
+        res.send(result)
+    })
+}
+
+function removeOneCommentary(req, res){
+    commentary.removeOne(req.params.topic_id, req.params.com_id, function(result){
+        res.send(result)
+    })
+}
 
 module.exports = router;
