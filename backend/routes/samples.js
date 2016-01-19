@@ -9,9 +9,9 @@ var samples = require('../business/samples');
 
 router.get('/collection', getAllFiles);
 router.post('/upload', saveFile);
-router.get('/download/:encoding/:id', download);
+router.get('/download/:encoding/:_id', download);
 router.delete('/drop', removeAll);
-router.delete('/remove/:id', removeOne);
+router.delete('/remove/:_id', removeOne);
 
 function getAllFiles(req, res) {
     samples.getAll(function(result){
@@ -43,7 +43,7 @@ function removeAll(req, res){
 }
 
 function removeOne(req, res){
-    samples.remove(req.params.id, function(result){
+    samples.remove(req.params, function(result){
         res.send({status: result})
     })
 }
