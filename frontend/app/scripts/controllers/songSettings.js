@@ -14,7 +14,7 @@ angular.module('frontendApp')
     $scope.filter = '';
     $scope.bufferList = '';
     $scope.trackVolumeNodes = [];
-    $scope.tracks = ['../../assets/loops/clarinet.mp3'];
+    $scope.tracks = ['../../assets/loops/avenir.mp3'];
     $scope.volume = 1;
     $scope.init = function() {
       $scope.context = initAudioContext();
@@ -86,27 +86,19 @@ angular.module('frontendApp')
 
       requestAnimationFrame(drawBar);
       $scope.analyser.getByteTimeDomainData($scope.dataArray);
-     /* $scope.grdBar = $scope.canvasBarCtx.createLinearGradient(0, 0, $scope.canvasBarWidth, 0);
-      $scope.grdBar.addColorStop(0, "#FA6B67");
-      $scope.grdBar.addColorStop(0.2, "#70CA5D");
-      $scope.grdBar.addColorStop(0.4, "#3CC9E4");
-      $scope.grdBar.addColorStop(0.6, "#EC945E");
-      $scope.grdBar.addColorStop(0.8, "#7189DE");
-      $scope.grdBar.addColorStop(1, "#E798DC");
-      $scope.canvasBarCtx.fillStyle = $scope.grdBar;
-      $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);*/
       $scope.canvasBarCtx.fillStyle = 'rgb(0, 0, 0)';
       $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);
-      var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount) * 2.5;
+      var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount);
       var barHeight;
       var x = 0;
+      $scope.canvasBarLength = $scope.analyser.frequencyBinCount;
+      $scope.canvasBarUnit = $scope.analyser.frequencyBinCount / 6;
+      $scope.colors = ['#70CA5D','#FA6B67', "#3CC9E4", "#EC945E", "#7189DE", "#E798DC", "#E798DC"];
       for(var i = 0; i <  $scope.analyser.frequencyBinCount; i++) {
-        barHeight = $scope.dataArray[i]/2;
-
-        $scope.canvasBarCtx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
-        $scope.canvasBarCtx.fillRect(x,$scope.canvasBarHeight-barHeight/2,barWidth,barHeight);
-
-        x += barWidth + 1;
+        barHeight = $scope.dataArray[i] / 2;
+        $scope.canvasBarCtx.fillStyle = $scope.colors[Math.floor(i / $scope.canvasBarUnit)];
+        $scope.canvasBarCtx.fillRect(x,$scope.canvasBarHeight-barHeight,barWidth,barHeight);
+        x += barWidth;
       }
 
     }
