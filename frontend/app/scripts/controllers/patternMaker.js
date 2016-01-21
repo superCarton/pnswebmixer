@@ -14,7 +14,6 @@ angular.module('frontendApp')
     var samples = []; // audiograph nodes
     var masterVolumeNode;
     var trackVolumeNodes = [];
-    var nodeActive = [];
 
     var initAudioContext = function() {
 
@@ -61,30 +60,36 @@ angular.module('frontendApp')
 
       bufferList.forEach(function(sample, i) {
 
-        // each sound sample is the  source of a graph
-        sources[i] = context.createBufferSource();
-        sources[i].buffer = sample;
-        // connect each sound sample to a vomume node
-        trackVolumeNodes[i] = context.createGain();
-        // Connect the sound sample to its volume node
-        sources[i].connect(trackVolumeNodes[i]);
-        // Connects all track volume nodes a single master volume node
-        trackVolumeNodes[i].connect(masterVolumeNode);
-        // Connect the master volume to the speakers
-        masterVolumeNode.connect(context.destination);
-        // On active les boutons start et stop
-        samples = sources;
+        // create 8 samples for each sample
+        sources[i] = [];
+        for (var j=0; j<8; j++){
+
+          // each sound sample is the  source of a graph
+          sources[i][j] = context.createBufferSource();
+          sources[i][j].buffer = sample;
+          // connect each sound sample to a vomume node
+          trackVolumeNodes[i] = context.createGain();
+          // Connect the sound sample to its volume node
+          sources[i][j].connect(trackVolumeNodes[i]);
+          // Connects all track volume nodes a single master volume node
+          trackVolumeNodes[i].connect(masterVolumeNode);
+          // Connect the master volume to the speakers
+          masterVolumeNode.connect(context.destination);
+        }
 
       });
 
+      samples = sources;
     };
 
     var stopAllTracks = function (){
 
-      samples.forEach(function(s) {
-        // destroy the nodes
-        s.stop(0);
-      });
+      for (var i=0; i<samples.length; i++){
+        for (var j=0; j<8; j++){
+          // destroy the nodes
+          samples[i][j].stop(0);
+        }
+      }
 
     };
 
@@ -92,9 +97,12 @@ angular.module('frontendApp')
 
       masterVolumeNode.gain.value = 1;
 
-      samples.forEach(function (s) {
-        s.start(0, startTime);
-      });
+      for (var i=0; i<samples.length; i++){
+        for (var j=0; j<8; j++){
+          // destroy the nodes
+          samples[i][j].start(0, startTime);
+        }
+      }
 
       console.log("start all tracks startTime =" + startTime);
     };
