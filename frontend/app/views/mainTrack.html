@@ -11,9 +11,11 @@
   </table>
 </div>
 <div class="mtsongscontainer">
+  <waveform ng-repeat="track in tracks" waveform-url={{track}}></waveform>
+  <!--
   <div ng-repeat="i in getNumber(number) track by $index" class="mtsong">
       <canvas></canvas>
-  </div>
+  </div>-->
 </div>
 
 <div class="mtplay">

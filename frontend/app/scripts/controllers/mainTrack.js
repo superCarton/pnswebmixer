@@ -13,8 +13,12 @@ angular.module('frontendApp')
   .controller('MainTrackCtrl', function ($scope) {
 
 
-    var tracks = [];
+    /*
+    $scope.tracks = ["assets/loops/snare.mp3"];
+    $scope.showLoading = false;
+
     var buffers = []; // audio buffers decoded
+    $scope.buffers = buffers;
     var samples = []; // audiograph nodes
 
     // Master volume
@@ -31,7 +35,7 @@ angular.module('frontendApp')
     var bufferLoader;
     function loadAllSoundSamples() {
 
-      tracks = ["assets/loops/snare.mp3"];
+      var tracks = $scope.tracks;
 
       bufferLoader = new BufferLoader(
         context,
@@ -42,9 +46,13 @@ angular.module('frontendApp')
     }
 
     function finishedLoading(bufferList) {
+
       console.log("finished loading");
       buffers = bufferList;
 
+      $scope.showLoading = true;
+
+     // $scope.drawTrack(buffers[0]);
 
      // buildGraph(buffers);
       //playFrom(0);
@@ -183,22 +191,52 @@ angular.module('frontendApp')
     $scope.drawSong = function(canvas, index){
 
       // Object that draws a sample waveform in a canvas
-     /* var waveformDrawer = new WaveformDrawer();
+      var waveformDrawer = new WaveformDrawer();
 
       waveformDrawer.init(buffers[0], canvas, 'green');
 
       // First parameter = Y position (top left corner)
       // second = height of the sample drawing
-      waveformDrawer.drawWave(0, canvas.height); */
+      waveformDrawer.drawWave(0, canvas.height);
     };
 
 
 
     $scope.addTrack = function(){
-
-
-
       $scope.apply();
     };
 
   });
+
+angular.module('frontendApp')
+  .directive("waveform", function(){
+
+  return {
+    restrict: 'EA',
+    replace: true,
+    transclude: true,
+    scope: {
+      waveurl: '@waveformUrl',
+      loading: '=showLoading'
+    },
+    template: '<div>' +
+    '<canvas height=100 width=300></canvas>' +
+    '</div>',
+
+    link: function(scope, element, attr, $parent, $scope) {
+
+      // Object that draws a sample waveform in a canvas
+      var waveformDrawer = new WaveformDrawer();
+      var canvas = element[0].children[0];
+
+      $scope.$watch('loading', function(bool) {
+
+        waveformDrawer.init($scope.buffers[0], canvas, 'green');
+        // First parameter = Y position (top left corner)
+        // second = height of the sample drawing
+        waveformDrawer.drawWave(0, canvas.height);
+      });
+    }
+  */
+
+});
