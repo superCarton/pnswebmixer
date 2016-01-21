@@ -145,6 +145,11 @@ angular.module('frontendApp')
     var i = 0;
     var stopPlaying = false;
     var timer;
+
+    // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
+    // représente le nombre de blocks pour 1 temps
+    var pulsation = 2;
+
     var metronome = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8751.mp3");
     var kick = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8692.mp3");
     var snare = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8717.mp3");
@@ -181,7 +186,10 @@ angular.module('frontendApp')
         i = 0;
         return;
       } else if (i <= lightsIDs.length) {
-        timer = setTimeout(animateLights, 30000 / document.getElementById("myTempo").value);
+        // 60000 = 1 minute en ms
+        // divisé par la pulsation
+        // multiplié par le tempo = delay entre chaque beat
+        timer = setTimeout(animateLights, (60000 / pulsation) / document.getElementById("myTempo").value);
       } else {
         i = 0;
         animateLights();
