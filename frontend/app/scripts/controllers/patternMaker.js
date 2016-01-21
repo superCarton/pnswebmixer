@@ -197,7 +197,7 @@ angular.module('frontendApp')
         // 60000 = 1 minute en ms
         // divisé par la pulsation
         // multiplié par le tempo = delay entre chaque beat
-        timer = setTimeout(animateLights, (60000 / pulsation) / document.getElementById("myTempo").value);
+        timer = setTimeout(animateLights, computeDelay(1));
       } else {
         i = 0;
         animateLights();
@@ -247,4 +247,9 @@ angular.module('frontendApp')
         });
       }
     };
+
+    function computeDelay(i) {
+      return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
+    }
+
   });
