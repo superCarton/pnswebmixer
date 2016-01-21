@@ -30,7 +30,8 @@ angular.module('frontendApp')
     var timer;
 
     // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
-    var pulsation = 1;
+    // représente le nombre de blocks pour 1 temps
+    var pulsation = 2;
 
     var metronome = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8751.mp3");
     var kick = new Audio("http://s1download-universal-soundbank.com/mp3/sounds/8692.mp3");
