@@ -62,17 +62,18 @@ angular.module('frontendApp')
 
         // create 8 samples for each sample
         sources[i] = [];
+        trackVolumeNodes[i] = [];
         for (var j=0; j<8; j++){
 
           // each sound sample is the  source of a graph
           sources[i][j] = context.createBufferSource();
           sources[i][j].buffer = sample;
           // connect each sound sample to a vomume node
-          trackVolumeNodes[i] = context.createGain();
+          trackVolumeNodes[i][j] = context.createGain();
           // Connect the sound sample to its volume node
-          sources[i][j].connect(trackVolumeNodes[i]);
+          sources[i][j].connect(trackVolumeNodes[i][j]);
           // Connects all track volume nodes a single master volume node
-          trackVolumeNodes[i].connect(masterVolumeNode);
+          trackVolumeNodes[i][j].connect(masterVolumeNode);
           // Connect the master volume to the speakers
           masterVolumeNode.connect(context.destination);
         }
@@ -93,14 +94,14 @@ angular.module('frontendApp')
 
     };
 
+    var delays = [0, 250, 500, 750, 1000, 1250, 1500, 1750];
     var playFrom = function(startTime) {
 
       masterVolumeNode.gain.value = 1;
 
       for (var i=0; i<samples.length; i++){
         for (var j=0; j<8; j++){
-          // destroy the nodes
-          samples[i][j].start(0, startTime);
+          samples[i][j].start(delays[j], 0);
         }
       }
 
