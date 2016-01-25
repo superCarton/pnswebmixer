@@ -6,14 +6,14 @@
     <div ng-repeat="light in [2,3,4,5,6,7,8]" class="col-md-1 section light-tempo">
       <i id="light-{{light}}" class="fa fa-circle-thin"></i></div>
   </div>
-  <div class="row patterns" ng-repeat="obj in droppedObjects1">
+  <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
     <div class="col-md-2 section buttons-mute-solo">
       <button>Mute</button>
       <button>Solo</button>
     </div>
     <div class="col-md-2 section name">{{obj}}</div>
-    <div ng-repeat="button in [1,2,3,4,5,6,7,8]" class="col-md-1 section step-sequencer-button"><i
-      ng-click="toggleButton($event)" class="fa fa-circle-thin"></i></div>
+    <div ng-repeat="button in [0,1,2,3,4,5,6,7]" class="col-md-1 section step-sequencer-button"><i
+      ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}} data-active="false"></i></div>
   </div>
 </div>
 
