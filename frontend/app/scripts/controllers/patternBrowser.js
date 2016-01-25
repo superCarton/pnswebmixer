@@ -8,6 +8,10 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternBrowserCtrl', function () {
+  .controller('PatternBrowserCtrl', ["$scope", 'Samples', function ($scope, Samples) {
 
-  });
+    Samples.all(function(samples){
+      $scope.samples = samples;
+    })
+
+  }]);
