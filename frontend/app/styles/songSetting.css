@@ -25,7 +25,7 @@ div.cross-fade {
   display: none;
 }
 canvas#song-visualize {
-  height: 55px;
+  height: 200px;
   width: 400px;
   border: 1px solid black;
 }

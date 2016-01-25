@@ -70,7 +70,7 @@ angular.module('frontendApp')
       for(var i = 0; i < $scope.analyser.frequencyBinCount; i++) {
 
         var v = $scope.dataArray[i] / 128.0;
-        var y = v * 55/2;
+        var y = v * 55;
 
         if(i === 0) {
           $scope.canvasCtx.moveTo(x, y);
@@ -93,7 +93,7 @@ angular.module('frontendApp')
       var x = 0;
       $scope.canvasBarLength = $scope.analyser.frequencyBinCount;
       $scope.canvasBarUnit = $scope.analyser.frequencyBinCount / 6;
-      $scope.colors = ['#70CA5D','#FA6B67', "#3CC9E4", "#EC945E", "#7189DE", "#E798DC", "#E798DC"];
+      $scope.colors = ['#FF0000','#00FF0C', "#0000FF", "#EFF704", "#7189DE", "#00FFED", "#FF00D0"];
       for(var i = 0; i <  $scope.analyser.frequencyBinCount; i++) {
         barHeight = $scope.dataArray[i] / 2;
         $scope.canvasBarCtx.fillStyle = $scope.colors[Math.floor(i / $scope.canvasBarUnit)];
