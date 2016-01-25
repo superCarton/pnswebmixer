@@ -1,6 +1,6 @@
 <table class="table table-hover" id="loopList">
   <tbody>
-  <tr ng-repeat="loop in loopList" ng-drag="true" ng-drag-data="loop" data-allow-transform="false" class="ng-binding" draggable="false">
+  <tr ng-repeat="loop in loopList" ng-drag="true" ng-drag-data="loop" data-allow-transform="true" class="ng-binding" draggable="false">
     <td>{{loop}}</td>
     <td><button class="loop-play pull-right" ng-click="playSample($index)"><i class="fa fa-play"></i></button></td>
   </tr>
