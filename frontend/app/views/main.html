@@ -1,4 +1,7 @@
 <div class="row topFloor">
+  <div class="col-md-12 login">
+    <section class="login-container" ng-include="'views/login.html'" ng-controller="LoginCtrl"></section>
+  </div>
   <div class="col-md-12 section">
     <section class="mainTrack" ng-include="'views/mainTrack.html'" ng-controller="MainTrackCtrl"></section>
   </div>
@@ -15,10 +18,10 @@
   <div class="col-md-4 section">
     <section class="patternBrowser" ng-include="'views/patternBrowser.html'" ng-controller="PatternBrowserCtrl"></section>
   </div>
-  <div class="col-md-4 section">
-    <section class="equalizer" ng-include="'views/equalizer.html'" ng-controller="EqualizerCtrl"></section>
-  </div>
   <div class="col-md-4 section loopBrowsers">
     <section class="loopBrowser" ng-include="'views/loopBrowser.html'" ng-controller="LoopBrowserCtrl"></section>
+  </div>
+  <div class="col-md-10 section">
+    <section class="equalizer" ng-include="'views/equalizer.html'" ng-controller="EqualizerCtrl"></section>
   </div>
 </div>

@@ -1,0 +1,26 @@
+div.navbar-header1.login {
+  height: 50px;
+  background-color: #071e3f;
+  width: 100%;
+}
+div.navbar-header1.login button,
+div.navbar-header1.login a {
+  float: right;
+  margin-right: 10px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+  background-color: #071e3f;
+  border: none;
+}
+div.login-form {
+  text-align: center;
+  margin-top: 50px;
+}
+div.login-form input {
+  margin-bottom: 10px;
+}
+div.login-form button {
+  margin-bottom: 20px;
+}
