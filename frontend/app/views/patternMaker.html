@@ -1,19 +1,22 @@
 <div class="round-corners" ng-drop="true" ng-drop-success="onDropComplete1($data)">
-  <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row">
-    <div class="col-md-1 col-md-offset-4 section light-tempo"><i
-      id="light-1" class="fa fa-circle-thin"></i></div>
-    <div ng-repeat="light in [2,3,4,5,6,7,8]" class="col-md-1 section light-tempo">
-      <i id="light-{{light}}" class="fa fa-circle-thin"></i></div>
+    <div class="col-md-8 col-md-offset-4 lights">
+      <span ng-repeat="light in lightsIDs" class="light-tempo"><i id="{{light}}"
+        class="fa fa-circle-thin"></i></span>
+    </div>
   </div>
+  <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
     <div class="col-md-2 section buttons-mute-solo">
       <button>Mute</button>
       <button>Solo</button>
     </div>
     <div class="col-md-2 section name">{{obj}}</div>
-    <div ng-repeat="button in [0,1,2,3,4,5,6,7]" class="col-md-1 section step-sequencer-button"><i
-      ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}} data-active="false"></i></div>
+    <div class="col-md-8 step-sequencer">
+    <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i id="b-{{button}}"
+      ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}}
+      data-active="false"></i></span>
+    </div>
   </div>
 </div>
 

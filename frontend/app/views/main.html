@@ -1,14 +1,14 @@
 <div class="row topFloor">
   <div class="col-md-12 section">
-    <section class="mainTrack" ng-include="'views/mainTrack.html'" ng-controller="MainTrackCtrl"></section>
+      <section class="patternMaker" ng-include="'views/patternMaker.html'" ng-controller="PatternMakerCtrl"></section>
   </div>
 </div>
 <div class="row middleFloor">
   <div class="col-md-6 section">
     <section class="songSettings" ng-include="'views/songSettings.html'" ng-controller="SongSettingsCtrl"></section>
   </div>
-  <div class="col-md-6 section">
-    <section class="patternMaker" ng-include="'views/patternMaker.html'" ng-controller="PatternMakerCtrl"></section>
+  <div class="col-md-6 section loopBrowsers">
+    <section class="loopBrowser" ng-include="'views/loopBrowser.html'" ng-controller="LoopBrowserCtrl"></section>
   </div>
 </div>
 <div class="row bottomFloor">
@@ -17,8 +17,5 @@
   </div>
   <div class="col-md-4 section">
     <section class="equalizer" ng-include="'views/equalizer.html'" ng-controller="EqualizerCtrl"></section>
-  </div>
-  <div class="col-md-4 section loopBrowsers">
-    <section class="loopBrowser" ng-include="'views/loopBrowser.html'" ng-controller="LoopBrowserCtrl"></section>
   </div>
 </div>

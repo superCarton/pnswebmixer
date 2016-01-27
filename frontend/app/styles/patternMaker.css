@@ -10,14 +10,7 @@
 }
 
 [ng-drop].drag-enter p {
-  font-size: large;
-}
-
-.step-sequencer-button
-{
-  text-align: center;
-  font-size: x-large;
-  color: deepskyblue;
+  font-size: medium;
 }
 
 .patterns
@@ -31,7 +24,7 @@
   background-color: #ebebeb;
   padding-left: 10px;
   overflow-y: auto;
-  max-height: 149px;
+  max-height: 300px;
 }
 
 .round-corners p
@@ -114,11 +107,39 @@
   font-size: 10px;
 }
 
+.lights
+{
+  padding-left: 45px;
+}
+
+.step-sequencer
+{
+  padding-left: 45px;
+}
+
+.step-sequencer-button
+{
+  text-align: center;
+  font-size: x-large;
+  margin-right: 20px;
+}
+
+#b-0,#b-1,#b-2,#b-3,#b-8,#b-9,#b-10,#b-11
+{
+  color: deepskyblue;
+}
+
+#b-4,#b-5,#b-6,#b-7,#b-12,#b-13,#b-14,#b-15
+{
+  color: red;
+}
+
 .light-tempo
 {
   text-align: center;
-  font-size: small;
+  font-size: x-large;
   color: green;
+  margin-right: 20px;
 }
 
 @font-face {
