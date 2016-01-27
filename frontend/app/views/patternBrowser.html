@@ -1,1 +1,11 @@
 Liste des pattern : pattern browser
+
+<table class="table table-hover" id="patternList">
+  <tbody>
+  <tr ng-repeat="sample in samples" ng-drag="true" ng-drag-data="loop" data-allow-transform="false" class="ng-binding" draggable="false">
+    <td>{{sample.name}}</td>
+    <td><a ng-href="#/allComments/{{sample._id}}">Comments</a></td>
+    <td><button class="loop-play pull-right" ><i class="fa fa-play"></i></button></td>
+  </tr>
+  </tbody>
+</table>
