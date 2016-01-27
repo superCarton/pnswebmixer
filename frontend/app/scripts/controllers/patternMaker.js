@@ -108,6 +108,8 @@ angular.module('frontendApp')
       $scope.tracks = [];
       switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
         "false", "false", "false", "false", "false", "false", "false", "false"]);
+      muteMatrix.push(false);
+      soloMatrix.push(false);
       $scope.droppedObjects1.forEach(function (s) {
         $scope.tracks.push("assets/loops/" + s);
       });
@@ -155,6 +157,19 @@ angular.module('frontendApp')
         $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
         $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
       }
+    }
+
+    /******************* MUTE + SOLO + VOLUME *****************/
+
+    var muteMatrix = [];
+    var soloMatrix = [];
+
+    $scope.toggleMute = function (index) {
+      muteMatrix[index] = !muteMatrix[index];
+    }
+
+    $scope.toggleSolo = function (index) {
+      soloMatrix[index] = !soloMatrix[index];
     }
 
     /************* BEATMAKING ****************/

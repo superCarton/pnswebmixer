@@ -8,11 +8,11 @@
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
     <div class="col-md-1 section buttons-mute-solo-volume">
-      <button>Mute</button>
-      <button>Solo</button>
+      <button ng-click="toggleMute($index)">Mute</button>
+      <button ng-click="toggleSolo($index)">Solo</button>
     </div>
-    <div id="volume-slider" class="col-md-1 section buttons-mute-solo-volume">
-      <input ng-model="volume" type="range" min="0" max="1" value="1" step="0.01">
+    <div class="col-md-1 section buttons-mute-solo-volume volume-slider">
+      <input type="range" min="0" max="1" value="1" step="0.01">
     </div>
     <div class="col-md-1 section name">{{obj}}</div>
     <div class="col-md-9 step-sequencer">
