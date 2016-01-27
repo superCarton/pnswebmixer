@@ -32,19 +32,24 @@
   text-align: center;
 }
 
-.buttons-mute-solo
+.buttons-mute-solo-volume
 {
   font-size: x-small;
 }
 
-.buttons-mute-solo, .name
+.buttons-mute-solo-volume, .name
 {
   margin-top: 6px;
 }
 
-.buttons-mute-solo button
+.buttons-mute-solo-volume button
 {
   margin-right: 3px;
+}
+
+#volume-slider
+{
+  padding-right: 15px;
 }
 
 .patterns .name
