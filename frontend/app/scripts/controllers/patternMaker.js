@@ -174,13 +174,12 @@ angular.module('frontendApp')
     $scope.toggleMute = function (index) {
       muteMatrix[index] = !muteMatrix[index];
       $("#mute-" + index).toggleClass("mute");
-      console.log(muteMatrix);
 
-      /*if (!stopPlaying) {
-       trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-       muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
-       })
-       }*/
+      if (isPlaying) {
+        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
+          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
+        })
+      }
 
     }
 
@@ -193,8 +192,6 @@ angular.module('frontendApp')
           soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
         }
       }
-      console.log("MUTE:" + muteMatrix);
-      console.log("SOLO:" + soloMatrix);
     }
 
     /************* BEATMAKING ****************/
