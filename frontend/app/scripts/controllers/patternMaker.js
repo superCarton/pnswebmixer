@@ -93,6 +93,18 @@ angular.module('frontendApp')
       }
     }
 
+    function muteLoop(index) {
+      for (var j = 0; j < 16; j++) {
+        trackVolumeNodes[index][j].gain.value = 0;
+      }
+    }
+
+    function unmuteLoop(index) {
+      for (var j = 0; j < 16; j++) {
+        trackVolumeNodes[index][j].gain.value = 1;
+      }
+    }
+
     var context = initAudioContext(); // Init audio context
 
 
@@ -115,6 +127,7 @@ angular.module('frontendApp')
       });
       $scope.stopBeat();
       loadAllSoundSamples();
+      //buildGraph(buffers);
     }
 
 
@@ -165,11 +178,20 @@ angular.module('frontendApp')
     var soloMatrix = [];
 
     $scope.toggleMute = function (index) {
+      if (soloMatrix[index]) {
+        $scope.toggleSolo(index);
+      }
       muteMatrix[index] = !muteMatrix[index];
+      $("#mute-" + index).toggleClass("mute");
+      muteMatrix[index] ? unmuteLoop(index) : muteLoop(index);
     }
 
     $scope.toggleSolo = function (index) {
+      if (muteMatrix[index]) {
+        $scope.toggleMute(index);
+      }
       soloMatrix[index] = !soloMatrix[index];
+      $("#solo-" + index).toggleClass("solo");
     }
 
     /************* BEATMAKING ****************/

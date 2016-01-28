@@ -47,6 +47,21 @@
   margin-right: 3px;
 }
 
+.mute
+{
+  background-color: red;
+  text-decoration: none;
+  border: 2px solid black ;
+  color: white;
+}
+
+.solo
+{
+  background-color: yellow;
+  text-decoration: none;
+  border: 2px solid black ;
+}
+
 .volume-slider
 {
   padding-right: 15px;
