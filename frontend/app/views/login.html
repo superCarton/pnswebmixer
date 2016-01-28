@@ -1,4 +1,4 @@
-<div id="login-content" ng-controller="LoginCtrl" ng-init = "init();">
+<div id="login-content" ng-controller="LoginCtrl" ng-init="init();">
   <div class="navbar-header1 login">
     <a class="username" ng-show="username">{{first_name}} {{last_name}}</a>
     <button class="navbar-brand1" id="signUp" ng-show="register" ng-click="showSignUp()">Sign up</button>
@@ -19,7 +19,6 @@
     <div class="row">
       <input type="email" placeholder="Email" pattern="[^ @]*@[^ @]*" value="" ng-model="email" name="myEmail">
     </div>
-
 
     <div class="row">
       <input type="password" name="myPwd" placeholder="Password" ng-model="pwd">

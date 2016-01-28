@@ -1,28 +1,32 @@
-<div class="row topFloor">
-  <div class="col-md-12 login">
-    <section class="login-container" ng-include="'views/login.html'" ng-controller="LoginCtrl"></section>
+<div class="row">
+  <div class="col-xs-12 section">
+    <h1>Polytech Web Mixer</h1>
   </div>
-  <div class="col-md-12 section">
+</div>
+<div class="row topFloor">
+  <div class="col-xs-12 section">
     <section class="patternMaker" ng-include="'views/patternMaker.html'" ng-controller="PatternMakerCtrl"></section>
   </div>
 </div>
 <div class="row middleFloor">
-  <div class="col-md-6 section">
+  <div class="col-xs-6 section">
     <section class="songSettings" ng-include="'views/songSettings.html'" ng-controller="SongSettingsCtrl"></section>
   </div>
-  <div class="col-md-6 section loopBrowsers">
+  <div class="col-xs-6 section loopBrowsers">
     <section class="loopBrowser" ng-include="'views/loopBrowser.html'" ng-controller="LoopBrowserCtrl"></section>
   </div>
 </div>
 <div class="row bottomFloor">
-  <div class="col-md-4 section">
-    <section class="patternBrowser" ng-include="'views/patternBrowser.html'"
-             ng-controller="PatternBrowserCtrl"></section>
-  </div>
-  <div class="col-md-4 section loopBrowsers">
+  <!--<div class="col-xs-4 section">
+    <section class="patternBrowser" ng-include="'views/patternBrowser.html'" ng-controller="PatternBrowserCtrl"></section>
+  </div>-->
+  <div class="col-xs-6 section loopBrowsers">
     <section class="loopBrowser" ng-include="'views/loopBrowser.html'" ng-controller="LoopBrowserCtrl"></section>
   </div>
-  <div class="col-md-10 section">
+  <!--<div class="col-md-10 section">
     <section class="equalizer" ng-include="'views/equalizer.html'" ng-controller="EqualizerCtrl"></section>
+  </div>-->
+  <div class="col-xs-6 login">
+    <section class="login-container" ng-include="'views/login.html'" ng-controller="LoginCtrl"></section>
   </div>
 </div>
