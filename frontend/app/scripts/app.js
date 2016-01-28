@@ -25,6 +25,11 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'main'
       })
+      .when('/allComments/:link',{
+        templateUrl: 'views/allComments.html',
+        controller: 'AllcommentsCtrl',
+        controllerAs: 'allComments'
+      })
       .otherwise({
         redirectTo: '/'
       });

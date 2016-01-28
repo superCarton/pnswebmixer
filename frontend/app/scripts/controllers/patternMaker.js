@@ -54,7 +54,7 @@ angular.module('frontendApp')
         // create 8 samples for each sample
         sources[i] = [];
         trackVolumeNodes[i] = [];
-        for (var j = 0; j < 8; j++) {
+        for (var j = 0; j < 16; j++) {
           // each sound sample is the  source of a graph
           sources[i][j] = context.createBufferSource();
           sources[i][j].buffer = sample;
@@ -73,7 +73,7 @@ angular.module('frontendApp')
 
     function stopAllTracks() {
       for (var i = 0; i < samples.length; i++) {
-        for (var j = 0; j < 8; j++) {
+        for (var j = 0; j < 16; j++) {
           // destroy the nodes
           if (switchMatrix[i][j] == "true") {
             samples[i][j].stop(0);
@@ -85,7 +85,7 @@ angular.module('frontendApp')
     function playFrom() {
       masterVolumeNode.gain.value = 1;
       for (var i = 0; i < samples.length; i++) {
-        for (var j = 0; j < 8; j++) {
+        for (var j = 0; j < 16; j++) {
           if (switchMatrix[i][j] == "true") {
             samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0, computeDelay(1) / 1000);
           }
@@ -106,7 +106,10 @@ angular.module('frontendApp')
         $scope.droppedObjects1.push(data);
       }
       $scope.tracks = [];
-      switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false"]);
+      switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
+        "false", "false", "false", "false", "false", "false", "false", "false"]);
+      muteMatrix.push(false);
+      soloMatrix.push(false);
       $scope.droppedObjects1.forEach(function (s) {
         $scope.tracks.push("assets/loops/" + s);
       });
@@ -117,7 +120,8 @@ angular.module('frontendApp')
 
     /***************************     ANIMATION LUMIERES     **********************************/
 
-    var lightsIDs = ["#light-1", "#light-2", "#light-3", "#light-4", "#light-5", "#light-6", "#light-7", "#light-8"];
+    $scope.lightsIDs = ["light-1", "light-2", "light-3", "light-4", "light-5", "light-6", "light-7", "light-8",
+      "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
     var i = 0;
     var stopPlaying = false;
@@ -138,7 +142,7 @@ angular.module('frontendApp')
         isPlaying == !isPlaying;
         i = 0;
         return;
-      } else if (i <= lightsIDs.length) {
+      } else if (i <= $scope.lightsIDs.length) {
         timer = setTimeout(animateLights, computeDelay(1));
       } else {
         i = 0;
@@ -148,14 +152,27 @@ angular.module('frontendApp')
 
     function animateLight(index) {
       if (index == 0) {
-        $(lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
       } else {
-        $(lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-        $(lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
       }
     }
 
-    /***** BEATMAKING ****/
+    /******************* MUTE + SOLO + VOLUME *****************/
+
+    var muteMatrix = [];
+    var soloMatrix = [];
+
+    $scope.toggleMute = function (index) {
+      muteMatrix[index] = !muteMatrix[index];
+    }
+
+    $scope.toggleSolo = function (index) {
+      soloMatrix[index] = !soloMatrix[index];
+    }
+
+    /************* BEATMAKING ****************/
 
     var switchMatrix = [];
 
@@ -201,9 +218,9 @@ angular.module('frontendApp')
         clearTimeout(timer);
         stopPlaying = true;
         $("#play").toggleClass("playing");
-        lightsIDs.forEach(function (light) {
-          if ($(light).hasClass("fa-circle")) {
-            $(light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
+        $scope.lightsIDs.forEach(function (light) {
+          if ($('#' + light).hasClass("fa-circle")) {
+            $('#' + light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
           }
         });
       }
@@ -214,7 +231,7 @@ angular.module('frontendApp')
 
     // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
     // représente le nombre de blocks pour 1 temps
-    var pulsation = 2;
+    var pulsation = 4;
 
     function computeDelay(i) {
       return i * ((60000 / pulsation) / document.getElementById("myTempo").value);

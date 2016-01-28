@@ -20,10 +20,10 @@ div {
 section {
   min-height: 220px;
   margin-top: 2px;
-
   background-color: #FFFFFF;
   border: 1px solid black;
 }
+
 section.login-container {
   min-height: 20px;
 }
