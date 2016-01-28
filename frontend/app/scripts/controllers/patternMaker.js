@@ -139,7 +139,7 @@ angular.module('frontendApp')
 
     function animateLights() {
       if (i == 0) {
-        //stopAllTracks();
+        stopAllTracks();
         buildGraph(buffers);
         playFrom();
       }
