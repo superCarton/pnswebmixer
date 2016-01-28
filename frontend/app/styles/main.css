@@ -1,12 +1,20 @@
 body {
   min-height: 100%;
-  background-color: #FFFFFF;
   color: black;
+  background-image: url("../images/bg.png");
+  background-repeat: repeat;
 }
+
 div {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+}
+
+.container {
+  border-radius: 10px;
+  border: 3px solid grey;
+  background-color: #e6e3e0;
 }
 
 .topFloor, .middleFloor, .bottomFloor {
@@ -19,11 +27,16 @@ div {
 
 section {
   min-height: 220px;
-  margin-top: 2px;
+  margin: 5px 0 5px 0;
   background-color: #FFFFFF;
-  border: 1px solid black;
+  border: 3px solid grey;
 }
 
 section.login-container {
   min-height: 20px;
+}
+
+h1 {
+  color: darkgrey;
+  text-align: center;
 }
