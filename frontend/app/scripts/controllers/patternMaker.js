@@ -67,6 +67,8 @@ angular.module('frontendApp')
           // Connect the master volume to the speakers
           masterVolumeNode.connect(context.destination);
 
+          trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
+
           // Checking for mute loop
           if (muteMatrix[i]) {
             trackVolumeNodes[i][j].gain.value = 0;
@@ -181,7 +183,7 @@ angular.module('frontendApp')
 
       if (isPlaying) {
         trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
+          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + index).val()
         })
       }
 
@@ -204,9 +206,17 @@ angular.module('frontendApp')
       if (isPlaying) {
         for (var i = 0; i < muteMatrix.length; i++) {
           trackVolumeNodes[i].forEach(function (trackVolumeNode) {
-            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
+            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + i).val()
           })
         }
+      }
+    }
+
+    $scope.changeVolume = function (index) {
+      if (isPlaying && !muteMatrix[index]) {
+        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
+          trackVolumeNode.gain.value = $("#vol-" + index).val();
+        })
       }
     }
 
