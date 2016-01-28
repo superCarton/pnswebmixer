@@ -49,7 +49,7 @@ angular.module('frontendApp')
       var sources = [];
       // Create a single gain node for master volume
       masterVolumeNode = context.createGain();
-      console.log("in build graph, bufferList.size = " + bufferList.length);
+      //console.log("in build graph, bufferList.size = " + bufferList.length);
       bufferList.forEach(function (sample, i) {
         // create 8 samples for each sample
         sources[i] = [];
@@ -66,6 +66,12 @@ angular.module('frontendApp')
           trackVolumeNodes[i][j].connect(masterVolumeNode);
           // Connect the master volume to the speakers
           masterVolumeNode.connect(context.destination);
+
+          // Checking for mute loop
+          if (muteMatrix[i]) {
+            trackVolumeNodes[i][j].gain.value = 0;
+          }
+
         }
       });
       samples = sources;
@@ -87,21 +93,9 @@ angular.module('frontendApp')
       for (var i = 0; i < samples.length; i++) {
         for (var j = 0; j < 16; j++) {
           if (switchMatrix[i][j] == "true") {
-            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0, computeDelay(1) / 1000);
+            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0);
           }
         }
-      }
-    }
-
-    function muteLoop(index) {
-      for (var j = 0; j < 16; j++) {
-        trackVolumeNodes[index][j].gain.value = 0;
-      }
-    }
-
-    function unmuteLoop(index) {
-      for (var j = 0; j < 16; j++) {
-        trackVolumeNodes[index][j].gain.value = 1;
       }
     }
 
@@ -127,7 +121,6 @@ angular.module('frontendApp')
       });
       $scope.stopBeat();
       loadAllSoundSamples();
-      //buildGraph(buffers);
     }
 
 
@@ -178,20 +171,31 @@ angular.module('frontendApp')
     var soloMatrix = [];
 
     $scope.toggleMute = function (index) {
-      if (soloMatrix[index]) {
-        $scope.toggleSolo(index);
-      }
       muteMatrix[index] = !muteMatrix[index];
       $("#mute-" + index).toggleClass("mute");
-      muteMatrix[index] ? unmuteLoop(index) : muteLoop(index);
+      console.log(muteMatrix);
+
+
+      if (isPlaying) {
+        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
+          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
+        })
+      }
+
+
     }
 
     $scope.toggleSolo = function (index) {
-      if (muteMatrix[index]) {
-        $scope.toggleMute(index);
-      }
       soloMatrix[index] = !soloMatrix[index];
       $("#solo-" + index).toggleClass("solo");
+
+      if (soloMatrix.contains(true)) {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
+        }
+      }
+      console.log("MUTE:" + muteMatrix);
+      console.log("SOLO:" + soloMatrix);
     }
 
     /************* BEATMAKING ****************/
