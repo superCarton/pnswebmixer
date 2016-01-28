@@ -172,7 +172,11 @@ angular.module('frontendApp')
     var soloMatrix = [];
 
     $scope.toggleMute = function (index) {
-      muteMatrix[index] = !muteMatrix[index];
+      if (soloMatrix[index]) {
+        muteMatrix[index] = false;
+      } else {
+        muteMatrix[index] = !muteMatrix[index];
+      }
       $("#mute-" + index).toggleClass("mute");
 
       if (isPlaying) {
@@ -187,9 +191,21 @@ angular.module('frontendApp')
       soloMatrix[index] = !soloMatrix[index];
       $("#solo-" + index).toggleClass("solo");
 
-      if (soloMatrix.contains(true)) {
+      if (soloMatrix.indexOf(true) != -1) {
         for (var i = 0; i < muteMatrix.length; i++) {
           soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
+        }
+      } else {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          $("#mute-" + i).hasClass("mute") ? muteMatrix[i] = true : muteMatrix[i] = false
+        }
+      }
+
+      if (isPlaying) {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          trackVolumeNodes[i].forEach(function (trackVolumeNode) {
+            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = 1
+          })
         }
       }
     }
