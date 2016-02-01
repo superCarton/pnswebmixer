@@ -7,28 +7,36 @@
   </div>
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
-    <div class="col-md-1 section buttons-mute-solo-volume">
+    <div class="col-xs-1 section buttons-mute-solo-volume">
       <button id="mute-{{$index}}" ng-click="toggleMute($index)">Mute</button>
       <button id="solo-{{$index}}" ng-click="toggleSolo($index)">Solo</button>
     </div>
 
-    <div class="col-md-1 section buttons-mute-solo-volume volume-slider">
+    <div class="col-xs-1 section buttons-mute-solo-volume volume-slider">
       <input id="vol-{{$index}}" ng-model="tools.volume" ng-change="changeVolume($index)" type="range" min="0" max="1" value="1" step="0.01">
     </div>
-    <div class="col-md-1 section name">{{obj}}</div>
-    <div class="col-md-8 section step-sequencer">
+    <div class="col-xs-1 section name">{{obj}}</div>
+    <div class="col-xs-8 section step-sequencer">
     <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i id="b-{{button}}"
       ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}}
       data-active="false"></i></span>
     </div>
-    <div class="col-md-1 section delete">
+    <div class="col-xs-1 section delete">
       <button id="delete-{{$index}}" ng-click="deleteLoop($index)"><i class="fa fa-times"></i></button>
     </div>
   </div>
 </div>
 
 <div class="row tools">
-  <div class="col-xs-6 play-stop-buttons">
+  <form id="save-form">
+  <div class="col-xs-3 save-field">
+    <input required ng-model="pattern_title" id="pattern-name" type="text" placeholder="Entez un nom">
+  </div>
+    <div class="col-xs-1 save-disket">
+    <button id="disket" ng-click="save_pattern(pattern_title)"><i class="fa fa-save"></i></button>
+  </div>
+  </form>
+  <div class="col-xs-2 play-stop-buttons">
     <button id="play" ng-click="playBeat()" disabled="true"><i class="fa fa-play"></i></button>
     <button id="stop" ng-click="stopBeat()"><i class="fa fa-stop"></i></button>
   </div>

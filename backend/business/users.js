@@ -17,12 +17,14 @@ function getAllUsers(callback) {
 }
 
 function createAccount(body, callback) {
-    if (body.email != undefined) {
+    console.log(body);
+    if (body.email != undefined && body.email != '') {
         checkEmailValidity(body.email, function (result) {
             if (!result) {
                 callback({status: 'fail', value: 'email already taken'})
             } else {
-                if (body.last_name != undefined && body.first_name != undefined && body.password != undefined) {
+                if (body.last_name != undefined && body.first_name != undefined && body.password != undefined
+                    && body.last_name != '' && body.first_name != '' && body.password != '') {
                     var user = new User({
                         last_name: body.last_name,
                         first_name: body.first_name,
