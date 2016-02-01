@@ -24,6 +24,8 @@ function getUserPattern(req, res){
 }
 
 function savePattern(req, res){
+    console.log((new Date()).toString() + ' : Save pattern');
+    console.log(req.body);
     if (req.body.user_id != undefined) {
         pattern.save(req.body, function (result) {
             res.send(result)

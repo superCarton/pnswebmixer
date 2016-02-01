@@ -48,6 +48,7 @@ angular.module('frontendApp')
         "email" : $scope.email,
         "password" : $scope.pwd
       };
+
       user.register($scope.signUpContent, function(data) {
         $scope.loginButton = true;
         $scope.registerButton = false;
@@ -59,7 +60,7 @@ angular.module('frontendApp')
         console.log(error);
         return;
       });
-    }
+    };
 
     $scope.logIn =  function() {
       $scope.loginContent = {
@@ -78,7 +79,8 @@ angular.module('frontendApp')
         console.log(error);
         return;
       });
-    }
+    };
+
     $scope.showLogout = function() {
       $scope.logout = false;
       $scope.login  = true;
