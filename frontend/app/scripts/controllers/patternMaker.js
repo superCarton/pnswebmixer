@@ -220,6 +220,17 @@ angular.module('frontendApp')
       }
     }
 
+    /***************** DELETE TRACK ***********/
+    $scope.deleteLoop = function (index) {
+      $scope.stopBeat();
+      $scope.droppedObjects1.splice(index,1);
+      $scope.tracks.splice(index,1);
+      muteMatrix.splice(index,1);
+      soloMatrix.splice(index,1);
+      switchMatrix.splice(index,1);
+      loadAllSoundSamples();
+    }
+
     /************* BEATMAKING ****************/
 
     var switchMatrix = [];
