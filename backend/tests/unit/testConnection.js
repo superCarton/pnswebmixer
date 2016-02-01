@@ -5,10 +5,10 @@
 var assert = require('assert');
 var mongoose = require('../../connector/mongodb');
 
-describe('Test the validity of the Mongo database,', function(){
+suite('Test the validity of the Mongo database,', function(){
 
-    describe('If the connection is open return true :', function(){
-        it('If the connection is open should return true', function () {
+    suite('If the connection is open return true :', function(){
+        test('If the connection is open should return true', function () {
             assert.equal(mongoose.connections[0]._hasOpened, true)
         })
     })
