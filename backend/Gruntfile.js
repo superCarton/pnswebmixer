@@ -13,7 +13,7 @@ module.exports = function (grunt) {
             },
             build: {
                 options: {
-                    script: 'bin/pns_drone_delivery_server.js'
+                    script: 'bin/webMixer.js'
                 }
             }
         },
@@ -32,4 +32,5 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', function(){
         grunt.task.run(['express:build','watch']);
     });
+
 };
