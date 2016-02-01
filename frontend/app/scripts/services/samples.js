@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('frontendApp')
-  .factory('Samples',["$http",'$rootScope', function($http, $rootScope){
+  .factory('samplesByUsersFactory',["$http",'$rootScope', function($http, $rootScope){
     var obj = {
       all : function(callback){
         $http.get("http://" + $rootScope.backendURL + "/samples/collection")

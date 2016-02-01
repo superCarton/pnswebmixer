@@ -7,59 +7,53 @@ var mongoose = require('../connector/mongodb');
 const url = 'http://localhost:4000/users/description/';
 
 function getAllUsers(callback) {
-    if (mongoose.connections[0]._hasOpened) {
-        User.find(function (err, result) {
-            if (err) {
-                callback({status: 'fail', value: err})
-            } else {
-                callback({status: 'success', value: result})
-            }
-        })
-    } else {
-        callback({status: 'fail', value: 'connection should be open'})
-    }
+    User.find(function (err, result) {
+        if (err) {
+            callback({status: 'fail', value: err})
+        } else {
+            callback({status: 'success', value: result})
+        }
+    })
 }
 
 function createAccount(body, callback) {
-    if (body.email != undefined) {
-        if (mongoose.connections[0]._hasOpened) {
-            checkEmailValidity(body.email, function (result) {
-                if (!result) {
-                    callback({status: 'fail', value: 'email already taken'})
+    console.log(body);
+    if (body.email != undefined && body.email != '') {
+        checkEmailValidity(body.email, function (result) {
+            if (!result) {
+                callback({status: 'fail', value: 'email already taken'})
+            } else {
+                if (body.last_name != undefined && body.first_name != undefined && body.password != undefined
+                    && body.last_name != '' && body.first_name != '' && body.password != '') {
+                    var user = new User({
+                        last_name: body.last_name,
+                        first_name: body.first_name,
+                        birth_date: body.birth_date,
+                        email: body.email,
+                        password: body.password
+                    });
+                    user.save(function (err, user) {
+                        if (err) {
+                            callback({status: 'fail', value: err})
+                        } else {
+                            user.description = url + user._id;
+                            user.save(function (err, new_user) {
+                                var result = new_user;
+                                if (err) {
+                                    callback({status: 'fail', value: err})
+                                } else {
+                                    // Whaaaat the fuuuuck ??
+                                    delete result.password;
+                                    callback({status: 'success', value: result})
+                                }
+                            })
+                        }
+                    })
                 } else {
-                    if (body.last_name != undefined && body.first_name != undefined && body.password != undefined) {
-                        var user = new User({
-                            last_name: body.last_name,
-                            first_name: body.first_name,
-                            birth_date: body.birth_date,
-                            email: body.email,
-                            password: body.password
-                        });
-                        user.save(function (err, user) {
-                            if (err) {
-                                callback({status: 'fail', value: err})
-                            } else {
-                                user.description = url + user._id;
-                                user.save(function (err, new_user) {
-                                    var result = new_user;
-                                    if (err) {
-                                        callback({status: 'fail', value: err})
-                                    } else {
-                                        // Whaaaat the fuuuuck ??
-                                        delete result.password;
-                                        callback({status: 'success', value: result})
-                                    }
-                                })
-                            }
-                        })
-                    } else {
-                        callback({status: 'fail', value: 'body params are incorrect'})
-                    }
+                    callback({status: 'fail', value: 'body params are incorrect'})
                 }
-            })
-        } else {
-            callback({status: 'fail', value: 'connection with mongoDB should be open'})
-        }
+            }
+        })
     } else {
         callback({status: 'fail', value: 'email and password are required'})
     }
@@ -122,6 +116,26 @@ function dropTableUser(callback) {
     })
 }
 
+function removeOne(body, callback) {
+    User.findOne({email: body.email, password: body.password}, function (err, result) {
+        if (err) {
+            callback({status: 'fail', value: err})
+        } else {
+            if (result == null) {
+                callback({status: 'success', data: 'no data to remove'})
+            } else {
+                User.remove({email: body.email, password: body.password}, function (err) {
+                    if (err) {
+                        callback({status: 'fail', value: err})
+                    } else {
+                        callback({status: 'success', data: 'suppression done'})
+                    }
+                })
+            }
+        }
+    })
+}
+
 var userSchema = mongoose.Schema({
         last_name: String,
         first_name: String,
@@ -139,5 +153,6 @@ module.exports = {
     createAccount: createAccount,
     connection: connection,
     details: getDetailOfUser,
-    drop: dropTableUser
+    drop: dropTableUser,
+    deleteAccount: removeOne
 };

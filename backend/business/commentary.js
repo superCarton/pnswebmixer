@@ -10,71 +10,76 @@ const viewComments = 'http://localhost:4000/commentary/view/';
 const removePath = 'http://localhost:4000/commentary/remove/';
 
 function writeCommentary(body, params, callback) {
-    Handler.findOne({sample_id: params.sample_id}, function (err, handler) {
-        if (err) {
-            callback({status: 'fail', value: err})
-        } else {
-            var commentary = new Commentary({
-                date: new Date(),
-                text: body.text,
-                user_id: body.user_id,
-                profile: userDescription + body.user_id
-            });
-
-            if (handler == null || handler == []) {
-                // Create a new commentaryHandler
-                var new_handler = new Handler({
-                    sample_id: params.sample_id,
-                    view_comments: viewComments + params.sample_id,
-                    contents: [commentary]
-                });
-                new_handler.save(function (err, result) {
-                    if (err) {
-                        callback({status: 'fail', value: err})
-                    } else {
-                        result.remove_topic = removePath + result._id;
-                        result.contents[0].remove_commentary = removePath + result._id + '/' + result.contents[0]._id;
-                        result.save(function(err, final_result){
-                            if(err){
-                                callback({status: 'fail', value: err})
-                            } else {
-                                callback({status: 'success', value: final_result})
-                            }
-                        })
-                    }
-                })
+    if (body.user_id == undefined || body.first_name == undefined){
+        callback({status: 'fail', value: 'you need to identified'})
+    } else {
+        Handler.findOne({sample_id: params.sample_id}, function (err, handler) {
+            if (err) {
+                callback({status: 'fail', value: err})
             } else {
-                // Add a commentary to a commentaryHandler
-                handler.contents.push(commentary);
-                handler.save(function(err, result){
-                    if (err) {
-                        callback({status: 'fail', value: err})
-                    } else {
-                        async.eachSeries(result.contents, function(commentary, SeriesCallback){
-                            (function addRemovedPath(com){
-                                if (com.remove_commentary == undefined || com.remove_commentary == null){
-                                    com.remove_commentary = removePath + result._id + '/' + com._id;
+                var commentary = new Commentary({
+                    date: new Date(),
+                    text: body.text,
+                    user_id: body.user_id,
+                    first_name: body.first_name,
+                    profile: userDescription + body.user_id
+                });
+
+                if (handler == null || handler == []) {
+                    // Create a new commentaryHandler
+                    var new_handler = new Handler({
+                        sample_id: params.sample_id,
+                        view_comments: viewComments + params.sample_id,
+                        contents: [commentary]
+                    });
+                    new_handler.save(function (err, result) {
+                        if (err) {
+                            callback({status: 'fail', value: err})
+                        } else {
+                            result.remove_topic = removePath + result._id;
+                            result.contents[0].remove_commentary = removePath + result._id + '/' + result.contents[0]._id;
+                            result.save(function (err, final_result) {
+                                if (err) {
+                                    callback({status: 'fail', value: err})
+                                } else {
+                                    callback({status: 'success', value: final_result})
                                 }
-                                SeriesCallback()
-                            })(commentary)
-                        }, function (err){
-                            if (err) {
-                                callback({status: 'fail', value: err})
-                            } else {
-                                handler.save(function (err, final_result){
-                                    if (err){
-                                        callback({status: 'fail', value: err})
-                                    } else {
-                                        callback({status: 'success', value: final_result})
+                            })
+                        }
+                    })
+                } else {
+                    // Add a commentary to a commentaryHandler
+                    handler.contents.push(commentary);
+                    handler.save(function (err, result) {
+                        if (err) {
+                            callback({status: 'fail', value: err})
+                        } else {
+                            async.eachSeries(result.contents, function (commentary, SeriesCallback) {
+                                (function addRemovedPath(com) {
+                                    if (com.remove_commentary == undefined || com.remove_commentary == null) {
+                                        com.remove_commentary = removePath + result._id + '/' + com._id;
                                     }
-                                })
-                            }
-                        });
-                    }
-                })
+                                    SeriesCallback()
+                                })(commentary)
+                            }, function (err) {
+                                if (err) {
+                                    callback({status: 'fail', value: err})
+                                } else {
+                                    handler.save(function (err, final_result) {
+                                        if (err) {
+                                            callback({status: 'fail', value: err})
+                                        } else {
+                                            callback({status: 'success', value: final_result})
+                                        }
+                                    })
+                                }
+                            });
+                        }
+                    })
+                }
             }
-        }
-    })
+        })
+    }
 }
 
 function viewCommentary(params, callback){
@@ -147,6 +152,7 @@ function testViewAllBigCommentary(callback){
 
 var commentarySchema = mongoose.Schema({
     user_id: mongoose.Schema.Types.ObjectId,
+    first_name: String,
     profile: String,
     date: Date,
     text: String,

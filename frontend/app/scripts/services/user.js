@@ -11,6 +11,7 @@ angular.module('frontendApp')
 	.factory("user", ['$http', '$rootScope', function($http, $rootScope) {
   		var url = "http://" + $rootScope.backendURL + "/users/";
       var obj = {
+
   			get:function(data, successCB, failCB) {
    				 $http.get(url+"login", data)
     				.success(function(data) {

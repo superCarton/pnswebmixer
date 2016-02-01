@@ -11,6 +11,7 @@ var health = require('./routes/health');
 var users = require('./routes/users');
 var samples = require('./routes/samples');
 var commentary = require('./routes/commentary');
+var pattern = require('./routes/pattern');
 
 var app = express();
 
@@ -35,5 +36,6 @@ app.use('/health', health);
 app.use('/users', users);
 app.use('/samples', samples);
 app.use('/commentary', commentary);
+app.use('/pattern', pattern);
 
 module.exports = app;

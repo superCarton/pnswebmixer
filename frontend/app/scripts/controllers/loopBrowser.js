@@ -8,8 +8,37 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoopBrowserCtrl', function ($scope, $http) {
-    $scope.awesomeThings = ['HTML5 Boilerplate', 'AngularJS', 'Karma'];
+  .controller('LoopBrowserCtrl', ["$scope", '$http', '$rootScope', 'samplesByUsersFactory', 'commentsFactory', '$uibModal', function ($scope, $http, $rootScope, samplesByUsersFactory, commentsFactory, $uibModal) {
+
+    samplesByUsersFactory.all(function(samples){
+      $scope.samplesByUsers = samples;
+    });
+
+    $scope.dynamicPopover = {
+      content: 'Hello, World!',
+      templateUrl: 'commentTemplate.html',
+      title: 'Ecrire un commentaire'
+    };
+
+    $scope.open = function (id) {
+
+      console.log(id);
+      commentsFactory.allBySampleId(id).then(function(data){
+
+        $rootScope.comments = data;
+        $rootScope.currentCommentId = id;
+
+        var modalInstance = $uibModal.open({
+          templateUrl: 'allcomments.html',
+          controller: 'AllcommentsCtrl',
+          size: 'lg'
+        });
+
+      }, function(err){
+        console.log('error' + err);
+      });
+
+    };
 
     $http.get('../assets/loops.json')
       .then(function (res) {
@@ -110,4 +139,5 @@ angular.module('frontendApp')
         arr[index] = tmp;
       });
     };
-  });
+
+  }]);
