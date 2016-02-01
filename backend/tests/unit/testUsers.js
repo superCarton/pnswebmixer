@@ -5,52 +5,103 @@
 var assert = require('assert');
 var user = require('../../business/users');
 
-describe('Users business unit test,', function (){
+var body = null;
 
-    describe('Get user collection :', function(){
-        it('Should return status success', function(){
-            user.getAll(function(result){
-                assert.equal(result.status, 'success')
-            })
+suite('Users business unit test,', function () {
+
+    setup('Set the body variable', function () {
+        body = {
+            last_name: 'testName',
+            first_name: 'test',
+            birth_date: 738194400,
+            email: 'test@test.com',
+            password: 'azerty'
+        }
+    });
+
+    suiteTeardown(function DropUserIfExist(done) {
+        console.log('Excuting suite teardown :');
+        user.deleteAccount(body, function (result) {
+            console.log(result.status);
+            done()
         })
     });
 
-    describe('Create an user account :', function(){
-        var body = {};
-        it('Should return status fail if email is missing', function(){
-             user.createAccount(body, function(result){
-                 assert.equal(result.status, 'fail')
-             })
+    suite('Create an user account with missing field :', function() {
+
+        test('With missing email field, status fail', function(done){
+            delete body.email;
+            user.createAccount(body, function (result) {
+                assert.equal(result.status, 'fail');
+                done();
+            });
         });
-        it('Should return status fail if other field are missing too', function(){
-            body.email = 'pnswebmixer@gmail.com';
-            user.createAccount(body, function(result){
-                assert.equal(result.status, 'fail')
-            })
+
+        test('With missing password field, status fail', function(done){
+            body.email = 'test@test.com';
+            delete body.password;
+            user.createAccount(body, function (result) {
+                assert.equal(result.status, 'fail');
+                done();
+            });
         });
-        it('Should return status success otherwise', function(){
-            body.last_name = 'lastname'; body.first_name = 'firstname'; body.password = 'password';
-            user.createAccount(body, function(result){
-                console.log(result);
-                assert.equal(result.status, 'success')
-            })
-        });
-        it('Should return status fail if we try to sign up with the same email', function(){
-            console.log(body);
-            user.createAccount(body, function(result){
-                assert.equal(result.status, 'fail')
-            })
-        })
+
     });
 
-    describe('User Connection', function(){
-        var body = {};
-        it('Should return fail if email or password is missing', function(){
-            body.email = 'pnswebmixer@gmail.com';
-            user.connection(body, function(result){
-                assert.equal(result.status, 'fail')
+    suite('Create an user account :', function() {
+
+        test('Without missing field, status success', function (done) {
+            user.createAccount(body, function (result) {
+                assert.equal(result.status, 'success');
+                done();
+            });
+        });
+
+        test('With an already taken email, status fail', function (done) {
+            user.createAccount(body, function (result) {
+                assert.equal(result.status, 'fail');
+                done()
             })
         })
-    })
 
+    });
+
+    suite('User Connection', function () {
+
+        test('Normal connection, status success', function(done){
+            user.connection(body, function (result) {
+                assert.equal(result.status, 'success');
+                done()
+            })
+        });
+
+        test('Should return fail if email is missing', function (done) {
+            delete body.email;
+            user.connection(body, function (result) {
+                assert.equal(result.status, 'fail');
+                done()
+            })
+        });
+
+        test('Should return fail if password is missing', function (done) {
+            delete body.email;
+            user.connection(body, function (result) {
+                assert.equal(result.status, 'fail');
+                done()
+            })
+        })
+
+    });
+
+    suite('Get user collection :', function () {
+
+        test('Should return status success', function (done) {
+            user.getAll(function (result) {
+                assert.equal(result.status, 'success');
+                assert.equal(result.value.length > 0, true);
+                done()
+            })
+        })
+
+    });
 });

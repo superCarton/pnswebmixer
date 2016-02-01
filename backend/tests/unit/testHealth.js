@@ -5,10 +5,10 @@
 var assert = require('assert');
 var health = require('../../business/health');
 
-describe('Health tests,', function () {
+suite('Health tests,', function () {
 
-    describe('getHealth :', function () {
-        it('Should return status success', function () {
+    suite('getHealth :', function () {
+        test('Should return status success', function () {
             health(function (result) {
                 assert.equal(result.status, 'success')
             })
