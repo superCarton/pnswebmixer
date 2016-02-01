@@ -1,3 +1,9 @@
+.songSettings {
+  height: 350px;
+  padding:10px;
+}
+
+
 i.fa-play-circle.reglage-play,
 i.fa-pause-circle.reglage-pause,
 i.fa-pause-circle.reglage-volume{

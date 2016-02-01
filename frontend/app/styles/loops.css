@@ -1,3 +1,8 @@
+.loopBrowser {
+  height:220px;
+  overflow: scroll;
+}
+
 .loop-play
 {
   font-size: large;
@@ -30,7 +35,6 @@
 .loopBrowsers
 {
   overflow-y: scroll;
-  height: 200px;
 }
 
 #loopList tr:hover
@@ -62,4 +66,8 @@
 [ng-drag].dragging
 {
   opacity: 0.7;
+}
+
+.table {
+  margin-bottom: 0;
 }
