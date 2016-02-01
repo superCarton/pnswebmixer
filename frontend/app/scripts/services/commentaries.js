@@ -3,10 +3,10 @@
  */
 
 angular.module('frontendApp')
-  .factory('Commentary',["$http", function($http){
+  .factory('Commentary',["$http", '$rootScope', function($http, $rootScope){
     var obj = {
       allBySampleId : function(sample_id, callback){
-        $http.get("http://localhost:4000/commentary/view/"+sample_id)
+        $http.get("http://" + $rootScope.backendURL + "/commentary/view/"+sample_id)
           .success(function(result){
             console.log(result);
             if (result.status == 'success'){
