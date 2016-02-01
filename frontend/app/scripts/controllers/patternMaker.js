@@ -49,7 +49,7 @@ angular.module('frontendApp')
       var sources = [];
       // Create a single gain node for master volume
       masterVolumeNode = context.createGain();
-      console.log("in build graph, bufferList.size = " + bufferList.length);
+      //console.log("in build graph, bufferList.size = " + bufferList.length);
       bufferList.forEach(function (sample, i) {
         // create 8 samples for each sample
         sources[i] = [];
@@ -66,6 +66,14 @@ angular.module('frontendApp')
           trackVolumeNodes[i][j].connect(masterVolumeNode);
           // Connect the master volume to the speakers
           masterVolumeNode.connect(context.destination);
+
+          trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
+
+          // Checking for mute loop
+          if (muteMatrix[i]) {
+            trackVolumeNodes[i][j].gain.value = 0;
+          }
+
         }
       });
       samples = sources;
@@ -75,8 +83,9 @@ angular.module('frontendApp')
       for (var i = 0; i < samples.length; i++) {
         for (var j = 0; j < 16; j++) {
           // destroy the nodes
-          if (switchMatrix[i][j] == "true") {
+          if (playingLoops[i][j]) {
             samples[i][j].stop(0);
+            playingLoops[i][j] = false;
           }
         }
       }
@@ -87,7 +96,8 @@ angular.module('frontendApp')
       for (var i = 0; i < samples.length; i++) {
         for (var j = 0; j < 16; j++) {
           if (switchMatrix[i][j] == "true") {
-            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0, computeDelay(1) / 1000);
+            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0);
+            playingLoops[i][j] = true;
           }
         }
       }
@@ -110,6 +120,8 @@ angular.module('frontendApp')
         "false", "false", "false", "false", "false", "false", "false", "false"]);
       muteMatrix.push(false);
       soloMatrix.push(false);
+      playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
+        false, false, false, false, false,]);
       $scope.droppedObjects1.forEach(function (s) {
         $scope.tracks.push("assets/loops/" + s);
       });
@@ -124,22 +136,19 @@ angular.module('frontendApp')
       "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
     var i = 0;
-    var stopPlaying = false;
-    var timer;
     var isPlaying = false;
+    var timer;
 
     function animateLights() {
       if (i == 0) {
-        if (isPlaying) {
-          stopAllTracks();
-          isPlaying == !isPlaying;
-        }
+        stopAllTracks();
         buildGraph(buffers);
         playFrom();
       }
+
       animateLight(i++);
-      if (stopPlaying) {
-        isPlaying == !isPlaying;
+
+      if (!isPlaying) {
         i = 0;
         return;
       } else if (i <= $scope.lightsIDs.length) {
@@ -165,16 +174,56 @@ angular.module('frontendApp')
     var soloMatrix = [];
 
     $scope.toggleMute = function (index) {
-      muteMatrix[index] = !muteMatrix[index];
+      if (soloMatrix[index]) {
+        muteMatrix[index] = false;
+      } else {
+        muteMatrix[index] = !muteMatrix[index];
+      }
+      $("#mute-" + index).toggleClass("mute");
+
+      if (isPlaying) {
+        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
+          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + index).val()
+        })
+      }
+
     }
 
     $scope.toggleSolo = function (index) {
       soloMatrix[index] = !soloMatrix[index];
+      $("#solo-" + index).toggleClass("solo");
+
+      if (soloMatrix.indexOf(true) != -1) {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
+        }
+      } else {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          $("#mute-" + i).hasClass("mute") ? muteMatrix[i] = true : muteMatrix[i] = false
+        }
+      }
+
+      if (isPlaying) {
+        for (var i = 0; i < muteMatrix.length; i++) {
+          trackVolumeNodes[i].forEach(function (trackVolumeNode) {
+            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + i).val()
+          })
+        }
+      }
+    }
+
+    $scope.changeVolume = function (index) {
+      if (isPlaying && !muteMatrix[index]) {
+        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
+          trackVolumeNode.gain.value = $("#vol-" + index).val();
+        })
+      }
     }
 
     /************* BEATMAKING ****************/
 
     var switchMatrix = [];
+    var playingLoops = [];
 
     $scope.toggleButton = function (event) {
       var obj = event.currentTarget;
@@ -200,7 +249,7 @@ angular.module('frontendApp')
     $scope.playBeat = function () {
       $("#play").attr("disabled", true);
 
-      stopPlaying = false;
+      isPlaying = true;
       timer = 0;
       i = 0;
 
@@ -216,7 +265,7 @@ angular.module('frontendApp')
 
       if ($("#play").hasClass("playing")) {
         clearTimeout(timer);
-        stopPlaying = true;
+        isPlaying = false;
         $("#play").toggleClass("playing");
         $scope.lightsIDs.forEach(function (light) {
           if ($('#' + light).hasClass("fa-circle")) {

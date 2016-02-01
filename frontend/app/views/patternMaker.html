@@ -1,21 +1,22 @@
 <div class="round-corners" ng-drop="true" ng-drop-success="onDropComplete1($data)">
   <div class="row">
-    <div class="col-md-9 col-md-offset-3 lights">
+    <div class="col-xs-9 col-xs-offset-3 lights">
       <span ng-repeat="light in lightsIDs" class="light-tempo"><i id="{{light}}"
         class="fa fa-circle-thin"></i></span>
     </div>
   </div>
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
   <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
-    <div class="col-md-1 section buttons-mute-solo-volume">
-      <button ng-click="toggleMute($index)">Mute</button>
-      <button ng-click="toggleSolo($index)">Solo</button>
+    <div class="col-xs-1 section buttons-mute-solo-volume">
+      <button id="mute-{{$index}}" ng-click="toggleMute($index)">Mute</button>
+      <button id="solo-{{$index}}" ng-click="toggleSolo($index)">Solo</button>
     </div>
+
     <div class="col-md-1 section buttons-mute-solo-volume volume-slider">
-      <input type="range" min="0" max="1" value="1" step="0.01">
+      <input id="vol-{{$index}}" ng-model="tools.volume" ng-change="changeVolume($index)" type="range" min="0" max="1" value="1" step="0.01">
     </div>
-    <div class="col-md-1 section name">{{obj}}</div>
-    <div class="col-md-9 step-sequencer">
+    <div class="col-xs-1 section name">{{obj}}</div>
+    <div class="col-xs-9 step-sequencer">
     <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i id="b-{{button}}"
       ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}}
       data-active="false"></i></span>
@@ -24,17 +25,17 @@
 </div>
 
 <div class="row tools">
-  <div class="col-md-6 play-stop-buttons">
-    <button id="play" ng-click="playBeat()"><i class="fa fa-play"></i></button>
+  <div class="col-xs-6 play-stop-buttons">
+    <button id="play" ng-click="playBeat()" disabled="true"><i class="fa fa-play"></i></button>
     <button id="stop" ng-click="stopBeat()"><i class="fa fa-stop"></i></button>
   </div>
 
-  <div class="col-md-6">
+  <div class="col-xs-6">
     <div class="row">
-      <div class="col-md-3 range-block">
+      <div class="col-xs-3 range-block">
         <span id="range">120</span>
       </div>
-      <div class="col-md-9">
+      <div class="col-xs-9">
         <input id="myTempo" type="range" min=70 max="180" value=120 oninput="showValue(this.value)">
       </div>
     </div>
