@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($scope) {
+  .controller('PatternMakerCtrl', ["$scope", function ($scope) {
 
     /****************      WEB AUDIO     ******************/
 
@@ -286,4 +286,4 @@ angular.module('frontendApp')
       return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
     }
 
-  });
+  }]);

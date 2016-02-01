@@ -17,7 +17,7 @@ angular.module('frontendApp')
       $scope.loginForm = false;
       $scope.loginButton = false;
       $scope.username = false;
-    }
+    };
 
     $scope.showSignUp = function() {
       $scope.loginForm = true;
@@ -29,7 +29,7 @@ angular.module('frontendApp')
       $scope.pwd = '';
       $scope.firstName = '';
       $scope.lastName = '';
-    }
+    };
 
     $scope.showLogin = function() {
       $scope.loginForm = true;
@@ -39,7 +39,7 @@ angular.module('frontendApp')
       $scope.showLastName =false;
       $scope.email = '';
       $scope.pwd = '';
-    }
+    };
 
     $scope.signUp = function() {
        $scope.signUpContent = {

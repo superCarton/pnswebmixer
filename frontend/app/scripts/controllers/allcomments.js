@@ -8,10 +8,9 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('AllcommentsCtrl', ['$scope', 'Commentary', '$routeParams', function ($scope, Commentary, $routeParams) {
+  .controller('AllcommentsCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
-    Commentary.allBySampleId($routeParams.link, function(result){
-      $scope.commentaries = result;
-    });
+      $scope.commentaries = $rootScope.comments;
+      $scope.commentId = $rootScope.currentCommentId;
 
   }]);
