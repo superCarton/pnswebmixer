@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoginCtrl', ['$scope', 'user', function ($scope, user) {
+  .controller('LoginCtrl', ['$rootScope', '$scope', 'user', function ($scope, $rootScope, user) {
 
     $scope.init = function() {
       $scope.logout = false;
@@ -48,7 +48,7 @@ angular.module('frontendApp')
         "email" : $scope.email,
         "password" : $scope.pwd
       };
-
+      console.log($scope.signUpContent);
       user.register($scope.signUpContent, function(data) {
         $scope.loginButton = true;
         $scope.registerButton = false;
@@ -63,6 +63,9 @@ angular.module('frontendApp')
     };
 
     $scope.logIn =  function() {
+
+      console.log($scope.email);
+
       $scope.loginContent = {
         "email" : $scope.email,
         "password" : $scope.pwd
@@ -75,12 +78,16 @@ angular.module('frontendApp')
         $scope.logout = true;
         $scope.first_name = data.first_name;
         $scope.last_name = data.last_name;
+
+        $scope.id = data._id;
+        $rootScope.user_id = $scope.id;
+        $rootScope.first_name =$scope.first_name;
+        $rootScope.last_name =$scope.last_name;
       }, function(error) {
         console.log(error);
         return;
       });
     };
-
     $scope.showLogout = function() {
       $scope.logout = false;
       $scope.login  = true;

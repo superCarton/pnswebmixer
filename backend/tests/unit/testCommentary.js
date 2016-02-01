@@ -188,7 +188,7 @@ suite('Commentary business unit test', function(){
                 commentary.view(sample_id[2], function(result){
                     assert.equal(result.status, 'success');
                     assert(result.value.toString() == {});
-                    delete handler_id[2];
+                    handler_id.splice(2,1);
                     done()
                 })
             })

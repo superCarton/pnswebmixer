@@ -20,24 +20,32 @@ angular.module('frontendApp')
       title: 'Ecrire un commentaire'
     };
 
+    // when there is a click on a comment button
     $scope.open = function (id) {
 
       console.log(id);
-      commentsFactory.allBySampleId(id).then(function(data){
 
-        $rootScope.comments = data;
-        $rootScope.currentCommentId = id;
+      // if a user is connected
+//      if (!angular.isUndefined($rootScope.user_id)){
 
-        var modalInstance = $uibModal.open({
-          templateUrl: 'allcomments.html',
-          controller: 'AllcommentsCtrl',
-          size: 'lg'
+        // get the comment
+        commentsFactory.allBySampleId(id).then(function(data){
+
+          $rootScope.comments = data;
+          $rootScope.currentCommentId = id;
+
+          // open the modal
+          var modalInstance = $uibModal.open({
+            templateUrl: 'allcomments.html',
+            controller: 'AllcommentsCtrl',
+            size: 'lg'
+          });
+
+        }, function(err){
+          console.log('error' + err);
         });
 
-      }, function(err){
-        console.log('error' + err);
-      });
-
+    //  }
     };
 
     $http.get('../assets/loops.json')

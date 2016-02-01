@@ -28,7 +28,7 @@
   <table class="table table-hover">
     <tbody>  Les commentaires du samples :
     <tr ng-repeat="comment in commentaries.contents" >
-      <td>{{comment.text}}</td>
+      <td>[[{{comment.first_name}}]] - {{comment.text}}</td>
     </tr>
     </tbody>
   </table>
@@ -36,9 +36,9 @@
   <div>
     <form>
       <label>Votre commentaire</label>
-      <input type="text" placeholder="Ecrire ici..."/>
+      <input ng-model="newcomment" type="text" placeholder="Ecrire ici..."/>
     </form>
-    <button ng-click="">Répondre</button>
+    <button ng-click="comment()">Répondre</button>
   </div>
 
 </script>
