@@ -18,13 +18,13 @@ angular.module('frontendApp')
       $scope.comment = function(){
 
         var comm = $scope.newcomment;
-        console.log("Comment from : " + $rootScope.id);
+        console.log("Comment from : " + $rootScope.user_id);
         console.log("Comment : " + comm);
 
         // add a comment
         commentsFactory.commentSample($scope.commentId, $rootScope.user_id, $rootScope.first_name, comm).then(function(data){
           // push comment in the list
-          $scope.commentaries.push(data);
+        //  $scope.commentaries.push(data);
         });
       };
 

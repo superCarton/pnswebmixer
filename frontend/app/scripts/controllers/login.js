@@ -63,11 +63,13 @@ angular.module('frontendApp')
     };
 
     $scope.logIn =  function() {
+
+      console.log($scope.email);
+
       $scope.loginContent = {
         "email" : $scope.email,
         "password" : $scope.pwd
       };
-      console.log($scope.loginContent);
       user.connect($scope.loginContent, function(data) {
         $scope.loginForm = false;
         $scope.login = false;
@@ -77,10 +79,10 @@ angular.module('frontendApp')
         $scope.first_name = data.first_name;
         $scope.last_name = data.last_name;
 
-       /* $scope.id = data._id;
+        $scope.id = data._id;
         $rootScope.user_id = $scope.id;
         $rootScope.first_name =$scope.first_name;
-        $rootScope.last_name =$scope.last_name; */
+        $rootScope.last_name =$scope.last_name;
       }, function(error) {
         console.log(error);
         return;
