@@ -17,11 +17,12 @@ angular.module('frontendApp')
     $scope.tracks = ['../../assets/loops/avenir.mp3'];
     $scope.volume = 1;
     $scope.init = function() {
+      $scope.playTrackModel= true;
+      $scope.stopTrackModel = false;
       $scope.context = initAudioContext();
       $scope.analyser = $scope.context.createAnalyser();
       initAnalyser();
       loadAllSoundSamples();
-
     }
 
     function initAudioContext() {
@@ -106,7 +107,12 @@ angular.module('frontendApp')
         var sources = [];
         // Create a single gain node for master volume
         $scope.masterVolumeNode = $scope.context.createGain();
+        $scope.gainNode = $scope.context.createGain();
+        $scope.gainNode.gain.value = $scope.song.gain;
         $scope.filter = $scope.context.createBiquadFilter();
+        $scope.delay = $scope.context.createDelay();
+        $scope.delay.delayTime.value = $scope.song.delay;
+        console.log($scope.song.delay);
         $scope.filter.frequency.value = 5000;
         $scope.filter.Q.value = 1;
         $scope.buffers.forEach(function(sample, i) {
@@ -122,8 +128,10 @@ angular.module('frontendApp')
           $scope.masterVolumeNode.connect($scope.filter);
           //Connect the master volume to the analyser
           $scope.filter.connect($scope.analyser);
+          //Connect the analyser to the delay
+          $scope.analyser.connect($scope.delay);
         // Connect the master volume to the speakers
-          $scope.analyser.connect($scope.context.destination);
+          $scope.delay.connect($scope.context.destination);
           //$scope.filter.connect($scope.context.destination);
           // Connect source to filter, filter to destination.
 
@@ -208,6 +216,17 @@ angular.module('frontendApp')
         .error(function(err) {
           console.log(err);
         });
+    }
+
+    $scope.changeDelay = function() {
+      if( $scope.delay != undefined) {
+        $scope.delay.delayTime.value = $scope.song.delay;
+      }
+    }
+    $scope.changeGain = function () {
+      if( $scope.gainNode != undefined) {
+        $scope.gainNode.gain.value = $scope.song.gain;
+      }
     }
 
 

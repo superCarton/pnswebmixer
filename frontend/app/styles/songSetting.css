@@ -34,3 +34,10 @@ canvas#song-visualize-bar {
   width: 400px;
   height: 200px;
 }
+
+/*
+canvas#song-visualize,
+canvas#song-visualize-bar {
+  display : none;
+}
+*/
