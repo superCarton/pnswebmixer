@@ -17,14 +17,14 @@ router.delete('/drop', removeAllHandler);
 
 function writeCommentary(req, res) {
     console.log((new Date()).toString() + ' : Post Commentary');
-    commentary.write(req.body, req.params, function(result){
+    commentary.write(req.body, req.params.sample_id, function(result){
         res.send(result)
     })
 }
 
 function viewCommentary(req, res){
     console.log((new Date()).toString() + ' : View Commentary');
-    commentary.view(req.params, function(result){
+    commentary.view(req.params.sample_id, function(result){
         res.send(result)
     })
 }

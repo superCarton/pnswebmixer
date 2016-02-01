@@ -123,6 +123,18 @@ function removeOneFile(file, callback) {
     })
 }
 
+function findById(sample_id, callback){
+    Sample.findOne({_id: sample_id}, function(err, result){
+        if(err){
+            callback({status: 'success', value: err})
+        } else if (result == null){
+            callback({status: 'fail', value: 'no match sample'})
+        } else {
+            callback({status: 'success', value: result})
+        }
+    })
+}
+
 var sampleSchema = mongoose.Schema({
         name: String,
         original_name: String,
@@ -144,5 +156,6 @@ module.exports = {
     save: saveFile,
     download: download,
     drop: removeAll,
-    remove: removeOneFile
+    remove: removeOneFile,
+    find: findById
 };
