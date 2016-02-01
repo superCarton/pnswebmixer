@@ -8,8 +8,8 @@
  * Controller of the sunApp
  */
 angular.module('frontendApp')
-	.factory("user", ['$http', function($http) {
-  		var url = "http://localhost:4000/users/";
+	.factory("user", ['$http', '$rootScope', function($http, $rootScope) {
+  		var url = "http://" + $rootScope.backendURL + "/users/";
       var obj = {
   			get:function(data, successCB, failCB) {
    				 $http.get(url+"login", data)

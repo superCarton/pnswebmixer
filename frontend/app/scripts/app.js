@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngDraggable'
+    'ngDraggable',
+    'ui.bootstrap'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -33,4 +34,6 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  }).run(function($rootScope) {
+    $rootScope.backendURL = "10.212.100.199:4000";
   });
