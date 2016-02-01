@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', ["$scope", function ($scope) {
+  .controller('PatternMakerCtrl', function ($rootScope, $scope, PatternFactory) {
 
     /****************      WEB AUDIO     ******************/
 
@@ -223,11 +223,11 @@ angular.module('frontendApp')
     /***************** DELETE TRACK ***********/
     $scope.deleteLoop = function (index) {
       $scope.stopBeat();
-      $scope.droppedObjects1.splice(index,1);
-      $scope.tracks.splice(index,1);
-      muteMatrix.splice(index,1);
-      soloMatrix.splice(index,1);
-      switchMatrix.splice(index,1);
+      $scope.droppedObjects1.splice(index, 1);
+      $scope.tracks.splice(index, 1);
+      muteMatrix.splice(index, 1);
+      soloMatrix.splice(index, 1);
+      switchMatrix.splice(index, 1);
       loadAllSoundSamples();
     }
 
@@ -251,6 +251,69 @@ angular.module('frontendApp')
       } else {
         obj.setAttribute("data-active", "false");
         switchMatrix[index_song][index_bit] = "false";
+      }
+    }
+
+    /************ SAVE **********/
+
+    $scope.pattern_title = "";
+    var dialog;
+    $rootScope.user_id = "vincent";
+
+    $scope.save_pattern = function (name) {
+      if (name != "") {
+        if ($rootScope.user_id == "") {
+          dialog = new BootstrapDialog({
+            title: "Erreur",
+            message: "Vous devez être connecté à votre compte pour pouvoir sauvegarder votre pattern !",
+          });
+          dialog.realize();
+          //dialog.getModalHeader().css('background-color', '#f0b054');
+          dialog.getModalHeader().css('background-color', '#d9534f');
+          dialog.getModalHeader().css('color', '#ffffff');
+          dialog.getModalHeader().css('border-top-left-radius', '6px');
+          dialog.getModalHeader().css('border-top-right-radius', '6px');
+          dialog.open();
+        }
+
+        else {
+
+          var json_to_send = {
+            name: name,
+            user_id: $rootScope.user_id,
+            loops: $scope.tracks,
+            beatmaking: switchMatrix
+          };
+
+          PatternFactory.savePattern(json_to_send).then(function (data) {
+            console.log(data);
+            dialog = new BootstrapDialog({
+              size: BootstrapDialog.SIZE_SMALL,
+              title: "Sauvegarde réussie",
+              message: "Votre pattern " + name.bold() + " a bien été enregistré !",
+            });
+            dialog.realize();
+            dialog.getModalHeader().css('background-color', '#5cb85c');
+            dialog.getModalHeader().css('color', '#ffffff');
+            dialog.getModalHeader().css('border-top-left-radius', '6px');
+            dialog.getModalHeader().css('border-top-right-radius', '6px');
+            dialog.open();
+          }, function (err) {
+            console.log(err);
+            dialog = new BootstrapDialog({
+              size: BootstrapDialog.SIZE_SMALL,
+              title: "Echec de la sauvegarde",
+              message: "Votre pattern " + name.bold() + " n'a pas été enregistré...",
+            });
+            dialog.realize();
+            //dialog.getModalHeader().css('background-color', '#f0b054');
+            dialog.getModalHeader().css('background-color', '#d9534f');
+            dialog.getModalHeader().css('color', '#ffffff');
+            dialog.getModalHeader().css('border-top-left-radius', '6px');
+            dialog.getModalHeader().css('border-top-right-radius', '6px');
+            dialog.open();
+          });
+        }
       }
     }
 
@@ -297,4 +360,4 @@ angular.module('frontendApp')
       return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
     }
 
-  }]);
+  });
