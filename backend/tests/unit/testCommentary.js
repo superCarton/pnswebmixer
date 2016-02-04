@@ -8,7 +8,6 @@ var async = require('async');
 var commentary = require('../../business/commentary');
 var sampleId = require('../utils/SampleObjectIdGenerator');
 
-
 var handler_id = [];
 var sample_id = [];
 var commentary_id = [];
