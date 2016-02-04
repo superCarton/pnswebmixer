@@ -17,6 +17,8 @@ angular.module('frontendApp')
     var masterVolumeNode;
     var trackVolumeNodes = [];
     $scope.tracks = [];
+    var volumes = [];
+    var tempo;
 
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -28,7 +30,10 @@ angular.module('frontendApp')
     }
 
     function loadAllSoundSamples() {
-      $("#play").attr("disabled", true);
+
+      tempo = document.getElementById("myTempo").value;
+
+        $("#play").attr("disabled", true);
       var bufferLoader;
       var tracks = $scope.tracks;
       bufferLoader = new BufferLoader(
@@ -40,8 +45,12 @@ angular.module('frontendApp')
     }
 
     function finishedLoading(bufferList) {
+
       console.log("sounds finished loading");
       buffers = bufferList;
+      for (var i=0; i<buffers.length; i++){
+        volumes[i] = $("#vol-" + i).val();
+      }
       $("#play").attr("disabled", false);
     }
 
@@ -68,6 +77,7 @@ angular.module('frontendApp')
           masterVolumeNode.connect(context.destination);
 
           trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
+          volumes[i] = $("#vol-" + i).val();
 
           // Checking for mute loop
           if (muteMatrix[i]) {
@@ -103,9 +113,6 @@ angular.module('frontendApp')
       }
     }
 
-    var context = initAudioContext(); // Init audio context
-
-
     /*********************    DRAG N DROP    **************************/
 
     $scope.droppedObjects1 = [];
@@ -121,7 +128,7 @@ angular.module('frontendApp')
       muteMatrix.push(false);
       soloMatrix.push(false);
       playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
-        false, false, false, false, false,]);
+        false, false, false, false, false]);
       $scope.droppedObjects1.forEach(function (s) {
         $scope.tracks.push("assets/loops/" + s);
       });
@@ -140,11 +147,12 @@ angular.module('frontendApp')
     var timer;
 
     function animateLights() {
-      if (i == 0) {
+
+     /* if (i == 0) {
         stopAllTracks();
         buildGraph(buffers);
         playFrom();
-      }
+      } */
 
       animateLight(i++);
 
@@ -214,6 +222,8 @@ angular.module('frontendApp')
 
     $scope.changeVolume = function (index) {
       if (isPlaying && !muteMatrix[index]) {
+
+        volumes[i] = $("#vol-" + index).val();
         trackVolumeNodes[index].forEach(function (trackVolumeNode) {
           trackVolumeNode.gain.value = $("#vol-" + index).val();
         })
@@ -321,6 +331,7 @@ angular.module('frontendApp')
     /******** PLAY BEAT + STOP BEAT **********/
 
     $scope.playBeat = function () {
+
       $("#play").attr("disabled", true);
 
       isPlaying = true;
@@ -329,13 +340,16 @@ angular.module('frontendApp')
 
       $("#play").toggleClass("playing");
 
+      handlePlay();
       animateLights();
     }
 
     $scope.stopBeat = function () {
+
       $("#play").attr("disabled", false);
 
-      stopAllTracks();
+     // stopAllTracks();
+      handleStop();
 
       if ($("#play").hasClass("playing")) {
         clearTimeout(timer);
@@ -349,6 +363,11 @@ angular.module('frontendApp')
       }
     }
 
+    $scope.changeTempo = function(){
+
+      tempo = document.getElementById("myTempo").value;
+    }
+
 
     /******* TEMPO ********/
 
@@ -357,7 +376,102 @@ angular.module('frontendApp')
     var pulsation = 4;
 
     function computeDelay(i) {
-      return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
+      return i * ((60000 / pulsation) / tempo);
+    }
+
+    /******* CHRIS WILSON OVERLAY ******/
+
+    var context = initAudioContext(); // Init audio context
+    var noteTime, startTime, timeoutId, rhythmIndex = 0;
+    var OVERLAY = 0.200;
+    var DELAY = 25;
+    var LOOP_LENTGH = 16;
+    var masterGainNode;
+
+    function advanceNote() {
+
+      noteTime += computeDelay(1)/1000;
+
+      rhythmIndex++;
+      if (rhythmIndex == LOOP_LENTGH) {
+        rhythmIndex = 0;
+      }
+
+      console.log('advance note index ' + rhythmIndex + ' note time ' + noteTime);
+    }
+
+    function playNote(buffer, sendGain, noteTime) {
+
+      // Create the note
+      var voice = context.createBufferSource();
+      voice.buffer = buffer;
+
+      masterGainNode = context.createGain();
+      masterGainNode.gain.value = 1;
+      masterGainNode.connect(context.destination);
+
+      // Connect to dry mix
+      var dryGainNode = context.createGain();
+
+      if (muteMatrix[i]) {
+        dryGainNode.gain.value = 0;
+      } else {
+        dryGainNode.gain.value = sendGain;
+      }
+      voice.connect(dryGainNode);
+      dryGainNode.connect(masterGainNode);
+
+      voice.start(noteTime, 0);
+    }
+
+    function schedule() {
+
+      var currentTime = context.currentTime;
+
+      // The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
+      currentTime -= startTime;
+
+      console.log('note time' + noteTime + '--' + currentTime);
+     // console.log(noteTime + ' vs ' + currentTime + OVERLAY);
+
+      while (noteTime < currentTime + OVERLAY) {
+
+        // Convert noteTime to context time.
+        var contextPlayTime = noteTime + currentTime;
+
+        // iterate on notes at rhythm index
+        for (var i=0; i<$scope.tracks.length; i++){
+
+          // we have to schedule the song
+          if (switchMatrix[i][rhythmIndex] == "true"){
+
+            console.log('do play');
+            playNote(buffers[i], volumes[i], noteTime);
+          }
+        }
+
+        // Attempt to synchronize drawing time with sound
+        /*  if (noteTime != lastDrawTime) {
+         lastDrawTime = noteTime;
+         drawPlayhead((rhythmIndex + 15) % 16);
+         } */
+
+        advanceNote();
+      }
+
+      timeoutId = setTimeout(schedule, DELAY);
+    }
+
+    function handlePlay() {
+
+      noteTime = 0.0;
+      startTime = context.currentTime;
+      schedule();
+    }
+
+    function handleStop() {
+      clearTimeout(timeoutId);
+      rhythmIndex = 0;
     }
 
   });
