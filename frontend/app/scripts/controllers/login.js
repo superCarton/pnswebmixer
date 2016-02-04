@@ -20,6 +20,8 @@ angular.module('frontendApp')
     };
 
     $scope.showSignUp = function() {
+      $("#lastNameLogin").required = true;
+      $("#firstNameLogin").required = true;
       $scope.loginForm = true;
       $scope.loginButton = false;
       $scope.registerButton = true;
@@ -32,6 +34,8 @@ angular.module('frontendApp')
     };
 
     $scope.showLogin = function() {
+      $("#lastNameLogin").required = false;
+      $("#firstNameLogin").required = false;
       $scope.loginForm = true;
       $scope.loginButton = true;
       $scope.registerButton = false;
@@ -40,6 +44,8 @@ angular.module('frontendApp')
       $scope.email = '';
       $scope.pwd = '';
     };
+
+
 
     $scope.signUp = function() {
        $scope.signUpContent = {

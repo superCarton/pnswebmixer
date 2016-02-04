@@ -8,6 +8,8 @@
 
   <div class="login-form row" ng-show="loginForm">
 
+    <form name="myLoginForm">
+
     <div class="row">
       <input id="lastNameLogin"  placeholder="Last Name" ng-model="lastName" ng-show="showLastName">
     </div>
@@ -17,19 +19,23 @@
     </div>
 
     <div class="row">
-      <input type="email" placeholder="Email" pattern="[^ @]*@[^ @]*" ng-model="email" name="myEmail">
+      <input required type="email" placeholder="Email" pattern="[^ @]*@[^ @]*" ng-model="email" name="myEmail">
     </div>
 
     <div class="row">
-      <input type="password" name="myPwd" placeholder="Password" ng-model="pwd">
+      <input required type="password" name="myPwd" placeholder="Password" ng-model="pwd">
     </div>
 
     <div class="row">
       <button id="signUp-button" class="btn btn-primary" type="submit" ng-show ="registerButton" ng-click="signUp()">Sign Up</button>
     </div>
+
     <div class="row">
       <button id="login-button" class="btn btn-primary" type="submit" ng-click="logIn()" ng-show="loginButton">Login</button>
     </div>
+
+    </form>
+
   </div>
 
 </div>
