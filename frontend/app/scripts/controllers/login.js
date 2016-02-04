@@ -70,10 +70,12 @@ angular.module('frontendApp')
         $rootScope.user_id = data._id;
         $scope.connected = true;
         $scope.logoutMenuOn = true;
-        $scope.firstName = data.first_name;
-        $scope.lastName = data.last_name;
-        $scope.email = data.email;
-        $scope.pwd = data.password;
+        $scope.loginMenuOn = false;
+        $scope.registerMenuOn = false;
+        $rootScope.first_name = data.first_name;
+        $rootScope.last_name = data.last_name;
+        $scope.email = '';
+        $scope.pwd = '';
 
         dialog = new BootstrapDialog({
           size: BootstrapDialog.SIZE_SMALL,
@@ -129,10 +131,12 @@ angular.module('frontendApp')
           $rootScope.user_id = data._id;
           $scope.connected = true;
           $scope.logoutMenuOn = true;
-          $scope.firstName = data.first_name;
-          $scope.lastName = data.last_name;
-          $scope.email = data.email;
-          $scope.pwd = data.password;
+          $scope.loginMenuOn = false;
+          $scope.registerMenuOn = false;
+          $rootScope.first_name = data.first_name;
+          $rootScope.last_name = data.last_name;
+          $scope.email = '';
+          $scope.pwd = '';
 
           dialog = new BootstrapDialog({
             size: BootstrapDialog.SIZE_SMALL,

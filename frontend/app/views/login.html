@@ -1,6 +1,6 @@
 <div id="login-content" ng-controller="LoginCtrl" ng-init="init();">
   <div class="navbar-header1 login">
-    <a class="username">{{first_name}} {{last_name}}</a>
+    <a class="username" ng-show="connected">{{firstName}} {{lastName}}</a>
     <button class="navbar-brand1" id="signUp" ng-show="registerMenuOn" ng-click="showSignUp()">Sign up</button>
     <button class="navbar-brand2" id="login" ng-show="loginMenuOn" ng-click="showLogin()">Log in</button>
     <button class="navbar-brand3" id="logout" ng-show="logoutMenuOn"  ng-click="showLogout()">Log out</button>
