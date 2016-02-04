@@ -10,6 +10,8 @@ var pattern = require('../business/pattern');
 router.get('/collection', collection);
 router.get('/view/:userId', getUserPattern);
 router.post('/save', savePattern);
+router.delete('/remove/:patternId', remove);
+router.delete('/drop', drop);
 
 function collection(req, res){
     pattern.collection(function(result){
@@ -25,7 +27,6 @@ function getUserPattern(req, res){
 
 function savePattern(req, res){
     console.log((new Date()).toString() + ' : Save pattern');
-    console.log(req.body);
     if (req.body.user_id != undefined) {
         pattern.save(req.body, function (result) {
             res.send(result)
@@ -33,6 +34,23 @@ function savePattern(req, res){
     } else {
         res.send({status: 'fail', value: 'user_id is needed'})
     }
+}
+
+function remove(req, res){
+    console.log((new Date()).toString() + ' : Remone pattern');
+    if (req.params.patternId != undefined && req.params.patternId != null) {
+        pattern.remove(req.params.patternId, function(result){
+            res.send(result);
+        })
+    } else {
+        res.send({status: 'fail', value: 'patternId is needed'})
+    }
+}
+
+function drop(req, res){
+    pattern.drop(function(result){
+        res.send(result)
+    })
 }
 
 module.exports = router;

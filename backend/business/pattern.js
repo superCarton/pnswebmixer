@@ -14,22 +14,32 @@ function savePattern(body, callback) {
             loops: body.loops,
             beatmaking: body.beatmaking
         });
-        pattern.save(function(err){
+        pattern.save(function(err, result){
             if (err){
                 callback({status: 'fail', value: err})
             } else {
-                callback({status: 'success', value: 'pattern successfully saved'})
+                callback({status: 'success', value: result})
             }
         })
     }
 }
 
+function findOnePattern(patternId, callback){
+    Pattern.findOne({_id:patternId}, function(err, result){
+        if (err || result == null) {
+            callback({status: 'fail', value: err})
+        } else {
+            callback({status: 'success', value: result})
+        }
+    })
+}
+
 function findPatternByUserId(userId, callback) {
     Pattern.find({user_id: userId}, function (err, result) {
         if (err || result == null) {
-            callback({status: 'success', value: err})
+            callback({status: 'fail', value: err})
         } else {
-            callback({status: 'fail', value: result})
+            callback({status: 'success', value: result})
         }
     })
 }
@@ -37,12 +47,33 @@ function findPatternByUserId(userId, callback) {
 function getAllPattern(callback) {
     Pattern.find({}, function (err, result) {
         if (err || result == null) {
-            callback({status: 'success', value: err})
+            callback({status: 'fail', value: err})
         } else {
-            callback({status: 'fail', value: result})
+            callback({status: 'success', value: result})
         }
     })
 }
+
+function removeOne(patternId, callback){
+    Pattern.remove({_id: patternId}, function(err, result){
+        if (err){
+            callback({status: 'err', value: err})
+        } else {
+            callback({status: 'success', value: result.result})
+        }
+    })
+}
+
+function removeAll(callback){
+    Pattern.remove({}, function(err){
+        if (err){
+            callback({status: 'err', value: err})
+        } else {
+            callback({status: 'success'})
+        }
+    })
+}
+
 
 var patternSchema = mongoose.Schema({
     user_id: mongoose.Schema.Types.ObjectId,
@@ -56,5 +87,8 @@ var Pattern = mongoose.model('pattern', patternSchema);
 module.exports = {
     collection: getAllPattern,
     save: savePattern,
-    getUserPattern: findPatternByUserId
+    getUserPattern: findPatternByUserId,
+    find: findOnePattern,
+    remove: removeOne,
+    drop: removeAll
 };
