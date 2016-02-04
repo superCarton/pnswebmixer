@@ -256,7 +256,7 @@ angular.module('frontendApp')
 
     /************ SAVE **********/
 
-    $scope.pattern_title = "";
+    $scope.pattern_title = '';
     var dialog;
     $rootScope.user_id = "vincent";
 

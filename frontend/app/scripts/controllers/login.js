@@ -8,18 +8,26 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoginCtrl', ['$rootScope', '$scope', 'user', function ($scope, $rootScope, user) {
+  .controller('LoginCtrl', function ($scope, $rootScope, UserFactory) {
 
-    $scope.init = function() {
-      $scope.logout = false;
-      $scope.login  = true;
-      $scope.register =  true;
+    /************* INIT ****************/
+
+    var json_to_send;
+
+    $scope.init = function () {
+      $scope.logoutMenuOn = false;
+      $scope.loginMenuOn = true;
+      $scope.registerMenuOn = true;
       $scope.loginForm = false;
       $scope.loginButton = false;
-      $scope.username = false;
+      $scope.connected = false;
+      json_to_send = [];
     };
 
-    $scope.showSignUp = function() {
+    /************* SHOW STUFF FUNCTIONS *************/
+
+    $scope.showSignUp = function () {
+      json_to_send = [];
       $("#lastNameLogin").required = true;
       $("#firstNameLogin").required = true;
       $scope.loginForm = true;
@@ -27,77 +35,68 @@ angular.module('frontendApp')
       $scope.registerButton = true;
       $scope.showLastName = true;
       $scope.showFirstName = true;
-      $scope.email = '';
-      $scope.pwd = '';
-      $scope.firstName = '';
-      $scope.lastName = '';
-    };
+    }
 
-    $scope.showLogin = function() {
+    $scope.showLogin = function () {
+      json_to_send = [];
       $("#lastNameLogin").required = false;
       $("#firstNameLogin").required = false;
       $scope.loginForm = true;
       $scope.loginButton = true;
       $scope.registerButton = false;
       $scope.showFirstName = false;
-      $scope.showLastName =false;
-      $scope.email = '';
-      $scope.pwd = '';
-    };
+      $scope.showLastName = false;
+    }
 
-
-
-    $scope.signUp = function() {
-       $scope.signUpContent = {
-        "first_name" : $scope.firstName,
-        "last_name" : $scope.lastName,
-        "email" : $scope.email,
-        "password" : $scope.pwd
-      };
-      console.log($scope.signUpContent);
-      user.register($scope.signUpContent, function(data) {
-        $scope.loginButton = true;
-        $scope.registerButton = false;
-        $scope.showFirstName = false;
-        $scope.showLastName =false;
-        $scope.email = '';
-        $scope.pwd = '';
-      }, function(error) {
-        console.log(error);
-        return;
-      });
-    };
-
-    $scope.logIn =  function() {
-
-      console.log($scope.email);
-
-      $scope.loginContent = {
-        "email" : $scope.email,
-        "password" : $scope.pwd
-      };
-      user.connect($scope.loginContent, function(data) {
-        $scope.loginForm = false;
-        $scope.login = false;
-        $scope.register = false;
-        $scope.username = true;
-        $scope.logout = true;
-        $scope.first_name = data.first_name;
-        $scope.last_name = data.last_name;
-
-        $scope.id = data._id;
-        $rootScope.user_id = $scope.id;
-        $rootScope.first_name =$scope.first_name;
-        $rootScope.last_name =$scope.last_name;
-      }, function(error) {
-        console.log(error);
-        return;
-      });
-    };
-    $scope.showLogout = function() {
+    $scope.showLogout = function () {
       $scope.logout = false;
-      $scope.login  = true;
+      $scope.login = true;
       $scope.register = true;
       $scope.username = false;
     }
-  }]);
+
+    /************ SIGN UP *************/
+
+    $scope.signUp = function (firstName, lastName, myEmail, pwd) {
+      json_to_send = {
+        first_name: firstName,
+        last_name: lastName,
+        email: myEmail,
+        password: pwd
+      };
+
+      UserFactory.signUpToServer(json_to_send).then(function (data) {
+        $rootScope.user_id = data._id;
+        $scope.connected = true;
+        $scope.logoutMenuOn = true;
+        $scope.firstName = data.first_name;
+        $scope.lastName = data.last_name;
+        $scope.email = data.email;
+        $scope.pwd = data.password;
+      }, function (err) {
+        //TODO: handle server error
+      });
+    }
+
+    /************ LOG IN *************/
+
+    $scope.logIn = function (mail, pwd) {
+      json_to_send = {
+        email: mail,
+        password: pwd
+      };
+
+      UserFactory.loginToServer(json_to_send).then(function (data) {
+        $rootScope.user_id = data._id;
+        $scope.connected = true;
+        $scope.logoutMenuOn = true;
+        $scope.firstName = data.first_name;
+        $scope.lastName = data.last_name;
+        $scope.email = data.email;
+        $scope.pwd = data.password;
+      }, function (err) {
+        //TODO: handle server error
+      });
+    }
+
+  });
