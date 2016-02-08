@@ -20,6 +20,7 @@ function saveFile(body, file, callback) {
     if (file == undefined) {
         callback({status: 'fail', value: 'missing file'})
     } else {
+        console.log(file);
         var extansion = (file.mimetype.split('/'))[1];
         fs.rename(__dirname + '/../uploads/' + file.filename, __dirname + '/../uploads/' + file.filename + '.' + extansion);
 

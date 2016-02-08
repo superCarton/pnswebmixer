@@ -5,7 +5,6 @@
 var mongoose = require('../connector/mongodb');
 var async = require('async');
 
-const userDescription = 'http://localhost:4000/users/description/';
 const viewComments = 'http://localhost:4000/commentary/view/';
 const removePath = 'http://localhost:4000/commentary/remove/';
 
