@@ -4,10 +4,10 @@
 'use strict';
 
 angular.module('frontendApp')
-  .factory('samplesByUsersFactory',["$http",'$rootScope', function($http, $rootScope){
+  .factory('samplesByUsersFactory', function($http, CONSTANTS){
     var obj = {
       all : function(callback){
-        $http.get("http://" + $rootScope.backendURL + "/samples/collection")
+        $http.get(CONSTANTS.serverAddress + "samples/collection")
           .success(function(result){
             if (result.status == 'success'){
               callback(result.value)
@@ -21,4 +21,4 @@ angular.module('frontendApp')
       }
     };
     return obj;
-  }]);
+  });

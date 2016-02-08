@@ -23,8 +23,6 @@ angular.module('frontendApp')
     // when there is a click on a comment button
     $scope.open = function (id) {
 
-      console.log(id);
-
         if ($rootScope.connected){
 
           // get the comment

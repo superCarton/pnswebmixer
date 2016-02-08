@@ -3,11 +3,11 @@
  */
 
 angular.module('frontendApp')
-  .factory('commentsFactory',["$http", '$rootScope', '$q', function($http, $rootScope, $q){
+  .factory('commentsFactory',["$http", '$rootScope', '$q', function($http, CONSTANTS, $q){
     var obj = {
       allBySampleId : function(sample_id){
         var deferred = $q.defer();
-        $http.get("http://" + $rootScope.backendURL + "/commentary/view/" + sample_id)
+        $http.get(CONSTANTS.serverAddress + "commentary/view/" + sample_id)
           .success(function(result){
             console.log(result);
             if (result.status == 'success'){
@@ -26,7 +26,7 @@ angular.module('frontendApp')
       },
       commentSample : function(sample_id, first_name, user_id, comment){
         var deferred = $q.defer();
-        $http.post("http://" + $rootScope.backendURL + "/commentary/post/" + sample_id,
+        $http.post(CONSTANTS.serverAddress + "commentary/post/" + sample_id,
           { 'user_id' : user_id, 'first_name' : first_name,
           'text': comment}
         ).success(function(result){
