@@ -82,15 +82,10 @@ angular.module('frontendApp')
         $scope.droppedObjects1 = [];
         $scope.tracks = [];
         $scope.droppedObjects1 = data.loops;
-        //switchMatrix = data.beatmaking;
-        //volumes = data.volumes_samples;
-        //muteMatrix = data.mute_samples;
-        //soloMatrix = data.solo_samples;
-        switchMatrix = [["true", "false", "true", "false", "false", "false", "false", "false",
-          "false", "false", "false", "false", "false", "false", "false", "false"],["true", "false", "true", "false", "false", "false", "false", "false",
-          "false", "false", "false", "false", "false", "false", "false", "false"]];
-        muteMatrix = [false,true];
-        soloMatrix = [true,false];
+        switchMatrix = data.beatmaking;
+        volumes = data.volumes_samples;
+        muteMatrix = data.mute_samples;
+        soloMatrix = data.solo_samples;
         $scope.droppedObjects1.forEach(function (s) {
           $scope.tracks.push("assets/loops/" + s);
         });
