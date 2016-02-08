@@ -31,7 +31,7 @@ angular.module('frontendApp')
 
       tempo = document.getElementById("myTempo").value;
 
-        $("#play").attr("disabled", true);
+      $("#play").attr("disabled", true);
       var bufferLoader;
       var tracks = $scope.tracks;
       bufferLoader = new BufferLoader(
@@ -81,14 +81,13 @@ angular.module('frontendApp')
     $scope.lightsIDs = ["light-1", "light-2", "light-3", "light-4", "light-5", "light-6", "light-7", "light-8",
       "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
-    var isPlaying = false;
-
     /******************* MUTE + SOLO + VOLUME *****************/
 
     var muteMatrix = [];
     var soloMatrix = [];
 
     $scope.toggleMute = function (index) {
+
       if (soloMatrix[index]) {
         muteMatrix[index] = false;
       } else {
@@ -96,13 +95,9 @@ angular.module('frontendApp')
       }
       $("#mute-" + index).toggleClass("mute");
 
-      if (isPlaying) {
-        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + index).val()
-        })
-      }
+      muteMatrix[index] ? volumes[index] = 0 : volumes[index] = $("#vol-" + index).val();
 
-    }
+    };
 
     $scope.toggleSolo = function (index) {
       soloMatrix[index] = !soloMatrix[index];
@@ -118,24 +113,16 @@ angular.module('frontendApp')
         }
       }
 
-      if (isPlaying) {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          trackVolumeNodes[i].forEach(function (trackVolumeNode) {
-            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + i).val()
-          })
-        }
+      for (var i = 0; i < muteMatrix.length; i++) {
+        muteMatrix[i] ? volumes[i] = 0 : volumes[i] = $("#vol-" + i).val()
       }
-    }
+    };
 
     $scope.changeVolume = function (index) {
-      if (isPlaying && !muteMatrix[index]) {
-
-        volumes[i] = $("#vol-" + index).val();
-        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-          trackVolumeNode.gain.value = $("#vol-" + index).val();
-        })
+      if (!muteMatrix[index]) {
+        volumes[index] = $("#vol-" + index).val();
       }
-    }
+    };
 
     /***************** DELETE TRACK ***********/
     $scope.deleteLoop = function (index) {
@@ -146,7 +133,7 @@ angular.module('frontendApp')
       soloMatrix.splice(index, 1);
       switchMatrix.splice(index, 1);
       loadAllSoundSamples();
-    }
+    };
 
     /************* BEATMAKING ****************/
 
@@ -169,7 +156,7 @@ angular.module('frontendApp')
         obj.setAttribute("data-active", "false");
         switchMatrix[index_song][index_bit] = "false";
       }
-    }
+    };
 
     /************ SAVE **********/
 
@@ -232,7 +219,7 @@ angular.module('frontendApp')
           });
         }
       }
-    }
+    };
 
 
     /******* TEMPO ********/
@@ -299,7 +286,7 @@ angular.module('frontendApp')
       // Connect to dry mix
       var dryGainNode = context.createGain();
 
-      if (muteMatrix[i]) {
+      if (muteMatrix[rhythmIndex]) {
         dryGainNode.gain.value = 0;
       } else {
         dryGainNode.gain.value = sendGain;
@@ -381,9 +368,6 @@ angular.module('frontendApp')
 
       // disable play button
       $("#play").attr("disabled", true);
-
-      isPlaying = true;
-
       $("#play").toggleClass("playing");
 
       handlePlay();
@@ -400,7 +384,6 @@ angular.module('frontendApp')
       handleStop();
 
       if ($("#play").hasClass("playing")) {
-        isPlaying = false;
         $("#play").toggleClass("playing");
         $scope.lightsIDs.forEach(function (light) {
           if ($('#' + light).hasClass("fa-circle")) {
