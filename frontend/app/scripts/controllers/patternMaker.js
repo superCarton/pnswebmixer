@@ -19,7 +19,7 @@ angular.module('frontendApp')
     var volumes = [];
     var tempo;
 
-    $scope.init = function() {
+    $scope.init = function () {
 
     }
     function initAudioContext() {
@@ -53,7 +53,7 @@ angular.module('frontendApp')
       console.log("sounds finished loading");
       buffers = bufferList;
 
-      for (var i=0; i<buffers.length; i++){
+      for (var i = 0; i < buffers.length; i++) {
         volumes[i] = $("#vol-" + i).val();
       }
       $("#play").attr("disabled", false);
@@ -66,20 +66,34 @@ angular.module('frontendApp')
     $scope.onDropComplete1 = function (data) {
       var index = $scope.droppedObjects1.indexOf(data);
       if (index == -1) {
-        $scope.droppedObjects1.push(data);
+        if (typeof data === 'string') {
+          $scope.droppedObjects1.push(data);
+          $scope.tracks = [];
+          switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
+            "false", "false", "false", "false", "false", "false", "false", "false"]);
+          muteMatrix.push(false);
+          soloMatrix.push(false);
+          playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false]);
+          $scope.droppedObjects1.forEach(function (s) {
+            $scope.tracks.push("assets/loops/" + s);
+          });
+        } else {
+          $scope.droppedObjects1 = data.loops;
+          $scope.tracks = [];
+          switchMatrix = data.beatmaking;
+          console.log(switchMatrix);
+          volumes = data.volumes_samples;
+          muteMatrix = data.mute_samples;
+          soloMatrix = data.solo_samples;
+          $scope.droppedObjects1.forEach(function (s) {
+            $scope.tracks.push("assets/loops/" + s);
+          });
+          scanSwitchMatrix();
+        }
+        $scope.stopBeat();
+        loadAllSoundSamples();
       }
-      $scope.tracks = [];
-      switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
-        "false", "false", "false", "false", "false", "false", "false", "false"]);
-      muteMatrix.push(false);
-      soloMatrix.push(false);
-      playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
-        false, false, false, false, false]);
-      $scope.droppedObjects1.forEach(function (s) {
-        $scope.tracks.push("assets/loops/" + s);
-      });
-      $scope.stopBeat();
-      loadAllSoundSamples();
     }
 
 
@@ -147,6 +161,17 @@ angular.module('frontendApp')
     var switchMatrix = [];
     var playingLoops = [];
 
+    function scanSwitchMatrix() {
+      for(var i = 0; i < switchMatrix.length; i++) {
+        for(var j = 0; j < switchMatrix[i].length; j++) {
+          if(switchMatrix[i][j] == 'true') {
+            $('#b' + i + j).setAttribute("data-active", "true");
+            $('#b' + i + j).toggleClass("fa-circle");
+          }
+        }
+      }
+    }
+
     $scope.toggleButton = function (event) {
       var obj = event.currentTarget;
 
@@ -169,17 +194,15 @@ angular.module('frontendApp')
 
     $scope.pattern_title = '';
     var dialog;
-    $rootScope.user_id = "vincent";
 
     $scope.save_pattern = function (name) {
-      if (name != "") {
-        if ($rootScope.user_id == "") {
+      if (name != '') {
+        if ($rootScope.user_id == '') {
           dialog = new BootstrapDialog({
             title: "Erreur",
             message: "Vous devez être connecté à votre compte pour pouvoir sauvegarder votre pattern !",
           });
           dialog.realize();
-          //dialog.getModalHeader().css('background-color', '#f0b054');
           dialog.getModalHeader().css('background-color', '#d9534f');
           dialog.getModalHeader().css('color', '#ffffff');
           dialog.getModalHeader().css('border-top-left-radius', '6px');
@@ -192,8 +215,11 @@ angular.module('frontendApp')
           var json_to_send = {
             name: name,
             user_id: $rootScope.user_id,
-            loops: $scope.tracks,
-            beatmaking: switchMatrix
+            loops: $scope.droppedObjects1,
+            beatmaking: switchMatrix,
+            volumes_samples: volumes,
+            mute_samples: muteMatrix,
+            solo_samples: soloMatrix
           };
 
           PatternFactory.savePattern(json_to_send).then(function (data) {
@@ -211,7 +237,6 @@ angular.module('frontendApp')
           }, function (err) {
             console.log(err);
             dialog = new BootstrapDialog({
-              size: BootstrapDialog.SIZE_SMALL,
               title: "Echec de la sauvegarde",
               message: "Votre pattern " + name.bold() + " n'a pas été enregistré...",
             });
@@ -257,12 +282,12 @@ angular.module('frontendApp')
      */
     function advanceNote() {
 
-      noteTime += computeDelay(1)/1000;
+      noteTime += computeDelay(1) / 1000;
 
       rhythmIndex++;
 
       // set light on at the correct index
-      animateLight(rhythmIndex-1);
+      animateLight(rhythmIndex - 1);
 
       if (rhythmIndex == LOOP_LENTGH) {
 
@@ -321,10 +346,10 @@ angular.module('frontendApp')
         var contextPlayTime = noteTime + currentTime;
 
         // iterate on notes at rhythm index
-        for (var i=0; i<$scope.tracks.length; i++){
+        for (var i = 0; i < $scope.tracks.length; i++) {
 
           // we have to schedule the song
-          if (switchMatrix[i][rhythmIndex] == "true"){
+          if (switchMatrix[i][rhythmIndex] == "true") {
             playNote(buffers[i], volumes[i], noteTime);
           }
         }
@@ -403,17 +428,17 @@ angular.module('frontendApp')
      * Callback for change tempo
      * Update the value of the tempo
      */
-    $scope.changeTempo = function(){
+    $scope.changeTempo = function () {
       tempo = document.getElementById("myTempo").value;
     };
 
     /****** Frequency ********/
-    $scope.setFrequency = function() {
+    $scope.setFrequency = function () {
       var minValue = 40;
       var maxValue = context.sampleRate / 2;
       var unitRate = (maxValue - minValue) / 100;
-      var currentRate = unitRate *  $scope.song.frequency + minValue;
-      if( biquadFilter.frequency != undefined) {
+      var currentRate = unitRate * $scope.song.frequency + minValue;
+      if (biquadFilter.frequency != undefined) {
         biquadFilter.frequency.value = currentRate;
       }
     }

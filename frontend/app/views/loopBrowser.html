@@ -12,10 +12,10 @@
   <uib-tab heading="Collection">
     <table class="table table-hover" id="patternList">
       <tbody>
-      <tr ng-repeat="sample in samplesByUsers" ng-drag="true" ng-drag-data="loop" data-allow-transform="false" class="ng-binding" draggable="false">
-        <td>{{sample.name}}</td>
+      <tr ng-repeat="pattern in patternsByUsers" ng-drag="true" ng-drag-data="pattern" data-allow-transform="true" class="ng-binding" draggable="false">
+        <td>{{pattern.name}}</td>
        <!-- <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
-        <td><button type="button" class="btn btn-default" ng-click="open(sample._id)">Commenter</button></td>
+        <td><button type="button" class="btn btn-default" ng-click="open(pattern._id)">Commenter</button></td>
       </tr>
       </tbody>
     </table>

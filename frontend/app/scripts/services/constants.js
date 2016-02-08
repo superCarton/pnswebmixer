@@ -7,5 +7,6 @@ angular.module('frontendApp')
     serverAddress: 'http://10.212.100.199:4000/',
     savePatternPath: 'pattern/save',
     loginPath: 'users/login',
-    signUpPath: 'users/signup'
+    signUpPath: 'users/signup',
+    getAllPatternsPath: 'pattern/collection'
   });

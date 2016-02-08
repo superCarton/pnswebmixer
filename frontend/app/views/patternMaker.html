@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-xs-9 col-xs-offset-3 lights">
       <span ng-repeat="light in lightsIDs" class="light-tempo"><i id="{{light}}"
-        class="fa fa-circle-thin"></i></span>
+                                                                  class="fa fa-circle-thin"></i></span>
     </div>
   </div>
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
@@ -13,12 +13,14 @@
     </div>
 
     <div class="col-xs-1 section buttons-mute-solo-volume volume-slider">
-      <input id="vol-{{$index}}" ng-model="tools.volume" ng-change="changeVolume($index)" type="range" min="0" max="1" value="1" step="0.01">
+      <input id="vol-{{$index}}" ng-model="tools.volume" ng-change="changeVolume($index)" type="range" min="0" max="1"
+             value="1" step="0.01">
     </div>
     <div class="col-xs-1 section name">{{obj}}</div>
     <div class="col-xs-8 section step-sequencer">
-    <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i id="b-{{button}}"
-      ng-click="toggleButton($event)" class="fa fa-circle-thin" data-song="{{$parent.$index}}" data-index={{button}}
+    <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i
+      id="b{{$parent.$index}}{{button}}"
+      ng-click="toggleButton($event)" class="fa fa-circle-thin b-{{button}}" data-song="{{$parent.$index}}" data-index={{button}}
       data-active="false"></i></span>
     </div>
     <div class="col-xs-1 section delete">
@@ -29,12 +31,12 @@
 
 <div class="row tools">
   <form id="save-form">
-  <div class="col-xs-3 save-field">
-    <input required ng-model="pattern_title" id="pattern-name" type="text" placeholder="Entez un nom">
-  </div>
+    <div class="col-xs-3 save-field">
+      <input required ng-model="pattern_title" id="pattern-name" type="text" placeholder="Entez un nom">
+    </div>
     <div class="col-xs-1 save-disket">
-    <button id="disket" ng-click="save_pattern(pattern_title)"><i class="fa fa-save"></i></button>
-  </div>
+      <button id="disket" ng-click="save_pattern(pattern_title)"><i class="fa fa-save"></i></button>
+    </div>
   </form>
   <div class="col-xs-2 play-stop-buttons">
     <button id="play" ng-click="playBeat()" disabled="true"><i class="fa fa-play"></i></button>
@@ -47,23 +49,24 @@
         <span id="range">120</span>
       </div>
       <div class="col-xs-9">
-        <input id="myTempo" type="range" min=70 max="180" value=120 ng-model="tools.tempo" ng-change="changeTempo()" oninput="showValue(this.value)">
+        <input id="myTempo" type="range" min=70 max="180" value=120 ng-model="tools.tempo" ng-change="changeTempo()"
+               oninput="showValue(this.value)">
       </div>
     </div>
     <div class="row">
       <span id="tempo" class="pull-right">TEMPO</span>
     </div>
   </div>
- <!-- <div class="row" >
-    <div class="col-lg-3 song-frequency">
-      <span>Frequency : </span>
-      <input type="range" min="0" max="100" ng-model="song.frequency" ng-init = "song.frequency=50" ng-change="setFrequency()">
-    </div>
-    <div class="col-lg-3">Hello2</div>
-    <div class="col-lg-3">Hello3</div>
-    <div class="col-lg-3">Hello4</div>
-  </div>
--->
+  <!-- <div class="row" >
+     <div class="col-lg-3 song-frequency">
+       <span>Frequency : </span>
+       <input type="range" min="0" max="100" ng-model="song.frequency" ng-init = "song.frequency=50" ng-change="setFrequency()">
+     </div>
+     <div class="col-lg-3">Hello2</div>
+     <div class="col-lg-3">Hello3</div>
+     <div class="col-lg-3">Hello4</div>
+   </div>
+ -->
 </div>
 
 
