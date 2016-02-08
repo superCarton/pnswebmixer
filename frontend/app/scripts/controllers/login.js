@@ -23,11 +23,19 @@ angular.module('frontendApp')
       $scope.loginButton = false;
       $scope.connected = false;
       json_to_send = [];
+      $scope.firstName = '';
+      $scope.lastName = '';
+      $scope.myEmail = '';
+      $scope.pwd = '';
     };
 
     /************* SHOW STUFF FUNCTIONS *************/
 
     $scope.showSignUp = function () {
+      $scope.firstName = '';
+      $scope.lastName = '';
+      $scope.myEmail = '';
+      $scope.pwd = '';
       json_to_send = [];
       $("#lastNameLogin").required = true;
       $("#firstNameLogin").required = true;
@@ -39,6 +47,10 @@ angular.module('frontendApp')
     }
 
     $scope.showLogin = function () {
+      $scope.firstName = '';
+      $scope.lastName = '';
+      $scope.myEmail = '';
+      $scope.pwd = '';
       json_to_send = [];
       $("#lastNameLogin").required = false;
       $("#firstNameLogin").required = false;
@@ -50,11 +62,10 @@ angular.module('frontendApp')
     }
 
     $scope.showLogout = function () {
-      console.log("hi");
-      $scope.logout = false;
-      $scope.login = true;
-      $scope.register = true;
-      $scope.username = false;
+      $scope.connected = false;
+      $rootScope.first_name = '';
+      $rootScope.last_name = '';
+      $scope.init();
     }
 
     /************ SIGN UP *************/
@@ -75,8 +86,11 @@ angular.module('frontendApp')
         $scope.registerMenuOn = false;
         $rootScope.first_name = data.first_name;
         $rootScope.last_name = data.last_name;
-        $scope.email = '';
+        $scope.firstName = data.first_name;
+        $scope.lastName = data.last_name;
+        $scope.myEmail = '';
         $scope.pwd = '';
+        $scope.loginForm = false;
 
         dialog = new BootstrapDialog({
           title: "Inscription réussie",
@@ -135,8 +149,9 @@ angular.module('frontendApp')
           $scope.registerMenuOn = false;
           $rootScope.first_name = data.first_name;
           $rootScope.last_name = data.last_name;
-          $scope.email = '';
+          $scope.myEmail = '';
           $scope.pwd = '';
+          $scope.loginForm = false;
 
           dialog = new BootstrapDialog({
             title: "Connexion réussie",
