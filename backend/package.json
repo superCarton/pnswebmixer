@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/webMixer.js",
-    "unit": "mocha --ui tdd ./tests/unit/*.js"
+    "test": "mocha --ui tdd ./tests/unit/*.js"
   },
   "dependencies": {
 
