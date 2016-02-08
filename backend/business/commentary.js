@@ -38,11 +38,13 @@ function writeCommentary(body, sample_id, callback) {
                         } else {
                             result.remove_topic = removePath + result._id;
                             result.contents[0].remove_commentary = removePath + result._id + '/' + result.contents[0]._id;
-                            result.save(function (err, final_result) {
+                            result.save(function (err) {
                                 if (err) {
                                     callback({status: 'fail', value: err})
                                 } else {
-                                    callback({status: 'success', value: final_result})
+                                    viewCommentary(sample_id, function(result){
+                                        callback(result)
+                                    })
                                 }
                             })
                         }
