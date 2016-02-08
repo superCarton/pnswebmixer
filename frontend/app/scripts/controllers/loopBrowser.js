@@ -25,27 +25,35 @@ angular.module('frontendApp')
 
       console.log(id);
 
-      // if a user is connected
-//      if (!angular.isUndefined($rootScope.user_id)){
+        if ($rootScope.connected){
 
-        // get the comment
-        commentsFactory.allBySampleId(id).then(function(data){
+          // get the comment
+          commentsFactory.allBySampleId(id).then(function(data){
 
-          $rootScope.comments = data;
-          $rootScope.currentCommentId = id;
+            $rootScope.comments = data;
+            $rootScope.currentCommentId = id;
+
+            // open the modal
+            var modalInstance = $uibModal.open({
+              templateUrl: 'views/comment.html',
+              controller: 'AllcommentsCtrl',
+              size: 'lg'
+            });
+
+          }, function(err){
+            console.log('error' + err);
+          });
+
+        } else {
 
           // open the modal
           var modalInstance = $uibModal.open({
-            templateUrl: 'allcomments.html',
+            templateUrl: 'views/not_connected_comment.html',
             controller: 'AllcommentsCtrl',
             size: 'lg'
           });
 
-        }, function(err){
-          console.log('error' + err);
-        });
-
-    //  }
+        }
     };
 
     $http.get('../assets/loops.json')
