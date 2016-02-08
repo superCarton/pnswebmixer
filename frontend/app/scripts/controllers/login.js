@@ -50,6 +50,7 @@ angular.module('frontendApp')
     }
 
     $scope.showLogout = function () {
+      console.log("hi");
       $scope.logout = false;
       $scope.login = true;
       $scope.register = true;
@@ -78,7 +79,6 @@ angular.module('frontendApp')
         $scope.pwd = '';
 
         dialog = new BootstrapDialog({
-          size: BootstrapDialog.SIZE_SMALL,
           title: "Inscription réussie",
           message: "Bienvenue dans le Polytech Web Mixer, " + data.first_name.bold() + ".",
         });
@@ -90,7 +90,7 @@ angular.module('frontendApp')
         dialog.open();
 
       }, function (err) {
-        if (err != null) {
+        if (err == null) {
           dialog = new BootstrapDialog({
             title: "Erreur",
             message: "Il semble y avoir un problème avec le serveur... :-(",
@@ -139,7 +139,6 @@ angular.module('frontendApp')
           $scope.pwd = '';
 
           dialog = new BootstrapDialog({
-            size: BootstrapDialog.SIZE_SMALL,
             title: "Connexion réussie",
             message: "C'est un plaisir de vous revoir, " + data.first_name.bold() + ".",
           });

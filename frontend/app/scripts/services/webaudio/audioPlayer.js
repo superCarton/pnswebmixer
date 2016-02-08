@@ -88,7 +88,7 @@ angular.module('frontendApp')
           // connect each sound sample to a vomume node
           var gainNode = context.createGain();
           // Connect the sound sample to its volume node
-          sources[i].connect( gainNode);
+          sources[i].connect(gainNode);
           // Connects all track volume nodes a single master volume node
           //gainNode.connect(masterVolumeNode);
           gainNode.connect(filter);
