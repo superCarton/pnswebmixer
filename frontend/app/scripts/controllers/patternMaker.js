@@ -13,19 +13,23 @@ angular.module('frontendApp')
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
-    var samples = []; // audiograph nodes
-    var masterVolumeNode;
     var trackVolumeNodes = [];
+    var biquadFilter;
     $scope.tracks = [];
     var volumes = [];
     var tempo;
 
+    $scope.init = function() {
+
+    }
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new audioContext();
       if (ctx === undefined) {
         throw new Error('AudioContext is not supported. :(');
       }
+      biquadFilter = ctx.createBiquadFilter();
+      $scope.setFrequency;
       return ctx;
     }
 
@@ -48,9 +52,7 @@ angular.module('frontendApp')
 
       console.log("sounds finished loading");
       buffers = bufferList;
-      for (var i=0; i<buffers.length; i++){
-        volumes[i] = $("#vol-" + i).val();
-      }
+/*
       $("#play").attr("disabled", false);
     }
 
@@ -59,6 +61,7 @@ angular.module('frontendApp')
       // Create a single gain node for master volume
       masterVolumeNode = context.createGain();
       //console.log("in build graph, bufferList.size = " + bufferList.length);
+
       bufferList.forEach(function (sample, i) {
         // create 8 samples for each sample
         sources[i] = [];
@@ -73,11 +76,12 @@ angular.module('frontendApp')
           sources[i][j].connect(trackVolumeNodes[i][j]);
           // Connects all track volume nodes a single master volume node
           trackVolumeNodes[i][j].connect(masterVolumeNode);
-          // Connect the master volume to the speakers
-          masterVolumeNode.connect(context.destination);
+          // Connect the master volume to the Biquad Filter
+          masterVolumeNode.connect(biquadFilter);
+          //Connect the Biquad Filter to the speakers
+          biquadFilter.connect(context.destination);
 
           trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
-          volumes[i] = $("#vol-" + i).val();
 
           // Checking for mute loop
           if (muteMatrix[i]) {
@@ -110,7 +114,11 @@ angular.module('frontendApp')
             playingLoops[i][j] = true;
           }
         }
+*/
+      for (var i=0; i<buffers.length; i++){
+        volumes[i] = $("#vol-" + i).val();
       }
+      $("#play").attr("disabled", false);
     }
 
     /*********************    DRAG N DROP    **************************/
@@ -142,39 +150,7 @@ angular.module('frontendApp')
     $scope.lightsIDs = ["light-1", "light-2", "light-3", "light-4", "light-5", "light-6", "light-7", "light-8",
       "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
-    var i = 0;
     var isPlaying = false;
-    var timer;
-
-    function animateLights() {
-
-     /* if (i == 0) {
-        stopAllTracks();
-        buildGraph(buffers);
-        playFrom();
-      } */
-
-      animateLight(i++);
-
-      if (!isPlaying) {
-        i = 0;
-        return;
-      } else if (i <= $scope.lightsIDs.length) {
-        timer = setTimeout(animateLights, computeDelay(1));
-      } else {
-        i = 0;
-        animateLights();
-      }
-    }
-
-    function animateLight(index) {
-      if (index == 0) {
-        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-      } else {
-        $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-      }
-    }
 
     /******************* MUTE + SOLO + VOLUME *****************/
 
@@ -328,53 +304,17 @@ angular.module('frontendApp')
     }
 
 
-    /******** PLAY BEAT + STOP BEAT **********/
-
-    $scope.playBeat = function () {
-
-      $("#play").attr("disabled", true);
-
-      isPlaying = true;
-      timer = 0;
-      i = 0;
-
-      $("#play").toggleClass("playing");
-
-      handlePlay();
-      animateLights();
-    }
-
-    $scope.stopBeat = function () {
-
-      $("#play").attr("disabled", false);
-
-     // stopAllTracks();
-      handleStop();
-
-      if ($("#play").hasClass("playing")) {
-        clearTimeout(timer);
-        isPlaying = false;
-        $("#play").toggleClass("playing");
-        $scope.lightsIDs.forEach(function (light) {
-          if ($('#' + light).hasClass("fa-circle")) {
-            $('#' + light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
-          }
-        });
-      }
-    }
-
-    $scope.changeTempo = function(){
-
-      tempo = document.getElementById("myTempo").value;
-    }
-
-
     /******* TEMPO ********/
 
     // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
     // représente le nombre de blocks pour 1 temps
     var pulsation = 4;
 
+    /**
+     * The delay for a note at a position on the pattern maker
+     * @param i the position
+     * @returns {number} the delay in sec
+     */
     function computeDelay(i) {
       return i * ((60000 / pulsation) / tempo);
     }
@@ -383,23 +323,38 @@ angular.module('frontendApp')
 
     var context = initAudioContext(); // Init audio context
     var noteTime, startTime, timeoutId, rhythmIndex = 0;
-    var OVERLAY = 0.200;
+    var OVERLAY = 0.100;
     var DELAY = 25;
     var LOOP_LENTGH = 16;
     var masterGainNode;
 
+    /**
+     * Change current note
+     */
     function advanceNote() {
 
       noteTime += computeDelay(1)/1000;
 
       rhythmIndex++;
+
+      // set light on at the correct index
+      animateLight(rhythmIndex-1);
+
       if (rhythmIndex == LOOP_LENTGH) {
+
+        // reset light at the end of the boucle
+        animateLight(LOOP_LENTGH);
         rhythmIndex = 0;
       }
 
-      console.log('advance note index ' + rhythmIndex + ' note time ' + noteTime);
     }
 
+    /**
+     * Build and play a song with a delay
+     * @param buffer the song buffer
+     * @param sendGain the gain
+     * @param noteTime the delay to play the song
+     */
     function playNote(buffer, sendGain, noteTime) {
 
       // Create the note
@@ -424,15 +379,17 @@ angular.module('frontendApp')
       voice.start(noteTime, 0);
     }
 
+    /**
+     * Main schedulling function
+     * Called each DELAY ms
+     * Look ahead for OVERLAY ms to play songs
+     */
     function schedule() {
 
       var currentTime = context.currentTime;
 
       // The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
       currentTime -= startTime;
-
-      console.log('note time' + noteTime + '--' + currentTime);
-     // console.log(noteTime + ' vs ' + currentTime + OVERLAY);
 
       while (noteTime < currentTime + OVERLAY) {
 
@@ -444,17 +401,9 @@ angular.module('frontendApp')
 
           // we have to schedule the song
           if (switchMatrix[i][rhythmIndex] == "true"){
-
-            console.log('do play');
             playNote(buffers[i], volumes[i], noteTime);
           }
         }
-
-        // Attempt to synchronize drawing time with sound
-        /*  if (noteTime != lastDrawTime) {
-         lastDrawTime = noteTime;
-         drawPlayhead((rhythmIndex + 15) % 16);
-         } */
 
         advanceNote();
       }
@@ -462,16 +411,91 @@ angular.module('frontendApp')
       timeoutId = setTimeout(schedule, DELAY);
     }
 
-    function handlePlay() {
+    /**
+     * Switch on light at index
+     * Switch of others
+     * @param index
+     */
+    function animateLight(index) {
+      if (index == 0) {
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      } else {
+        $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      }
+    }
 
+    /**
+     * Play songs
+     */
+    function handlePlay() {
       noteTime = 0.0;
       startTime = context.currentTime;
       schedule();
     }
 
+    /**
+     * Stop schedulling function
+     */
     function handleStop() {
       clearTimeout(timeoutId);
       rhythmIndex = 0;
+    }
+
+    /**
+     * Callback for play button
+     * Play the beats
+     */
+    $scope.playBeat = function () {
+
+      // disable play button
+      $("#play").attr("disabled", true);
+
+      isPlaying = true;
+
+      $("#play").toggleClass("playing");
+
+      handlePlay();
+    }
+
+    /**
+     * Callback for stop button
+     * Stops the music and the lights
+     */
+    $scope.stopBeat = function () {
+
+      $("#play").attr("disabled", false);
+
+      handleStop();
+
+      if ($("#play").hasClass("playing")) {
+        isPlaying = false;
+        $("#play").toggleClass("playing");
+        $scope.lightsIDs.forEach(function (light) {
+          if ($('#' + light).hasClass("fa-circle")) {
+            $('#' + light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
+          }
+        });
+      }
+    }
+
+    /**
+     * Callback for change tempo
+     * Update the value of the tempo
+     */
+    $scope.changeTempo = function(){
+      tempo = document.getElementById("myTempo").value;
+    };
+
+    /****** Frequency ********/
+    $scope.setFrequency = function() {
+      var minValue = 40;
+      var maxValue = context.sampleRate / 2;
+      var unitRate = (maxValue - minValue) / 100;
+      var currentRate = unitRate *  $scope.song.frequency + minValue;
+      if( biquadFilter.frequency != undefined) {
+        biquadFilter.frequency.value = currentRate;
+      }
     }
 
   });
