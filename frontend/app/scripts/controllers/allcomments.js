@@ -22,8 +22,9 @@ angular.module('frontendApp')
       console.log("Comment : " + comm);
 
       // add a comment
-      commentsFactory.commentSample($scope.commentId, $rootScope.user_id, $rootScope.first_name, comm).then(function (data) {
+      commentsFactory.commentSample($scope.commentId, $rootScope.first_name, $rootScope.user_id, comm).then(function (data) {
         $scope.commentaries = data;
+        $scope.newcomment = "";
       });
     };
 
