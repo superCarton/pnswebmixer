@@ -1,9 +1,13 @@
 <div id="login-content" ng-controller="LoginCtrl" ng-init="init();">
   <div class="navbar-header1 login">
-    <a class="username" ng-show="connected">{{firstName}} {{lastName}}</a>
+    <a class="username" ng-show="connected">{{first_name}} {{last_name}}</a>
     <button class="navbar-brand1" id="signUp" ng-show="registerMenuOn" ng-click="showSignUp()">Sign up</button>
     <button class="navbar-brand2" id="login" ng-show="loginMenuOn" ng-click="showLogin()">Log in</button>
     <button class="navbar-brand3" id="logout" ng-show="logoutMenuOn"  ng-click="showLogout()">Log out</button>
+  </div>
+
+  <div class="login-form row" ng-show="connected">
+    Maintenant, créez votre musique !
   </div>
 
   <div class="login-form row" ng-show="loginForm">
@@ -11,11 +15,11 @@
     <form name="formData">
 
     <div class="row">
-      <input id="lastNameLogin"  placeholder="Last Name" ng-model="lastName" ng-show="showLastName">
+      <input id="lastNameLogin"  placeholder="Last Name" ng-model="last_name" ng-show="showLastName">
     </div>
 
     <div class="row">
-      <input id="firstNameLogin"  placeholder="First Name" ng-model="firstName" ng-show="showFirstName">
+      <input id="firstNameLogin"  placeholder="First Name" ng-model="first_name" ng-show="showFirstName">
     </div>
 
     <div class="row">
@@ -27,7 +31,7 @@
     </div>
 
     <div class="row">
-      <button id="signUp-button" class="btn btn-primary" type="submit" ng-show ="registerButton" ng-click="signUp(firstName,lastName,myEmail,pwd)">Sign Up</button>
+      <button id="signUp-button" class="btn btn-primary" type="submit" ng-show ="registerButton" ng-click="signUp(first_name,last_name,myEmail,pwd)">Sign Up</button>
     </div>
 
     <div class="row">
