@@ -64,35 +64,66 @@ angular.module('frontendApp')
     $scope.droppedObjects1 = [];
 
     $scope.onDropComplete1 = function (data) {
+      console.log(data);
       var index = $scope.droppedObjects1.indexOf(data);
-      if (index == -1) {
-        if (typeof data === 'string') {
-          $scope.droppedObjects1.push(data);
-          $scope.tracks = [];
-          switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
-            "false", "false", "false", "false", "false", "false", "false", "false"]);
-          muteMatrix.push(false);
-          soloMatrix.push(false);
-          playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false]);
-          $scope.droppedObjects1.forEach(function (s) {
-            $scope.tracks.push("assets/loops/" + s);
-          });
-        } else {
-          $scope.droppedObjects1 = data.loops;
-          $scope.tracks = [];
-          switchMatrix = data.beatmaking;
-          console.log(switchMatrix);
-          volumes = data.volumes_samples;
-          muteMatrix = data.mute_samples;
-          soloMatrix = data.solo_samples;
-          $scope.droppedObjects1.forEach(function (s) {
-            $scope.tracks.push("assets/loops/" + s);
-          });
-          scanSwitchMatrix();
+      if (typeof data === 'string') {
+        $scope.droppedObjects1.push(data);
+        $scope.tracks = [];
+        switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
+          "false", "false", "false", "false", "false", "false", "false", "false"]);
+        muteMatrix.push(false);
+        soloMatrix.push(false);
+        playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
+          false, false, false, false, false]);
+        $scope.droppedObjects1.forEach(function (s) {
+          $scope.tracks.push("assets/loops/" + s);
+        });
+      } else {
+        $scope.droppedObjects1 = [];
+        $scope.tracks = [];
+        $scope.droppedObjects1 = data.loops;
+        //switchMatrix = data.beatmaking;
+        //volumes = data.volumes_samples;
+        //muteMatrix = data.mute_samples;
+        //soloMatrix = data.solo_samples;
+        switchMatrix = [["true", "false", "true", "false", "false", "false", "false", "false",
+          "false", "false", "false", "false", "false", "false", "false", "false"],["true", "false", "true", "false", "false", "false", "false", "false",
+          "false", "false", "false", "false", "false", "false", "false", "false"]];
+        muteMatrix = [false,true];
+        soloMatrix = [true,false];
+        $scope.droppedObjects1.forEach(function (s) {
+          $scope.tracks.push("assets/loops/" + s);
+        });
+        setTimeout(scanElements, 10);
+      }
+      $scope.stopBeat();
+      loadAllSoundSamples();
+    }
+
+    function scanElements() {
+      // Switch Matrix
+      for (var i = 0; i < switchMatrix.length; i++) {
+        for (var j = 0; j < switchMatrix[i].length; j++) {
+          if (switchMatrix[i][j] == 'true') {
+            $('#b' + i + j)["data-active"] = "true";
+            $('#b' + i + j).toggleClass("fa-circle");
+            $('#b' + i + j).toggleClass("fa-circle-thin");
+          }
         }
-        $scope.stopBeat();
-        loadAllSoundSamples();
+      }
+
+      // Mute Matrix
+      for (var i = 0; i < muteMatrix.length; i++) {
+        if (muteMatrix[i]) {
+          $("#mute-" + i).toggleClass("mute");
+        }
+      }
+
+      // Solo Matrix
+      for (var i = 0; i < soloMatrix.length; i++) {
+        if (soloMatrix[i]) {
+          $("#solo-" + i).toggleClass("solo");
+        }
       }
     }
 
@@ -160,17 +191,6 @@ angular.module('frontendApp')
 
     var switchMatrix = [];
     var playingLoops = [];
-
-    function scanSwitchMatrix() {
-      for(var i = 0; i < switchMatrix.length; i++) {
-        for(var j = 0; j < switchMatrix[i].length; j++) {
-          if(switchMatrix[i][j] == 'true') {
-            $('#b' + i + j).setAttribute("data-active", "true");
-            $('#b' + i + j).toggleClass("fa-circle");
-          }
-        }
-      }
-    }
 
     $scope.toggleButton = function (event) {
       var obj = event.currentTarget;
@@ -255,8 +275,8 @@ angular.module('frontendApp')
 
     /******* TEMPO ********/
 
-    // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
-    // représente le nombre de blocks pour 1 temps
+// 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
+// représente le nombre de blocks pour 1 temps
     var pulsation = 4;
 
     /**
@@ -443,4 +463,5 @@ angular.module('frontendApp')
       }
     }
 
-  });
+  })
+;

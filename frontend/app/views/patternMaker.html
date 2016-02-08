@@ -6,7 +6,7 @@
     </div>
   </div>
   <p ng-show="droppedObjects1.length == 0">Glissez-déposez vos loops ici</p>
-  <div class="row patterns" ng-repeat="obj in droppedObjects1" ng-init="current = 0">
+  <div class="row patterns" ng-repeat="obj in droppedObjects1 track by $index" ng-init="current = 0">
     <div class="col-xs-1 section buttons-mute-solo-volume">
       <button id="mute-{{$index}}" ng-click="toggleMute($index)">Mute</button>
       <button id="solo-{{$index}}" ng-click="toggleSolo($index)">Solo</button>

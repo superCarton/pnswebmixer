@@ -11,7 +11,6 @@ angular.module('frontendApp')
   .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal) {
 
     PatternFactory.loadAllPatterns().then(function (data) {
-      console.log(data);
       $scope.patternsByUsers = data;
     }, function (err) {
       console.log(err);
