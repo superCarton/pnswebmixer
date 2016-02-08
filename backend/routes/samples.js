@@ -14,6 +14,7 @@ router.delete('/drop', removeAll);
 router.delete('/remove/:_id', removeOne);
 
 function getAllFiles(req, res) {
+    console.log(new Date().toString() + ' : Collection');
     samples.getAll(function(result){
         res.send(result)
     })

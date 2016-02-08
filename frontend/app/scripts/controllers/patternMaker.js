@@ -8,16 +8,16 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($scope) {
+  .controller('PatternMakerCtrl', function ($rootScope, $scope, PatternFactory) {
 
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
-    var samples = []; // audiograph nodes
-    var masterVolumeNode;
     var trackVolumeNodes = [];
     var biquadFilter;
     $scope.tracks = [];
+    var volumes = [];
+    var tempo;
 
     $scope.init = function() {
 
@@ -34,7 +34,10 @@ angular.module('frontendApp')
     }
 
     function loadAllSoundSamples() {
-      $("#play").attr("disabled", true);
+
+      tempo = document.getElementById("myTempo").value;
+
+        $("#play").attr("disabled", true);
       var bufferLoader;
       var tracks = $scope.tracks;
       bufferLoader = new BufferLoader(
@@ -46,8 +49,10 @@ angular.module('frontendApp')
     }
 
     function finishedLoading(bufferList) {
+
       console.log("sounds finished loading");
       buffers = bufferList;
+/*
       $("#play").attr("disabled", false);
     }
 
@@ -109,11 +114,12 @@ angular.module('frontendApp')
             playingLoops[i][j] = true;
           }
         }
+*/
+      for (var i=0; i<buffers.length; i++){
+        volumes[i] = $("#vol-" + i).val();
       }
+      $("#play").attr("disabled", false);
     }
-
-    var context = initAudioContext(); // Init audio context
-
 
     /*********************    DRAG N DROP    **************************/
 
@@ -130,7 +136,7 @@ angular.module('frontendApp')
       muteMatrix.push(false);
       soloMatrix.push(false);
       playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
-        false, false, false, false, false,]);
+        false, false, false, false, false]);
       $scope.droppedObjects1.forEach(function (s) {
         $scope.tracks.push("assets/loops/" + s);
       });
@@ -144,38 +150,7 @@ angular.module('frontendApp')
     $scope.lightsIDs = ["light-1", "light-2", "light-3", "light-4", "light-5", "light-6", "light-7", "light-8",
       "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
-    var i = 0;
     var isPlaying = false;
-    var timer;
-
-    function animateLights() {
-      if (i == 0) {
-        stopAllTracks();
-        buildGraph(buffers);
-        playFrom();
-      }
-
-      animateLight(i++);
-
-      if (!isPlaying) {
-        i = 0;
-        return;
-      } else if (i <= $scope.lightsIDs.length) {
-        timer = setTimeout(animateLights, computeDelay(1));
-      } else {
-        i = 0;
-        animateLights();
-      }
-    }
-
-    function animateLight(index) {
-      if (index == 0) {
-        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-      } else {
-        $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
-      }
-    }
 
     /******************* MUTE + SOLO + VOLUME *****************/
 
@@ -223,10 +198,23 @@ angular.module('frontendApp')
 
     $scope.changeVolume = function (index) {
       if (isPlaying && !muteMatrix[index]) {
+
+        volumes[i] = $("#vol-" + index).val();
         trackVolumeNodes[index].forEach(function (trackVolumeNode) {
           trackVolumeNode.gain.value = $("#vol-" + index).val();
         })
       }
+    }
+
+    /***************** DELETE TRACK ***********/
+    $scope.deleteLoop = function (index) {
+      $scope.stopBeat();
+      $scope.droppedObjects1.splice(index, 1);
+      $scope.tracks.splice(index, 1);
+      muteMatrix.splice(index, 1);
+      soloMatrix.splice(index, 1);
+      switchMatrix.splice(index, 1);
+      loadAllSoundSamples();
     }
 
     /************* BEATMAKING ****************/
@@ -252,35 +240,66 @@ angular.module('frontendApp')
       }
     }
 
+    /************ SAVE **********/
 
-    /******** PLAY BEAT + STOP BEAT **********/
+    $scope.pattern_title = '';
+    var dialog;
+    $rootScope.user_id = "vincent";
 
-    $scope.playBeat = function () {
-      $("#play").attr("disabled", true);
+    $scope.save_pattern = function (name) {
+      if (name != "") {
+        if ($rootScope.user_id == "") {
+          dialog = new BootstrapDialog({
+            title: "Erreur",
+            message: "Vous devez être connecté à votre compte pour pouvoir sauvegarder votre pattern !",
+          });
+          dialog.realize();
+          //dialog.getModalHeader().css('background-color', '#f0b054');
+          dialog.getModalHeader().css('background-color', '#d9534f');
+          dialog.getModalHeader().css('color', '#ffffff');
+          dialog.getModalHeader().css('border-top-left-radius', '6px');
+          dialog.getModalHeader().css('border-top-right-radius', '6px');
+          dialog.open();
+        }
 
-      isPlaying = true;
-      timer = 0;
-      i = 0;
+        else {
 
-      $("#play").toggleClass("playing");
+          var json_to_send = {
+            name: name,
+            user_id: $rootScope.user_id,
+            loops: $scope.tracks,
+            beatmaking: switchMatrix
+          };
 
-      animateLights();
-    }
-
-    $scope.stopBeat = function () {
-      $("#play").attr("disabled", false);
-
-      stopAllTracks();
-
-      if ($("#play").hasClass("playing")) {
-        clearTimeout(timer);
-        isPlaying = false;
-        $("#play").toggleClass("playing");
-        $scope.lightsIDs.forEach(function (light) {
-          if ($('#' + light).hasClass("fa-circle")) {
-            $('#' + light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
-          }
-        });
+          PatternFactory.savePattern(json_to_send).then(function (data) {
+            console.log(data);
+            dialog = new BootstrapDialog({
+              size: BootstrapDialog.SIZE_SMALL,
+              title: "Sauvegarde réussie",
+              message: "Votre pattern " + name.bold() + " a bien été enregistré !",
+            });
+            dialog.realize();
+            dialog.getModalHeader().css('background-color', '#5cb85c');
+            dialog.getModalHeader().css('color', '#ffffff');
+            dialog.getModalHeader().css('border-top-left-radius', '6px');
+            dialog.getModalHeader().css('border-top-right-radius', '6px');
+            dialog.open();
+          }, function (err) {
+            console.log(err);
+            dialog = new BootstrapDialog({
+              size: BootstrapDialog.SIZE_SMALL,
+              title: "Echec de la sauvegarde",
+              message: "Votre pattern " + name.bold() + " n'a pas été enregistré...",
+            });
+            dialog.realize();
+            //dialog.getModalHeader().css('background-color', '#f0b054');
+            dialog.getModalHeader().css('background-color', '#d9534f');
+            dialog.getModalHeader().css('color', '#ffffff');
+            dialog.getModalHeader().css('border-top-left-radius', '6px');
+            dialog.getModalHeader().css('border-top-right-radius', '6px');
+            dialog.open();
+          });
+        }
       }
     }
 
@@ -291,9 +310,182 @@ angular.module('frontendApp')
     // représente le nombre de blocks pour 1 temps
     var pulsation = 4;
 
+    /**
+     * The delay for a note at a position on the pattern maker
+     * @param i the position
+     * @returns {number} the delay in sec
+     */
     function computeDelay(i) {
-      return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
+      return i * ((60000 / pulsation) / tempo);
     }
+
+    /******* CHRIS WILSON OVERLAY ******/
+
+    var context = initAudioContext(); // Init audio context
+    var noteTime, startTime, timeoutId, rhythmIndex = 0;
+    var OVERLAY = 0.100;
+    var DELAY = 25;
+    var LOOP_LENTGH = 16;
+    var masterGainNode;
+
+    /**
+     * Change current note
+     */
+    function advanceNote() {
+
+      noteTime += computeDelay(1)/1000;
+
+      rhythmIndex++;
+
+      // set light on at the correct index
+      animateLight(rhythmIndex-1);
+
+      if (rhythmIndex == LOOP_LENTGH) {
+
+        // reset light at the end of the boucle
+        animateLight(LOOP_LENTGH);
+        rhythmIndex = 0;
+      }
+
+    }
+
+    /**
+     * Build and play a song with a delay
+     * @param buffer the song buffer
+     * @param sendGain the gain
+     * @param noteTime the delay to play the song
+     */
+    function playNote(buffer, sendGain, noteTime) {
+
+      // Create the note
+      var voice = context.createBufferSource();
+      voice.buffer = buffer;
+
+      masterGainNode = context.createGain();
+      masterGainNode.gain.value = 1;
+      masterGainNode.connect(context.destination);
+
+      // Connect to dry mix
+      var dryGainNode = context.createGain();
+
+      if (muteMatrix[i]) {
+        dryGainNode.gain.value = 0;
+      } else {
+        dryGainNode.gain.value = sendGain;
+      }
+      voice.connect(dryGainNode);
+      dryGainNode.connect(masterGainNode);
+
+      voice.start(noteTime, 0);
+    }
+
+    /**
+     * Main schedulling function
+     * Called each DELAY ms
+     * Look ahead for OVERLAY ms to play songs
+     */
+    function schedule() {
+
+      var currentTime = context.currentTime;
+
+      // The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
+      currentTime -= startTime;
+
+      while (noteTime < currentTime + OVERLAY) {
+
+        // Convert noteTime to context time.
+        var contextPlayTime = noteTime + currentTime;
+
+        // iterate on notes at rhythm index
+        for (var i=0; i<$scope.tracks.length; i++){
+
+          // we have to schedule the song
+          if (switchMatrix[i][rhythmIndex] == "true"){
+            playNote(buffers[i], volumes[i], noteTime);
+          }
+        }
+
+        advanceNote();
+      }
+
+      timeoutId = setTimeout(schedule, DELAY);
+    }
+
+    /**
+     * Switch on light at index
+     * Switch of others
+     * @param index
+     */
+    function animateLight(index) {
+      if (index == 0) {
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      } else {
+        $('#' + $scope.lightsIDs[index - 1]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+        $('#' + $scope.lightsIDs[index]).toggleClass("fa-circle-thin").toggleClass("fa-circle");
+      }
+    }
+
+    /**
+     * Play songs
+     */
+    function handlePlay() {
+      noteTime = 0.0;
+      startTime = context.currentTime;
+      schedule();
+    }
+
+    /**
+     * Stop schedulling function
+     */
+    function handleStop() {
+      clearTimeout(timeoutId);
+      rhythmIndex = 0;
+    }
+
+    /**
+     * Callback for play button
+     * Play the beats
+     */
+    $scope.playBeat = function () {
+
+      // disable play button
+      $("#play").attr("disabled", true);
+
+      isPlaying = true;
+
+      $("#play").toggleClass("playing");
+
+      handlePlay();
+    }
+
+    /**
+     * Callback for stop button
+     * Stops the music and the lights
+     */
+    $scope.stopBeat = function () {
+
+      $("#play").attr("disabled", false);
+
+      handleStop();
+
+      if ($("#play").hasClass("playing")) {
+        isPlaying = false;
+        $("#play").toggleClass("playing");
+        $scope.lightsIDs.forEach(function (light) {
+          if ($('#' + light).hasClass("fa-circle")) {
+            $('#' + light).toggleClass("fa-circle").toggleClass("fa-circle-thin");
+          }
+        });
+      }
+    }
+
+    /**
+     * Callback for change tempo
+     * Update the value of the tempo
+     */
+    $scope.changeTempo = function(){
+      tempo = document.getElementById("myTempo").value;
+    };
 
     /****** Frequency ********/
     $scope.setFrequency = function() {

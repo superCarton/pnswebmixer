@@ -6,11 +6,6 @@ var fs = require('fs');
 var mongoose = require('../connector/mongodb');
 var async = require('async');
 
-const path = 'http://localhost:4000/samples/download/';
-const view = 'http://localhost:4000/commentary/view/';
-const post = 'http://localhost:4000/commentary/post/';
-const remove = 'http://localhost:4000/samples/remove/';
-
 function getAllFiles(callback) {
     Sample.find(function (err, samples) {
         if (err) {
@@ -22,16 +17,15 @@ function getAllFiles(callback) {
 }
 
 function saveFile(body, file, callback) {
-    if (file == undefined){
+    if (file == undefined) {
         callback({status: 'fail', value: 'missing file'})
     } else {
         var extansion = (file.mimetype.split('/'))[1];
         fs.rename(__dirname + '/../uploads/' + file.filename, __dirname + '/../uploads/' + file.filename + '.' + extansion);
-        var url = path + extansion + '/' + file.filename;
 
         var sample = new Sample({
             name: body.name, original_name: file.originalname, file_name: file.filename,
-            encoding: extansion, download: url
+            encoding: extansion
         });
         sample.save(function (err, result) {
             if (err) {
@@ -39,18 +33,10 @@ function saveFile(body, file, callback) {
                 console.log(err);
                 callback({status: 'fail', value: 'fail to save file in MongoDB'})
             } else {
-                result.view_comments = view + result._id;
-                result.post_comment = post + result._id;
-                result.remove_sample = remove + result._id;
-                result.save(function (err, result) {
-                    if (err) {
-                        callback({status: 'fail', value: err})
-                    } else {
-                        callback({status: 'success', value: result})
-                    }
-                })
+                callback({status: 'success', value: result})
+
             }
-        });
+        })
     }
 }
 
@@ -123,15 +109,23 @@ function removeOneFile(file, callback) {
     })
 }
 
+function findById(sample_id, callback) {
+    Sample.findOne({_id: sample_id}, function (err, result) {
+        if (err) {
+            callback({status: 'success', value: err})
+        } else if (result == null) {
+            callback({status: 'fail', value: 'no match sample'})
+        } else {
+            callback({status: 'success', value: result})
+        }
+    })
+}
+
 var sampleSchema = mongoose.Schema({
         name: String,
         original_name: String,
         file_name: String,
-        encoding: String,
-        download: String,
-        view_comments: String,
-        post_comment: String,
-        remove_sample: String
+        encoding: String
     }
 );
 sampleSchema.methods.ok = function () {
@@ -144,5 +138,6 @@ module.exports = {
     save: saveFile,
     download: download,
     drop: removeAll,
-    remove: removeOneFile
+    remove: removeOneFile,
+    find: findById
 };

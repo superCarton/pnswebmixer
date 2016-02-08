@@ -1,6 +1,6 @@
 .loopBrowser {
-  height:220px;
-  overflow: scroll;
+  height:320px;
+  overflow-y: scroll;
 }
 
 .loop-play
@@ -30,11 +30,6 @@
 {
   border-radius: 10px;
   background-color: #ebebeb;
-}
-
-.loopBrowsers
-{
-  overflow-y: scroll;
 }
 
 #loopList tr:hover
