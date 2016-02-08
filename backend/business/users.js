@@ -73,13 +73,12 @@ function connection(body, callback) {
                 if (user == null) {
                     callback({status: 'fail', value: 'wrong email or password'})
                 } else {
+                    delete user.password;
+                    callback({status: 'success', value: user});
                     user.last_connection = new Date();
                     user.save(function(err){
-                        if (err){
-                            callback({status:'fail', value:err})
-                        } else {
-                            delete user.password;
-                            callback({status: 'success', value: user})
+                        if (err) {
+                            console.log(err)
                         }
                     })
                 }
