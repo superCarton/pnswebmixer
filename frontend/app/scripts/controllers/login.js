@@ -16,32 +16,63 @@ angular.module('frontendApp')
     var dialog;
 
     $scope.init = function () {
+
       json_to_send = [];
 
-      $scope.logoutMenuOn = false;
-      $scope.loginMenuOn = true;
-      $scope.registerMenuOn = true;
+      // check if we are connected
+      if ($cookies.get("connected")){
 
-      $scope.loginForm = false;
-      $scope.loginButton = false;
+        console.log("Déjà connecté");
 
-      $scope.first_name = '';
-      $scope.last_name = '';
-      $scope.myEmail = '';
-      $scope.pwd = '';
+        $scope.logoutMenuOn = true;
+        $scope.loginMenuOn = false;
+        $scope.registerMenuOn = false;
 
-      $rootScope.connected = false;
-      $rootScope.user_id = '';
-      $rootScope.first_name = '';
+        $scope.loginForm = false;
+        $scope.loginButton = false;
 
-      $cookies.put('connected', false);
-      $cookies.put('user_id', '');
-      $cookies.put('first_name', '');
+        $scope.first_name = $cookies.get('first_name');
+        $scope.last_name = $cookies.get('last_name');
+        $scope.myEmail = $cookies.get('myEmail');
+        $scope.pwd = $cookies.get('pwd');
+
+        $rootScope.connected = true;
+        $rootScope.user_id = $cookies.get('user_id');
+        $rootScope.first_name = $cookies.get('first_name');
+
+      } else {
+
+        console.log("Non connecté");
+
+        $scope.logoutMenuOn = false;
+        $scope.loginMenuOn = true;
+        $scope.registerMenuOn = true;
+
+        $scope.loginForm = false;
+        $scope.loginButton = false;
+
+        $scope.first_name = '';
+        $scope.last_name = '';
+        $scope.myEmail = '';
+        $scope.pwd = '';
+
+        $rootScope.connected = false;
+        $rootScope.user_id = '';
+        $rootScope.first_name = '';
+
+        $cookies.put('connected', false);
+        $cookies.put('user_id', '');
+        $cookies.put('first_name', '');
+        $cookies.put('last_name', '');
+        $cookies.put('myEmail', '');
+        $cookies.put('pwd', '');
+      }
     };
 
     /************* SHOW STUFF FUNCTIONS *************/
 
     $scope.showSignUp = function () {
+
       json_to_send = [];
 
       $scope.first_name = '';
@@ -127,7 +158,9 @@ angular.module('frontendApp')
         $cookies.put('connected', true);
         $cookies.put('user_id', data._id);
         $cookies.put('first_name', data.first_name);
-
+        $cookies.put('last_name', data.last_name);
+        $cookies.put('myEmail', '');
+        $cookies.put('pwd', '');
 
         // response modal
         dialog = new BootstrapDialog({
@@ -205,6 +238,9 @@ angular.module('frontendApp')
           $cookies.put('connected', true);
           $cookies.put('user_id', data._id);
           $cookies.put('first_name', data.first_name);
+          $cookies.put('last_name', data.last_name);
+          $cookies.put('myEmail', '');
+          $cookies.put('pwd', '');
 
           // response modal
           dialog = new BootstrapDialog({
