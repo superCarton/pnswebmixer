@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name sunApp.controller:MainCtrl
+ * @name frontendApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the sunApp
+ * Controller of the frontendApp
  */
 angular.module('frontendApp')
 	.factory("user", ['$http', function($http) {
