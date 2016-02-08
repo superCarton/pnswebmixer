@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoopBrowserCtrl', ["$scope", '$http', '$rootScope', 'samplesByUsersFactory', 'commentsFactory', '$uibModal', function ($scope, $http, $rootScope, samplesByUsersFactory, commentsFactory, $uibModal) {
+  .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, samplesByUsersFactory, commentsFactory, $uibModal) {
 
     samplesByUsersFactory.all(function(samples){
       $scope.samplesByUsers = samples;
@@ -154,4 +154,4 @@ angular.module('frontendApp')
       });
     };
 
-  }]);
+  });

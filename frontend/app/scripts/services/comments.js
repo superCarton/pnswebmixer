@@ -3,7 +3,7 @@
  */
 
 angular.module('frontendApp')
-  .factory('commentsFactory',["$http", '$rootScope', '$q', function($http, CONSTANTS, $q){
+  .factory('commentsFactory', function($http, CONSTANTS, $q){
     var obj = {
       allBySampleId : function(sample_id){
         var deferred = $q.defer();
@@ -44,5 +44,5 @@ angular.module('frontendApp')
       }
     };
     return obj;
-  }]);
+  });
 
