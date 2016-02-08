@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoginCtrl', function ($scope, $rootScope, UserFactory) {
+  .controller('LoginCtrl', function ($scope, $rootScope, $cookies, UserFactory) {
 
     /************* INIT ****************/
 
@@ -16,61 +16,81 @@ angular.module('frontendApp')
     var dialog;
 
     $scope.init = function () {
+      json_to_send = [];
+
       $scope.logoutMenuOn = false;
       $scope.loginMenuOn = true;
       $scope.registerMenuOn = true;
+
       $scope.loginForm = false;
       $scope.loginButton = false;
-      $scope.connected = false;
-      json_to_send = [];
-      $scope.firstName = '';
-      $scope.lastName = '';
+
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
+
+      $rootScope.connected = false;
+      $rootScope.user_id = '';
+      $rootScope.first_name = '';
+
+      $cookies.put('connected', false);
+      $cookies.put('user_id', '');
+      $cookies.put('first_name', '');
     };
 
     /************* SHOW STUFF FUNCTIONS *************/
 
     $scope.showSignUp = function () {
-      $scope.firstName = '';
-      $scope.lastName = '';
+      json_to_send = [];
+
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
-      json_to_send = [];
+
       $("#lastNameLogin").required = true;
       $("#firstNameLogin").required = true;
+
       $scope.loginForm = true;
       $scope.loginButton = false;
       $scope.registerButton = true;
+
       $scope.showLastName = true;
       $scope.showFirstName = true;
     }
 
     $scope.showLogin = function () {
-      $scope.firstName = '';
-      $scope.lastName = '';
+      json_to_send = [];
+
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
-      json_to_send = [];
+
       $("#lastNameLogin").required = false;
       $("#firstNameLogin").required = false;
+
       $scope.loginForm = true;
       $scope.loginButton = true;
       $scope.registerButton = false;
+
       $scope.showFirstName = false;
       $scope.showLastName = false;
     }
 
     $scope.showLogout = function () {
-      $scope.connected = false;
-      $rootScope.first_name = '';
-      $rootScope.last_name = '';
       $scope.init();
+      $scope.showLogin();
     }
 
     /************ SIGN UP *************/
 
     $scope.signUp = function (firstName, lastName, myEmail, pwd) {
+
+      // Doing some CSS for the waiting cursor
+      $("body, body a, body input, body button, .step-sequencer-button").css("cursor", "progress");
+
       json_to_send = {
         first_name: firstName,
         last_name: lastName,
@@ -79,23 +99,42 @@ angular.module('frontendApp')
       };
 
       UserFactory.signUpToServer(json_to_send).then(function (data) {
-        $rootScope.user_id = data._id;
-        $scope.connected = true;
+
+        // Doing some CSS for the waiting cursor
+        $("body, body a, body input, body button").css("cursor", "auto");
+        $("body button").css("cursor", "pointer");
+        $(".step-sequencer-button").css("cursor", "pointer");
+
+
+        // boolean for displaying appropriate menus
         $scope.logoutMenuOn = true;
         $scope.loginMenuOn = false;
         $scope.registerMenuOn = false;
-        $rootScope.first_name = data.first_name;
-        $rootScope.last_name = data.last_name;
-        $scope.firstName = data.first_name;
-        $scope.lastName = data.last_name;
-        $scope.myEmail = '';
-        $scope.pwd = '';
         $scope.loginForm = false;
 
+        // local scope attributes for displaying
+        $scope.first_name = data.first_name;
+        $scope.last_name = data.last_name;
+        $scope.myEmail = '';
+        $scope.pwd = '';
+
+        // setting rootScope values
+        $rootScope.user_id = data._id;
+        $rootScope.first_name = data.first_name;
+        $rootScope.connected = true;
+
+        // adding to cookies
+        $cookies.put('connected', true);
+        $cookies.put('user_id', data._id);
+        $cookies.put('first_name', data.first_name);
+
+
+        // response modal
         dialog = new BootstrapDialog({
           title: "Inscription réussie",
           message: "Bienvenue dans le Polytech Web Mixer, " + data.first_name.bold() + ".",
         });
+
         dialog.realize();
         dialog.getModalHeader().css('background-color', '#5cb85c');
         dialog.getModalHeader().css('color', '#ffffff');
@@ -116,7 +155,6 @@ angular.module('frontendApp')
           });
         }
         dialog.realize();
-        //dialog.getModalHeader().css('background-color', '#f0b054');
         dialog.getModalHeader().css('background-color', '#d9534f');
         dialog.getModalHeader().css('color', '#ffffff');
         dialog.getModalHeader().css('border-top-left-radius', '6px');
@@ -131,6 +169,7 @@ angular.module('frontendApp')
 
       if (mail && pwd) {
 
+        // Doing some CSS for the waiting cursor
         $("body, body a, body input, body button, .step-sequencer-button").css("cursor", "progress");
 
         json_to_send = {
@@ -139,20 +178,35 @@ angular.module('frontendApp')
         };
 
         UserFactory.loginToServer(json_to_send).then(function (data) {
+
+          // Doing some CSS for the waiting cursor
           $("body, body a, body input, body button").css("cursor", "auto");
           $("body button").css("cursor", "pointer");
           $(".step-sequencer-button").css("cursor", "pointer");
-          $rootScope.user_id = data._id;
-          $scope.connected = true;
+
+          // boolean for displaying appropriate menus
           $scope.logoutMenuOn = true;
           $scope.loginMenuOn = false;
           $scope.registerMenuOn = false;
-          $rootScope.first_name = data.first_name;
-          $rootScope.last_name = data.last_name;
-          $scope.myEmail = '';
-          $scope.pwd = '';
           $scope.loginForm = false;
 
+          // local scope attributes for displaying
+          $scope.first_name = data.first_name;
+          $scope.last_name = data.last_name;
+          $scope.myEmail = '';
+          $scope.pwd = '';
+
+          // setting rootScope values
+          $rootScope.user_id = data._id;
+          $rootScope.first_name = data.first_name;
+          $rootScope.connected = true;
+
+          // adding to cookies
+          $cookies.put('connected', true);
+          $cookies.put('user_id', data._id);
+          $cookies.put('first_name', data.first_name);
+
+          // response modal
           dialog = new BootstrapDialog({
             title: "Connexion réussie",
             message: "C'est un plaisir de vous revoir, " + data.first_name.bold() + ".",
@@ -165,10 +219,13 @@ angular.module('frontendApp')
           dialog.open();
 
         }, function (err) {
+
+          // Doing some CSS for the waiting cursor
           $("body, body a, body input").css("cursor", "auto");
           $("body button").css("cursor", "pointer");
           $(".step-sequencer-button").css("cursor", "pointer");
-          if (err != null) {
+
+          if (err == null) {
             dialog = new BootstrapDialog({
               title: "Erreur",
               message: "Il semble y avoir un problème avec le serveur... :-(",
@@ -180,7 +237,6 @@ angular.module('frontendApp')
             });
           }
           dialog.realize();
-          //dialog.getModalHeader().css('background-color', '#f0b054');
           dialog.getModalHeader().css('background-color', '#d9534f');
           dialog.getModalHeader().css('color', '#ffffff');
           dialog.getModalHeader().css('border-top-left-radius', '6px');
@@ -189,5 +245,4 @@ angular.module('frontendApp')
         });
       }
     }
-
   });
