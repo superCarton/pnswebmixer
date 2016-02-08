@@ -20,7 +20,10 @@ angular.module('frontendApp')
       json_to_send = [];
 
       // check if we are connected
-      if ($cookies.get("connected")){
+      var isConnected=$cookies.get("connected");
+      console.log("cookie connected : " +isConnected);
+
+      if (isConnected=="true"){
 
         console.log("Déjà connecté");
 
@@ -36,7 +39,7 @@ angular.module('frontendApp')
         $scope.myEmail = $cookies.get('myEmail');
         $scope.pwd = $cookies.get('pwd');
 
-        $rootScope.connected = true;
+        $rootScope.connected = "true";
         $rootScope.user_id = $cookies.get('user_id');
         $rootScope.first_name = $cookies.get('first_name');
 
@@ -60,7 +63,7 @@ angular.module('frontendApp')
         $rootScope.user_id = '';
         $rootScope.first_name = '';
 
-        $cookies.put('connected', false);
+        $cookies.put('connected', "false");
         $cookies.put('user_id', '');
         $cookies.put('first_name', '');
         $cookies.put('last_name', '');
@@ -89,7 +92,7 @@ angular.module('frontendApp')
 
       $scope.showLastName = true;
       $scope.showFirstName = true;
-    }
+    };
 
     $scope.showLogin = function () {
       json_to_send = [];
@@ -108,12 +111,14 @@ angular.module('frontendApp')
 
       $scope.showFirstName = false;
       $scope.showLastName = false;
-    }
+    };
 
     $scope.showLogout = function () {
+
+      $cookies.put('connected', "false");
       $scope.init();
       $scope.showLogin();
-    }
+    };
 
     /************ SIGN UP *************/
 
@@ -155,7 +160,7 @@ angular.module('frontendApp')
         $rootScope.connected = true;
 
         // adding to cookies
-        $cookies.put('connected', true);
+        $cookies.put('connected', "true");
         $cookies.put('user_id', data._id);
         $cookies.put('first_name', data.first_name);
         $cookies.put('last_name', data.last_name);
@@ -165,7 +170,7 @@ angular.module('frontendApp')
         // response modal
         dialog = new BootstrapDialog({
           title: "Inscription réussie",
-          message: "Bienvenue dans le Polytech Web Mixer, " + data.first_name.bold() + ".",
+          message: "Bienvenue dans le Polytech Web Mixer, " + data.first_name.bold() + "."
         });
 
         dialog.realize();
@@ -235,7 +240,7 @@ angular.module('frontendApp')
           $rootScope.connected = true;
 
           // adding to cookies
-          $cookies.put('connected', true);
+          $cookies.put('connected', "true");
           $cookies.put('user_id', data._id);
           $cookies.put('first_name', data.first_name);
           $cookies.put('last_name', data.last_name);
