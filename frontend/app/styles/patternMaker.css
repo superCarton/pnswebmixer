@@ -164,3 +164,10 @@
   font-family: 'digital-love';
   src: url('../assets/fonts/digital-7.ttf');
 }
+
+div.song-frequency span {
+  float: left;
+}
+div.song-frequency input {
+  width: 60%;
+}

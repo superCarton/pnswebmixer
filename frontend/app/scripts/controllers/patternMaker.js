@@ -16,14 +16,20 @@ angular.module('frontendApp')
     var samples = []; // audiograph nodes
     var masterVolumeNode;
     var trackVolumeNodes = [];
+    var biquadFilter;
     $scope.tracks = [];
 
+    $scope.init = function() {
+
+    }
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new audioContext();
       if (ctx === undefined) {
         throw new Error('AudioContext is not supported. :(');
       }
+      biquadFilter = ctx.createBiquadFilter();
+      $scope.setFrequency;
       return ctx;
     }
 
@@ -50,6 +56,7 @@ angular.module('frontendApp')
       // Create a single gain node for master volume
       masterVolumeNode = context.createGain();
       //console.log("in build graph, bufferList.size = " + bufferList.length);
+
       bufferList.forEach(function (sample, i) {
         // create 8 samples for each sample
         sources[i] = [];
@@ -64,8 +71,10 @@ angular.module('frontendApp')
           sources[i][j].connect(trackVolumeNodes[i][j]);
           // Connects all track volume nodes a single master volume node
           trackVolumeNodes[i][j].connect(masterVolumeNode);
-          // Connect the master volume to the speakers
-          masterVolumeNode.connect(context.destination);
+          // Connect the master volume to the Biquad Filter
+          masterVolumeNode.connect(biquadFilter);
+          //Connect the Biquad Filter to the speakers
+          biquadFilter.connect(context.destination);
 
           trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
 
@@ -284,6 +293,17 @@ angular.module('frontendApp')
 
     function computeDelay(i) {
       return i * ((60000 / pulsation) / document.getElementById("myTempo").value);
+    }
+
+    /****** Frequency ********/
+    $scope.setFrequency = function() {
+      var minValue = 40;
+      var maxValue = context.sampleRate / 2;
+      var unitRate = (maxValue - minValue) / 100;
+      var currentRate = unitRate *  $scope.song.frequency + minValue;
+      if( biquadFilter.frequency != undefined) {
+        biquadFilter.frequency.value = currentRate;
+      }
     }
 
   });
