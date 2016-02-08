@@ -199,7 +199,6 @@ angular.module('frontendApp')
           PatternFactory.savePattern(json_to_send).then(function (data) {
             console.log(data);
             dialog = new BootstrapDialog({
-              size: BootstrapDialog.SIZE_SMALL,
               title: "Sauvegarde réussie",
               message: "Votre pattern " + name.bold() + " a bien été enregistré !",
             });
