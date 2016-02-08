@@ -14,16 +14,22 @@ angular.module('frontendApp')
 
     var buffers = []; // audio buffers decoded
     var trackVolumeNodes = [];
+    var biquadFilter;
     $scope.tracks = [];
     var volumes = [];
     var tempo;
 
+    $scope.init = function() {
+
+    }
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new audioContext();
       if (ctx === undefined) {
         throw new Error('AudioContext is not supported. :(');
       }
+      biquadFilter = ctx.createBiquadFilter();
+      $scope.setFrequency;
       return ctx;
     }
 
@@ -46,6 +52,69 @@ angular.module('frontendApp')
 
       console.log("sounds finished loading");
       buffers = bufferList;
+/*
+      $("#play").attr("disabled", false);
+    }
+
+    function buildGraph(bufferList) {
+      var sources = [];
+      // Create a single gain node for master volume
+      masterVolumeNode = context.createGain();
+      //console.log("in build graph, bufferList.size = " + bufferList.length);
+
+      bufferList.forEach(function (sample, i) {
+        // create 8 samples for each sample
+        sources[i] = [];
+        trackVolumeNodes[i] = [];
+        for (var j = 0; j < 16; j++) {
+          // each sound sample is the  source of a graph
+          sources[i][j] = context.createBufferSource();
+          sources[i][j].buffer = sample;
+          // connect each sound sample to a vomume node
+          trackVolumeNodes[i][j] = context.createGain();
+          // Connect the sound sample to its volume node
+          sources[i][j].connect(trackVolumeNodes[i][j]);
+          // Connects all track volume nodes a single master volume node
+          trackVolumeNodes[i][j].connect(masterVolumeNode);
+          // Connect the master volume to the Biquad Filter
+          masterVolumeNode.connect(biquadFilter);
+          //Connect the Biquad Filter to the speakers
+          biquadFilter.connect(context.destination);
+
+          trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
+
+          // Checking for mute loop
+          if (muteMatrix[i]) {
+            trackVolumeNodes[i][j].gain.value = 0;
+          }
+
+        }
+      });
+      samples = sources;
+    }
+
+    function stopAllTracks() {
+      for (var i = 0; i < samples.length; i++) {
+        for (var j = 0; j < 16; j++) {
+          // destroy the nodes
+          if (playingLoops[i][j]) {
+            samples[i][j].stop(0);
+            playingLoops[i][j] = false;
+          }
+        }
+      }
+    }
+
+    function playFrom() {
+      masterVolumeNode.gain.value = 1;
+      for (var i = 0; i < samples.length; i++) {
+        for (var j = 0; j < 16; j++) {
+          if (switchMatrix[i][j] == "true") {
+            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0);
+            playingLoops[i][j] = true;
+          }
+        }
+*/
       for (var i=0; i<buffers.length; i++){
         volumes[i] = $("#vol-" + i).val();
       }
@@ -400,5 +469,16 @@ angular.module('frontendApp')
     $scope.changeTempo = function(){
       tempo = document.getElementById("myTempo").value;
     };
+
+    /****** Frequency ********/
+    $scope.setFrequency = function() {
+      var minValue = 40;
+      var maxValue = context.sampleRate / 2;
+      var unitRate = (maxValue - minValue) / 100;
+      var currentRate = unitRate *  $scope.song.frequency + minValue;
+      if( biquadFilter.frequency != undefined) {
+        biquadFilter.frequency.value = currentRate;
+      }
+    }
 
   });

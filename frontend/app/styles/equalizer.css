@@ -1,0 +1,32 @@
+.mix-title {
+ text-align: center;
+  height: 30px;
+}
+div.mix-area{
+  height: 300px;
+}
+div.list-mixs{
+  height: 270px;
+  overflow: scroll;
+}
+div.mix-name {
+  float: left;
+}
+div.play-pause {
+  float: right;
+}
+div.mix {
+  display: block;
+}
+button.mix-pause {
+  display: none;
+}
+canvas#equalizer-realtime,
+canvas#equalizer-frequency {
+  width: 100%;
+  height: 270px;
+}
+h2.time-domain-title,
+h2.frequency-title {
+  text-align: center;
+}
