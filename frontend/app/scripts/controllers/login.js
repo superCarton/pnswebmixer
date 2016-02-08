@@ -21,10 +21,10 @@ angular.module('frontendApp')
       $scope.registerMenuOn = true;
       $scope.loginForm = false;
       $scope.loginButton = false;
-      $scope.connected = false;
+      $rootScope.connected = false;
       json_to_send = [];
-      $scope.firstName = '';
-      $scope.lastName = '';
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
     };
@@ -32,8 +32,8 @@ angular.module('frontendApp')
     /************* SHOW STUFF FUNCTIONS *************/
 
     $scope.showSignUp = function () {
-      $scope.firstName = '';
-      $scope.lastName = '';
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
       json_to_send = [];
@@ -47,8 +47,8 @@ angular.module('frontendApp')
     }
 
     $scope.showLogin = function () {
-      $scope.firstName = '';
-      $scope.lastName = '';
+      $scope.first_name = '';
+      $scope.last_name = '';
       $scope.myEmail = '';
       $scope.pwd = '';
       json_to_send = [];
@@ -62,10 +62,8 @@ angular.module('frontendApp')
     }
 
     $scope.showLogout = function () {
-      $scope.connected = false;
-      $rootScope.first_name = '';
-      $rootScope.last_name = '';
       $scope.init();
+      $scope.showLogin();
     }
 
     /************ SIGN UP *************/
@@ -80,14 +78,13 @@ angular.module('frontendApp')
 
       UserFactory.signUpToServer(json_to_send).then(function (data) {
         $rootScope.user_id = data._id;
-        $scope.connected = true;
+        $rootScope.connected = true;
         $scope.logoutMenuOn = true;
         $scope.loginMenuOn = false;
         $scope.registerMenuOn = false;
+        $scope.first_name = data.first_name;
+        $scope.last_name = data.last_name;
         $rootScope.first_name = data.first_name;
-        $rootScope.last_name = data.last_name;
-        $scope.firstName = data.first_name;
-        $scope.lastName = data.last_name;
         $scope.myEmail = '';
         $scope.pwd = '';
         $scope.loginForm = false;
@@ -143,12 +140,13 @@ angular.module('frontendApp')
           $("body button").css("cursor", "pointer");
           $(".step-sequencer-button").css("cursor", "pointer");
           $rootScope.user_id = data._id;
-          $scope.connected = true;
+          $rootScope.connected = true;
           $scope.logoutMenuOn = true;
           $scope.loginMenuOn = false;
           $scope.registerMenuOn = false;
+          $scope.first_name = data.first_name;
           $rootScope.first_name = data.first_name;
-          $rootScope.last_name = data.last_name;
+          $scope.last_name = data.last_name;
           $scope.myEmail = '';
           $scope.pwd = '';
           $scope.loginForm = false;
@@ -168,7 +166,7 @@ angular.module('frontendApp')
           $("body, body a, body input").css("cursor", "auto");
           $("body button").css("cursor", "pointer");
           $(".step-sequencer-button").css("cursor", "pointer");
-          if (err != null) {
+          if (err == null) {
             dialog = new BootstrapDialog({
               title: "Erreur",
               message: "Il semble y avoir un problème avec le serveur... :-(",
