@@ -16,14 +16,14 @@ router.delete('/remove/:topic_id/:com_id', removeOneCommentary);
 router.delete('/drop', removeAllHandler);
 
 function writeCommentary(req, res) {
-    console.log((new Date()).toString() + ' : Post Commentary');
+    console.log('['+(new Date()).toString() + '] : Post Commentary');
     commentary.write(req.body, req.params.sample_id, function(result){
         res.send(result)
     })
 }
 
 function viewCommentary(req, res){
-    console.log((new Date()).toString() + ' : View Commentary');
+    console.log('['+(new Date()).toString() + '] : View Commentary');
     commentary.view(req.params.sample_id, function(result){
         res.send(result)
     })

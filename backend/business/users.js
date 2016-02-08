@@ -15,7 +15,6 @@ function getAllUsers(callback) {
 }
 
 function createAccount(body, callback) {
-    console.log('['+(new Date()).toString()+'] Sign Up');
     if (body.email != undefined && body.email != '') {
         checkEmailValidity(body.email, function (result) {
             if (!result) {
