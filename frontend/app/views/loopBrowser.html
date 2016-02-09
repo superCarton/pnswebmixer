@@ -9,35 +9,26 @@
       </tbody>
     </table>
   </uib-tab>
-  <uib-tab heading="Collection">
-    <table class="table table-hover" id="patternList">
+  <uib-tab heading="Tous les patterns">
+    <table class="table table-hover patternList">
       <tbody>
       <tr ng-repeat="pattern in patternsByUsers" ng-drag="true" ng-drag-data="pattern" data-allow-transform="true" class="ng-binding" draggable="false">
         <td>{{pattern.name}}</td>
        <!-- <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
-        <td><button type="button" class="btn btn-default" ng-click="open(pattern._id)">Commenter</button></td>
+        <td><button type="button" class="btn btn-default" ng-click="open(pattern._id, pattern.name)">Commenter</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </uib-tab>
+  <uib-tab heading="Mes patterns">
+    <table class="table table-hover patternList">
+      <tbody>
+      <tr ng-repeat="myPattern in myPatterns" ng-drag="true" ng-drag-data="pattern" data-allow-transform="true" class="ng-binding" draggable="false">
+        <td>{{myPattern.name}}</td>
+        <!-- <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
+        <td><button type="button" class="btn btn-default" ng-click="open(myPattern._id, myPattern.name)">Commenter</button></td>
       </tr>
       </tbody>
     </table>
   </uib-tab>
 </uib-tabset>
-
-<script type="text/ng-template" id="allcomments.html">
-
-  <table class="table table-hover">
-    <tbody>  Les commentaires du samples :
-    <tr ng-repeat="comment in commentaries.contents" >
-      <td>[[{{comment.first_name}}]] - {{comment.text}}</td>
-    </tr>
-    </tbody>
-  </table>
-
-  <div>
-    <form>
-      <label>Votre commentaire</label>
-      <input ng-model="newcomment" type="text" placeholder="Ecrire ici..."/>
-    </form>
-    <button ng-click="comment()">Répondre</button>
-  </div>
-
-</script>

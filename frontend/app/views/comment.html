@@ -1,6 +1,6 @@
 <div class="comment">
-  <table class="table table-hover" id="patternList">
-    <tbody>  Les commentaires du pattern :
+  <table class="table table-hover" id="commentList">
+    <tbody>Commentaires pour le pattern <b style="text-transform: uppercase">{{currentPatternName}}</b>
 
     <tr ng-repeat="comment in commentaries.contents" >
       <td><b>{{comment.date | date:"dd/MM/yyyy 'à' h:mma"}} {{comment.first_name}}</b> : {{comment.text}}</td>

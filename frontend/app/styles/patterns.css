@@ -1,4 +1,4 @@
-#patternList td
+.patternList td
 {
   border: 0px;
   width: 50%;
@@ -7,18 +7,18 @@
   overflow: hidden;
 }
 
-#patternList > table
+.patternList > table
 {
   border-radius: 10px;
   background-color: #ebebeb;
 }
 
-#patternList tr:hover
+.patternList tr:hover
 {
   background-color: lightblue;
 }
 
-#patternList tr td:first-child {
+.patternList tr td:first-child {
   -moz-border-radius-topleft: 10px;
   -moz-border-radius-bottomleft: 10px;
   -webkit-border-top-left-radius: 10px;
@@ -26,7 +26,7 @@
 
 }
 
-#patternList tr td:last-child {
+.patternList tr td:last-child {
   -moz-border-radius-topright: 10px;
   -moz-border-radius-bottomright: 10px;
   -webkit-border-top-right-radius: 10px;

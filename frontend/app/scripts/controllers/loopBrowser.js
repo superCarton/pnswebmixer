@@ -8,53 +8,9 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal) {
+  .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal, $cookies) {
 
-    PatternFactory.loadAllPatterns().then(function (data) {
-      $scope.patternsByUsers = data;
-    }, function (err) {
-      console.log(err);
-    });
-
-    $scope.dynamicPopover = {
-      content: 'Hello, World!',
-      templateUrl: 'commentTemplate.html',
-      title: 'Ecrire un commentaire'
-    };
-
-    // when there is a click on a comment button
-    $scope.open = function (id) {
-
-      if ($rootScope.connected) {
-
-        // get the comment
-        commentsFactory.allBySampleId(id).then(function (data) {
-
-          $rootScope.comments = data;
-          $rootScope.currentCommentId = id;
-
-          // open the modal
-          var modalInstance = $uibModal.open({
-            templateUrl: 'views/comment.html',
-            controller: 'AllcommentsCtrl',
-            size: 'lg'
-          });
-
-        }, function (err) {
-          console.log('error' + err);
-        });
-
-      } else {
-
-        // open the modal
-        var modalInstance = $uibModal.open({
-          templateUrl: 'views/not_connected_comment.html',
-          controller: 'AllcommentsCtrl',
-          size: 'lg'
-        });
-
-      }
-    };
+    /*********************** WEB AUDIO ******************************/
 
     $http.get('../assets/loops.json')
       .then(function (res) {
@@ -156,4 +112,73 @@ angular.module('frontendApp')
       });
     };
 
+
+    /************************* GET PATTERNS **************************/
+
+    // Get all users patterns
+    $rootScope.getAllPatterns = function () {
+      PatternFactory.loadAllPatterns().then(function (data) {
+        $scope.patternsByUsers = data;
+      }, function (err) {
+        console.log(err);
+      });
+    }
+
+    // Get only my patterns
+    $rootScope.getMyPatterns = function () {
+      PatternFactory.loadMyPatterns($cookies.get('user_id')).then(function (data) {
+        $scope.myPatterns = data;
+      }, function (err) {
+        console.log(err);
+      });
+    }
+
+    /***************** FUNCTION CALLS ON PAGE LOAD *******************/
+
+    $rootScope.getAllPatterns();
+    $rootScope.getMyPatterns();
+
+
+    /******************** COMMENTS ON PATTERNS ***********************/
+
+    $scope.dynamicPopover = {
+      content: 'Hello, World!',
+      templateUrl: 'commentTemplate.html',
+      title: 'Ecrire un commentaire'
+    };
+
+    // when there is a click on a comment button
+    $scope.open = function (id, name) {
+
+      if ($rootScope.connected) {
+
+        // get the comment
+        commentsFactory.allBySampleId(id).then(function (data) {
+
+          $rootScope.comments = data;
+          $rootScope.currentCommentId = id;
+          $rootScope.currentPatternName = name;
+
+          // open the modal
+          var modalInstance = $uibModal.open({
+            templateUrl: 'views/comment.html',
+            controller: 'AllcommentsCtrl',
+            size: 'lg'
+          });
+
+        }, function (err) {
+          console.log('error' + err);
+        });
+
+      } else {
+
+        // open the modal
+        var modalInstance = $uibModal.open({
+          templateUrl: 'views/not_connected_comment.html',
+          controller: 'AllcommentsCtrl',
+          size: 'lg'
+        });
+
+      }
+    };
   });
