@@ -17,15 +17,13 @@ angular.module('frontendApp')
 
     $scope.init = function () {
 
-      $rootScope.clearAllPatterns();
-
       json_to_send = [];
 
       // check if we are connected
       var isConnected=$cookies.get("connected");
       console.log("cookie connected : " +isConnected);
 
-      if (isConnected=="true"){
+      if (isConnected=="true") {
 
         console.log("Déjà connecté");
 
@@ -118,6 +116,7 @@ angular.module('frontendApp')
     $scope.showLogout = function () {
 
       $cookies.put('connected', "false");
+      $rootScope.resetStorage();
       $rootScope.clearAllPatterns();
       $scope.init();
       $scope.showLogin();

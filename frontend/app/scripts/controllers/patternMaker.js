@@ -26,6 +26,19 @@ angular.module('frontendApp')
       playingLoops: []
     });
 
+    $rootScope.resetStorage = function () {
+      $localStorage.$reset({
+        tracks: [],
+        volumes: [],
+        tempo: 120,
+        droppedObjects1: [],
+        muteMatrix: [],
+        soloMatrix: [],
+        switchMatrix: [],
+        playingLoops: []
+      });
+    }
+
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
@@ -69,8 +82,6 @@ angular.module('frontendApp')
     /*********************    DRAG N DROP    **************************/
 
     $scope.onDropComplete1 = function (data) {
-      console.log(data);
-      /*
       if (typeof data === 'string') {
         $scope.$storage.droppedObjects1.push(data);
         $scope.$storage.switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
@@ -82,11 +93,11 @@ angular.module('frontendApp')
         $scope.$storage.tracks.push("assets/loops/" + data);
       } else {
         $scope.$storage.tracks = [];
-        $scope.$storage.droppedObjects1 = data.loops;
-        $scope.$storage.switchMatrix = data.beatmaking;
-        $scope.$storage.volumes = data.volumes_samples;
-        $scope.$storage.muteMatrix = data.mute_samples;
-        $scope.$storage.soloMatrix = data.solo_samples;
+        $scope.$storage.droppedObjects1 = data.loops.slice();
+        $scope.$storage.switchMatrix = data.beatmaking.slice();
+        $scope.$storage.volumes = data.volumes_samples.slice();
+        $scope.$storage.muteMatrix = data.mute_samples.slice();
+        $scope.$storage.soloMatrix = data.solo_samples.slice();
         $scope.$storage.droppedObjects1.forEach(function (s) {
           $scope.$storage.tracks.push("assets/loops/" + s);
         });
@@ -94,7 +105,6 @@ angular.module('frontendApp')
       }
       $scope.stopBeat();
       loadAllSoundSamples();
-      */
     }
 
     function scanElements() {
