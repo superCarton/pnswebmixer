@@ -128,11 +128,13 @@ angular.module('frontendApp')
     // Get only my patterns
     $rootScope.getMyPatterns = function () {
       console.log("MY PATTERNS");
-      PatternFactory.loadMyPatterns($cookies.get('user_id')).then(function (data) {
-        $scope.myPatterns = data;
-      }, function (err) {
-        console.log(err);
-      });
+      if ($cookies.get('user_id').length > 0) {
+        PatternFactory.loadMyPatterns($cookies.get('user_id')).then(function (data) {
+          $scope.myPatterns = data;
+        }, function (err) {
+          console.log(err);
+        });
+      }
     }
 
     $rootScope.clearAllPatterns = function () {

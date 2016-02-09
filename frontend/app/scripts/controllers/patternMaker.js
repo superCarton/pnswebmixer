@@ -8,16 +8,29 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($rootScope, $scope, PatternFactory) {
+  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, PatternFactory) {
+
+    /******************* STORAGE ******************/
+    $scope.$storage = $localStorage;
+    setTimeout(scanElements, 10);
+    setTimeout(loadAllSoundSamples, 10);
+
+    $scope.$storage = $localStorage.$default({
+      tracks: [],
+      volumes: [],
+      tempo: 120,
+      droppedObjects1: [],
+      muteMatrix: [],
+      soloMatrix: [],
+      switchMatrix: [],
+      playingLoops: []
+    });
 
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
     var trackVolumeNodes = [];
     var biquadFilter;
-    $scope.tracks = [];
-    var volumes = [];
-    var tempo;
 
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -31,12 +44,9 @@ angular.module('frontendApp')
     }
 
     function loadAllSoundSamples() {
-
-      tempo = document.getElementById("myTempo").value;
-
       $("#play").attr("disabled", true);
       var bufferLoader;
-      var tracks = $scope.tracks;
+      var tracks = $scope.$storage.tracks;
       bufferLoader = new BufferLoader(
         context,
         tracks,
@@ -51,52 +61,47 @@ angular.module('frontendApp')
       buffers = bufferList;
 
       for (var i = 0; i < buffers.length; i++) {
-        volumes[i] = $("#vol-" + i).val();
+        $scope.$storage.volumes[i] = $("#vol-" + i).val();
       }
       $("#play").attr("disabled", false);
     }
 
     /*********************    DRAG N DROP    **************************/
 
-    $scope.droppedObjects1 = [];
-
     $scope.onDropComplete1 = function (data) {
       console.log(data);
-      var index = $scope.droppedObjects1.indexOf(data);
+      /*
       if (typeof data === 'string') {
-        $scope.droppedObjects1.push(data);
-        $scope.tracks = [];
-        switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
+        $scope.$storage.droppedObjects1.push(data);
+        $scope.$storage.switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
           "false", "false", "false", "false", "false", "false", "false", "false"]);
-        muteMatrix.push(false);
-        soloMatrix.push(false);
-        playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
+        $scope.$storage.muteMatrix.push(false);
+        $scope.$storage.soloMatrix.push(false);
+        $scope.$storage.playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
           false, false, false, false, false]);
-        $scope.droppedObjects1.forEach(function (s) {
-          $scope.tracks.push("assets/loops/" + s);
-        });
+        $scope.$storage.tracks.push("assets/loops/" + data);
       } else {
-        $scope.droppedObjects1 = [];
-        $scope.tracks = [];
-        $scope.droppedObjects1 = data.loops;
-        switchMatrix = data.beatmaking;
-        volumes = data.volumes_samples;
-        muteMatrix = data.mute_samples;
-        soloMatrix = data.solo_samples;
-        $scope.droppedObjects1.forEach(function (s) {
-          $scope.tracks.push("assets/loops/" + s);
+        $scope.$storage.tracks = [];
+        $scope.$storage.droppedObjects1 = data.loops;
+        $scope.$storage.switchMatrix = data.beatmaking;
+        $scope.$storage.volumes = data.volumes_samples;
+        $scope.$storage.muteMatrix = data.mute_samples;
+        $scope.$storage.soloMatrix = data.solo_samples;
+        $scope.$storage.droppedObjects1.forEach(function (s) {
+          $scope.$storage.tracks.push("assets/loops/" + s);
         });
         setTimeout(scanElements, 10);
       }
       $scope.stopBeat();
       loadAllSoundSamples();
+      */
     }
 
     function scanElements() {
       // Switch Matrix
-      for (var i = 0; i < switchMatrix.length; i++) {
-        for (var j = 0; j < switchMatrix[i].length; j++) {
-          if (switchMatrix[i][j] == 'true') {
+      for (var i = 0; i < $scope.$storage.switchMatrix.length; i++) {
+        for (var j = 0; j < $scope.$storage.switchMatrix[i].length; j++) {
+          if ($scope.$storage.switchMatrix[i][j] == 'true') {
             $('#b' + i + j)["data-active"] = "true";
             $('#b' + i + j).toggleClass("fa-circle");
             $('#b' + i + j).toggleClass("fa-circle-thin");
@@ -105,15 +110,15 @@ angular.module('frontendApp')
       }
 
       // Mute Matrix
-      for (var i = 0; i < muteMatrix.length; i++) {
-        if (muteMatrix[i]) {
+      for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+        if ($scope.$storage.muteMatrix[i]) {
           $("#mute-" + i).toggleClass("mute");
         }
       }
 
       // Solo Matrix
-      for (var i = 0; i < soloMatrix.length; i++) {
-        if (soloMatrix[i]) {
+      for (var i = 0; i < $scope.$storage.soloMatrix.length; i++) {
+        if ($scope.$storage.soloMatrix[i]) {
           $("#solo-" + i).toggleClass("solo");
         }
       }
@@ -127,62 +132,56 @@ angular.module('frontendApp')
 
     /******************* MUTE + SOLO + VOLUME *****************/
 
-    var muteMatrix = [];
-    var soloMatrix = [];
-
     $scope.toggleMute = function (index) {
 
-      if (soloMatrix[index]) {
-        muteMatrix[index] = false;
+      if ($scope.$storage.soloMatrix[index]) {
+        $scope.$storage.muteMatrix[index] = false;
       } else {
-        muteMatrix[index] = !muteMatrix[index];
+        $scope.$storage.muteMatrix[index] = !$scope.$storage.muteMatrix[index];
       }
       $("#mute-" + index).toggleClass("mute");
 
-      muteMatrix[index] ? volumes[index] = 0 : volumes[index] = $("#vol-" + index).val();
+      $scope.$storage.muteMatrix[index] ? $scope.$storage.volumes[index] = 0 : $scope.$storage.volumes[index] = $("#vol-" + index).val();
 
     };
 
     $scope.toggleSolo = function (index) {
-      soloMatrix[index] = !soloMatrix[index];
+      $scope.$storage.soloMatrix[index] = !$scope.$storage.soloMatrix[index];
       $("#solo-" + index).toggleClass("solo");
 
-      if (soloMatrix.indexOf(true) != -1) {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
+      if ($scope.$storage.soloMatrix.indexOf(true) != -1) {
+        for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+          $scope.$storage.soloMatrix[i] ? $scope.$storage.muteMatrix[i] = false : $scope.$storage.muteMatrix[i] = true
         }
       } else {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          $("#mute-" + i).hasClass("mute") ? muteMatrix[i] = true : muteMatrix[i] = false
+        for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+          $("#mute-" + i).hasClass("mute") ? $scope.$storage.muteMatrix[i] = true : $scope.$storage.muteMatrix[i] = false
         }
       }
 
-      for (var i = 0; i < muteMatrix.length; i++) {
-        muteMatrix[i] ? volumes[i] = 0 : volumes[i] = $("#vol-" + i).val()
+      for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+        $scope.$storage.muteMatrix[i] ? $scope.$storage.volumes[i] = 0 : $scope.$storage.volumes[i] = $("#vol-" + i).val()
       }
     };
 
     $scope.changeVolume = function (index) {
-      if (!muteMatrix[index]) {
-        volumes[index] = $("#vol-" + index).val();
+      if (!$scope.$storage.muteMatrix[index]) {
+        $scope.$storage.volumes[index] = $("#vol-" + index).val();
       }
     };
 
     /***************** DELETE TRACK ***********/
     $scope.deleteLoop = function (index) {
       $scope.stopBeat();
-      $scope.droppedObjects1.splice(index, 1);
-      $scope.tracks.splice(index, 1);
-      muteMatrix.splice(index, 1);
-      soloMatrix.splice(index, 1);
-      switchMatrix.splice(index, 1);
+      $scope.$storage.droppedObjects1.splice(index, 1);
+      $scope.$storage.tracks.splice(index, 1);
+      $scope.$storage.muteMatrix.splice(index, 1);
+      $scope.$storage.soloMatrix.splice(index, 1);
+      $scope.$storage.switchMatrix.splice(index, 1);
       loadAllSoundSamples();
     };
 
     /************* BEATMAKING ****************/
-
-    var switchMatrix = [];
-    var playingLoops = [];
 
     $scope.toggleButton = function (event) {
       var obj = event.currentTarget;
@@ -195,10 +194,10 @@ angular.module('frontendApp')
 
       if (obj.getAttribute("data-active") == "false") {
         obj.setAttribute("data-active", "true");
-        switchMatrix[index_song][index_bit] = "true";
+        $scope.$storage.switchMatrix[index_song][index_bit] = "true";
       } else {
         obj.setAttribute("data-active", "false");
-        switchMatrix[index_song][index_bit] = "false";
+        $scope.$storage.switchMatrix[index_song][index_bit] = "false";
       }
     };
 
@@ -229,11 +228,11 @@ angular.module('frontendApp')
           var json_to_send = {
             name: name,
             user_id: $rootScope.user_id,
-            loops: $scope.droppedObjects1,
-            beatmaking: switchMatrix,
-            volumes_samples: volumes,
-            mute_samples: muteMatrix,
-            solo_samples: soloMatrix
+            loops: $scope.$storage.droppedObjects1,
+            beatmaking: $scope.$storage.switchMatrix,
+            volumes_samples: $scope.$storage.volumes,
+            mute_samples: $scope.$storage.muteMatrix,
+            solo_samples: $scope.$storage.soloMatrix
           };
 
           PatternFactory.savePattern(json_to_send).then(function (data) {
@@ -290,7 +289,7 @@ angular.module('frontendApp')
      * @returns {number} the delay in sec
      */
     function computeDelay(i) {
-      return i * ((60000 / pulsation) / tempo);
+      return i * ((60000 / pulsation) / $scope.$storage.tempo);
     }
 
     /******* CHRIS WILSON OVERLAY ******/
@@ -342,7 +341,7 @@ angular.module('frontendApp')
       // Connect to dry mix
       var dryGainNode = context.createGain();
 
-      if (muteMatrix[rhythmIndex]) {
+      if ($scope.$storage.muteMatrix[rhythmIndex]) {
         dryGainNode.gain.value = 0;
       } else {
         dryGainNode.gain.value = sendGain;
@@ -371,11 +370,11 @@ angular.module('frontendApp')
         var contextPlayTime = noteTime + currentTime;
 
         // iterate on notes at rhythm index
-        for (var i = 0; i < $scope.tracks.length; i++) {
+        for (var i = 0; i < $scope.$storage.tracks.length; i++) {
 
           // we have to schedule the song
-          if (switchMatrix[i][rhythmIndex] == "true") {
-            playNote(buffers[i], volumes[i], noteTime);
+          if ($scope.$storage.switchMatrix[i][rhythmIndex] == "true") {
+            playNote(buffers[i], $scope.$storage.volumes[i], noteTime);
           }
         }
 
@@ -454,7 +453,7 @@ angular.module('frontendApp')
      * Update the value of the tempo
      */
     $scope.changeTempo = function () {
-      tempo = document.getElementById("myTempo").value;
+      $scope.$storage.tempo = document.getElementById("myTempo").value;
     };
 
     /****** Frequency ********/

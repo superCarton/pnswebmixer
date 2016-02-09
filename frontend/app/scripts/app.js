@@ -16,6 +16,7 @@ angular.module('frontendApp', [
   'ngSanitize',
   'ngTouch',
   'ngDraggable',
+  'ngStorage',
   'ui.bootstrap'
 ]).config(function ($routeProvider) {
   $routeProvider
