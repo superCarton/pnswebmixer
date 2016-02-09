@@ -10,12 +10,15 @@
 angular.module('frontendApp')
   .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal) {
 
-    PatternFactory.loadAllPatterns().then(function (data) {
-      $scope.patternsByUsers = data;
-      console.log(data);
-    }, function (err) {
-      console.log(err);
-    });
+    $rootScope.getAllPatterns = function () {
+      PatternFactory.loadAllPatterns().then(function (data) {
+        $scope.patternsByUsers = data;
+      }, function (err) {
+        console.log(err);
+      });
+    }
+
+    $rootScope.getAllPatterns();
 
     $scope.dynamicPopover = {
       content: 'Hello, World!',

@@ -213,6 +213,8 @@ angular.module('frontendApp')
     $scope.save_pattern = function (name) {
       if (name != '') {
         if ($rootScope.user_id == '') {
+
+          // ERREUR SI PAS CONNECTE
           dialog = new BootstrapDialog({
             title: "Erreur",
             message: "Vous devez être connecté à votre compte pour pouvoir sauvegarder votre pattern !",
@@ -238,7 +240,10 @@ angular.module('frontendApp')
           };
 
           PatternFactory.savePattern(json_to_send).then(function (data) {
-            console.log(data);
+
+            // SAUVEGARDE REUSSIE
+
+            // On affiche une modal
             dialog = new BootstrapDialog({
               title: "Sauvegarde réussie",
               message: "Votre pattern " + name.bold() + " a bien été enregistré !",
@@ -249,8 +254,15 @@ angular.module('frontendApp')
             dialog.getModalHeader().css('border-top-left-radius', '6px');
             dialog.getModalHeader().css('border-top-right-radius', '6px');
             dialog.open();
+
+            // On get tous les patterns pour faire apparaitre le nouveau
+            $rootScope.getAllPatterns();
+
           }, function (err) {
-            console.log(err);
+
+            // SAUVEGARDE ECHOUEE
+
+            // On affiche une modal
             dialog = new BootstrapDialog({
               title: "Echec de la sauvegarde",
               message: "Votre pattern " + name.bold() + " n'a pas été enregistré...",
