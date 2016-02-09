@@ -17,6 +17,8 @@ angular.module('frontendApp')
 
     $scope.init = function () {
 
+      $rootScope.clearAllPatterns();
+
       json_to_send = [];
 
       // check if we are connected
@@ -116,6 +118,7 @@ angular.module('frontendApp')
     $scope.showLogout = function () {
 
       $cookies.put('connected', "false");
+      $rootScope.clearAllPatterns();
       $scope.init();
       $scope.showLogin();
     };
@@ -166,6 +169,10 @@ angular.module('frontendApp')
         $cookies.put('last_name', data.last_name);
         $cookies.put('myEmail', '');
         $cookies.put('pwd', '');
+
+        // load the patters
+        $rootScope.getAllPatterns();
+        $rootScope.getMyPatterns();
 
         // response modal
         dialog = new BootstrapDialog({
@@ -246,6 +253,10 @@ angular.module('frontendApp')
           $cookies.put('last_name', data.last_name);
           $cookies.put('myEmail', '');
           $cookies.put('pwd', '');
+
+          // load the patters
+          $rootScope.getAllPatterns();
+          $rootScope.getMyPatterns();
 
           // response modal
           dialog = new BootstrapDialog({

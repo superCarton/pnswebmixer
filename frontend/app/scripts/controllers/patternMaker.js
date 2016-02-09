@@ -19,9 +19,6 @@ angular.module('frontendApp')
     var volumes = [];
     var tempo;
 
-    $scope.init = function () {
-
-    }
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new audioContext();
@@ -257,6 +254,7 @@ angular.module('frontendApp')
 
             // On get tous les patterns pour faire apparaitre le nouveau
             $rootScope.getAllPatterns();
+            $rootScope.getMyPatterns();
 
           }, function (err) {
 
