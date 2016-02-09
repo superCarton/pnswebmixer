@@ -123,7 +123,7 @@ suite('Pattern business tests', function () {
         test('normally no error', function(done){
             pattern.collection(function(result){
                 assert.equal(result.status, 'success');
-                assert.equal(result.value.length, 2);
+                assert(result.value.length >= 2);
                 done()
             })
         })
@@ -133,25 +133,65 @@ suite('Pattern business tests', function () {
     suite('Remove One pattern', function(){
 
         test('When patternId is not existing', function(done){
-            pattern.remove('000000000000000000000000', function(result){
-                assert.equal(result.status, 'success');
-                assert.equal(result.value.n, 0);
-                pattern.collection(function(all){
-                    assert.equal(all.value.length, 2);
-                    done()
+            var total;
+            pattern.collection(function(all){
+                total = all.value.length;
+                pattern.remove('000000000000000000000000', function(result){
+                    assert.equal(result.status, 'success');
+                    assert.equal(result.value.n, 0);
+                    pattern.collection(function(all_again){
+                        assert.equal(all_again.value.length, total);
+                        done()
+                    })
                 })
             })
         });
 
         test('With existing patternId', function(done){
-            pattern.remove(patternId[0], function(result){
-                assert.equal(result.status, 'success');
-                assert.equal(result.value.n, 1);
-                pattern.collection(function(all){
-                    assert.equal(all.value.length, 1);
-                    patternId.splice(0, 1);
-                    done()
+            var total;
+            pattern.collection(function(all) {
+                total = all.value.length;
+                pattern.remove(patternId[0], function(result){
+                    assert.equal(result.status, 'success');
+                    assert.equal(result.value.n, 1);
+                    pattern.collection(function(all_again){
+                        assert.equal(all_again.value.length, total-1);
+                        patternId.splice(0, 1);
+                        done()
+                    })
                 })
+            })
+        })
+
+    });
+
+    suite('Add a note', function(){
+
+        test('give a first mark', function(done){
+            pattern.giveAMark(patternId[0], '000000000000000000000000', 4, function(result){
+                assert.equal(result.value.global_mark, 4);
+                assert.equal(result.value.personal_mark.length, 1);
+                done()
+            })
+        });
+
+        test('change mark', function(done){
+            pattern.giveAMark(patternId[0], '000000000000000000000000', 5, function(result){
+                assert.equal(result.value.global_mark, 5);
+                assert.equal(result.value.personal_mark.length, 1);
+                done()
+            })
+        });
+
+        test('add other mark', function(done){
+            pattern.giveAMark(patternId[0], '000000000000000000000001', 3, function(result){
+                assert.equal(result.value.global_mark, 4);
+                assert.equal(result.value.personal_mark.length, 2);
+                assert.equal(result.value.personal_mark[0].user_id, '000000000000000000000000');
+                assert.equal(result.value.personal_mark[0].mark, 5);
+                assert.equal(result.value.personal_mark[1].user_id, '000000000000000000000001');
+                assert.equal(result.value.personal_mark[1].mark, 3);
+                done()
             })
         })
 
