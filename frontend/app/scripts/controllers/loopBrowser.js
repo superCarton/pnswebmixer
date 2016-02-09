@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal) {
+  .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal, $cookies) {
 
     /*********************** WEB AUDIO ******************************/
 
@@ -126,7 +126,7 @@ angular.module('frontendApp')
 
     // Get only my patterns
     $rootScope.getMyPatterns = function () {
-      PatternFactory.loadMyPatterns($rootScope.user_id).then(function (data) {
+      PatternFactory.loadMyPatterns($cookies.get('user_id')).then(function (data) {
         $scope.myPatterns = data;
       }, function (err) {
         console.log(err);
@@ -136,6 +136,7 @@ angular.module('frontendApp')
     /***************** FUNCTION CALLS ON PAGE LOAD *******************/
 
     $rootScope.getAllPatterns();
+    $rootScope.getMyPatterns();
 
 
     /******************** COMMENTS ON PATTERNS ***********************/

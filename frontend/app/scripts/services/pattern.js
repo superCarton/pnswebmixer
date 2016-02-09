@@ -36,7 +36,7 @@ angular.module('frontendApp')
 
       loadMyPatterns: function (id) {
         var deferred = $q.defer();
-        $http.post(CONSTANTS.serverAddress + CONSTANTS.getMyPatternsPath, id).then(function (data) {
+        $http.get(CONSTANTS.serverAddress + CONSTANTS.getMyPatternsPath + id).then(function (data) {
           if (data.data.status == 'success') {
             deferred.resolve(data.data.value);
           } else {

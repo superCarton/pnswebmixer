@@ -10,5 +10,5 @@ angular.module('frontendApp')
     loginPath: 'users/login',
     signUpPath: 'users/signup',
     getAllPatternsPath: 'pattern/collection',
-    getMyPatternsPath: '?'
+    getMyPatternsPath: 'pattern/view/'
   });
