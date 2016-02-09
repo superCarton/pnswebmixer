@@ -9,5 +9,6 @@ angular.module('frontendApp')
     savePatternPath: 'pattern/save',
     loginPath: 'users/login',
     signUpPath: 'users/signup',
-    getAllPatternsPath: 'pattern/collection'
+    getAllPatternsPath: 'pattern/collection',
+    getMyPatternsPath: '?'
   });

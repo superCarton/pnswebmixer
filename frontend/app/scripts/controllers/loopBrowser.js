@@ -10,11 +10,6 @@
 angular.module('frontendApp')
   .controller('LoopBrowserCtrl', function ($scope, $http, $rootScope, PatternFactory, commentsFactory, $uibModal) {
 
-    /***************** FUNCTION CALLS ON PAGE LOAD *******************/
-
-    $rootScope.getAllPatterns();
-
-
     /*********************** WEB AUDIO ******************************/
 
     $http.get('../assets/loops.json')
@@ -129,7 +124,18 @@ angular.module('frontendApp')
       });
     }
 
+    // Get only my patterns
+    $rootScope.getMyPatterns = function () {
+      PatternFactory.loadMyPatterns($rootScope.user_id).then(function (data) {
+        $scope.myPatterns = data;
+      }, function (err) {
+        console.log(err);
+      });
+    }
 
+    /***************** FUNCTION CALLS ON PAGE LOAD *******************/
+
+    $rootScope.getAllPatterns();
 
 
     /******************** COMMENTS ON PATTERNS ***********************/

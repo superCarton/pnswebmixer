@@ -32,6 +32,20 @@ angular.module('frontendApp')
           deferred.reject(error);
         });
         return deferred.promise;
+      },
+
+      loadMyPatterns: function (id) {
+        var deferred = $q.defer();
+        $http.post(CONSTANTS.serverAddress + CONSTANTS.getMyPatternsPath, id).then(function (data) {
+          if (data.data.status == 'success') {
+            deferred.resolve(data.data.value);
+          } else {
+            deferred.reject(data.data.value);
+          }
+        }, function (error) {
+          deferred.reject(error);
+        });
+        return deferred.promise;
       }
     };
     return factory;
