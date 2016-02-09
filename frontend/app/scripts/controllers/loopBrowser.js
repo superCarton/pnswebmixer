@@ -12,6 +12,7 @@ angular.module('frontendApp')
 
     PatternFactory.loadAllPatterns().then(function (data) {
       $scope.patternsByUsers = data;
+      console.log(data);
     }, function (err) {
       console.log(err);
     });
@@ -23,7 +24,7 @@ angular.module('frontendApp')
     };
 
     // when there is a click on a comment button
-    $scope.open = function (id) {
+    $scope.open = function (id, name) {
 
       if ($rootScope.connected) {
 
@@ -32,6 +33,7 @@ angular.module('frontendApp')
 
           $rootScope.comments = data;
           $rootScope.currentCommentId = id;
+          $rootScope.currentPatternName = name;
 
           // open the modal
           var modalInstance = $uibModal.open({
