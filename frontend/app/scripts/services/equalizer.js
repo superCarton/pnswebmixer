@@ -32,16 +32,7 @@ angular.module('frontendApp')
         var parameters;
         var start;
         var tracks = ["assets/loops/avenir.mp3","assets/loops/clap.mp3","assets/loops/double_bass1.mp3"];
-
-        audioPlayer.initAudio(tracks, function(context, buffers) {
-          var data = {
-            "context" : context,
-            "buffers" : buffers,
-            "parameters" : parameters,
-            "start" : start
-          }
-          audioPlayer.playMix(data, successCB, failCB);
-        });
+        audioPlayer.loadTracks(audioPlayer.initAudio(), tracks, successCB);
       }
     };
     return obj;

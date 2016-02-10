@@ -8,8 +8,8 @@
           <tr ng-repeat="mix in listOfMix">
             <td>{{mix}}</td>
             <td>
-              <button class="mix-play pull-right" ng-click="playMix(mix)"><i class="fa fa-play"></i></button>
-              <button class="mix-pause pull-right" ng-click="pauseMix()"><i class="fa fa-pause"></i></button>
+              <button class="mix-play pull-right" equalizer ng-click="playMix(mix)"><i class="fa fa-play"></i></button>
+              <button class="mix-pause pull-right" equalizer ng-click="pauseMix()"><i class="fa fa-pause"></i></button>
             </td>
           </tr>
           </tbody>
@@ -18,11 +18,11 @@
       </div>
     <div class="col-lg-4 time-domain">
       <h2 class="time-domain-title">Time domain equalizer</h2>
-      <canvas id="equalizer-realtime" equalizer-draw></canvas>
+      <canvas id="equalizer-realtime" ></canvas>
     </div>
     <div class="col-lg-4 frequency-title">
       <h2 class="frequency-title">Frequency equalizer</h2>
-      <canvas id="equalizer-frequency" equalizer-draw ng-model="analyser"> </canvas>
+      <canvas id="equalizer-frequency" ></canvas>
     </div>
   </div>
 </div>
