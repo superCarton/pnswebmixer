@@ -8,37 +8,33 @@
 angular.module('frontendApp')
   .factory("audioPlayer", ['$http', function($http) {
   var obj = {
-    initAudio : function(tracks, callBack) {
-
+    initAudio : function() {
       var context;
-      //var analyser = context.createAnalyser();
-      var buffers;
-
-      (function init() {
-         context = initAudioContext();
-        loadAllSoundSamples();
-      })();
-
       function initAudioContext() {
         // Initialise the Audio Context
         // There can be only one!
         var audioContext = window.AudioContext || window.webkitAudioContext;
-
-        var ctx = new audioContext();
-
-        if(ctx === undefined) {
+        context = new audioContext();
+        if(context === undefined) {
           throw new Error('AudioContext is not supported. :(');
+        } else {
+          return context;
         }
-
-        return ctx;
       }
-
+      if(context===undefined) {
+        return initAudioContext();
+      } else {
+        return context;
+      }
+    },
+    loadTracks : function (context, tracks, callback) {
+      var buffers;
       function loadAllSoundSamples() {
         //TODO Get all the tracks
         /*var tracks =[];
-        parameters.forEach(function(track){
-          tracks.push(track.path);
-        });*/
+         parameters.forEach(function(track){
+         tracks.push(track.path);
+         });*/
         var bufferLoader = new BufferLoader(
           context,
           tracks,
@@ -49,9 +45,9 @@ angular.module('frontendApp')
 
       function finishedLoading(bufferList) {
         buffers = bufferList;
-        callBack(context, buffers);
+         callback(context, buffers);
       }
-
+      loadAllSoundSamples();
     },
     playMix : function(data, successCB, failCB) {
       //data contains context, buffers, start time and the parameters of each track
@@ -59,6 +55,7 @@ angular.module('frontendApp')
       var buffers = data.buffers;
       var start = data.start;
       var context = data.context;
+      var analyser = context.createAnalyser();
       var samples;
       (function() {
         buildGraph();
@@ -71,7 +68,7 @@ angular.module('frontendApp')
         buffers.forEach(function(sample, i) {
           var masterVolumeNode = context.createGain();
           var gainNode = context.createGain();
-          var analyser = context.createAnalyser();
+
          /* $scope.gainNode.gain.value = $scope.song.gain;
           //$scope.filter = $scope.context.createBiquadFilter();
           $scope.delay = $scope.context.createDelay();
@@ -115,7 +112,7 @@ angular.module('frontendApp')
           // second one is the offset in the song, in seconds, can be 2.3456
           // very high precision !
           s.start(0, 0);
-          successCB(context.createAnalyser());
+          successCB(analyser);
         });
       }
     }

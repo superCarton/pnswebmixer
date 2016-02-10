@@ -1,8 +1,7 @@
 .songSettings {
-  height: 350px;
+  height: 550px;
   padding:10px;
 }
-
 
 i.fa-play-circle.reglage-play,
 i.fa-pause-circle.reglage-pause,
@@ -24,9 +23,7 @@ div.song-quality{
 select.frequency-ctrl {
   width: 20%;
 }
-div.song-frequency {
-  border: 1px solid black;
-}
+
 div.cross-fade {
   display: none;
 }
@@ -35,12 +32,14 @@ canvas#song-visualize {
   width: 400px;
   border: 1px solid black;
 }
+.fa-pause.reglagesong-pause {
+  display: none;
+}
 canvas#song-visualize-bar {
   border: 1px solid black;
   width: 400px;
   height: 200px;
 }
-
 /*
 canvas#song-visualize,
 canvas#song-visualize-bar {

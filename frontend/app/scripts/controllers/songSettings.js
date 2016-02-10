@@ -14,9 +14,10 @@ angular.module('frontendApp')
     $scope.filter = '';
     $scope.bufferList = '';
     $scope.trackVolumeNodes = [];
-    $scope.tracks = ['../../assets/loops/avenir.mp3'];
+    $scope.tracks = ['../../assets/loops/avenir.mp3','../../assets/loops/clap.mp3' ];
     $scope.volume = 1;
     $scope.init = function() {
+      $scope.playTrackTime = 0;
       $scope.playTrackModel= true;
       $scope.stopTrackModel = false;
       $scope.context = initAudioContext();
@@ -43,7 +44,6 @@ angular.module('frontendApp')
       $scope.dataArray = new Uint8Array($scope.analyser.frequencyBinCount);
       $scope.canvasCtx =document.getElementById("song-visualize").getContext("2d");
       $scope.canvasCtx.clearRect(0, 0, 400, 55);
-
 
 
       $scope.canvasBar = document.getElementById("song-visualize-bar");
@@ -84,24 +84,23 @@ angular.module('frontendApp')
       $scope.canvasCtx.stroke();
     }
     function drawBar() {
-
       requestAnimationFrame(drawBar);
       $scope.analyser.getByteFrequencyData($scope.dataArray);
       $scope.canvasBarCtx.fillStyle = 'rgb(0, 0, 0)';
       $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);
-      var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount);
+      var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount) * 30;
       var barHeight;
       var x = 0;
       $scope.canvasBarLength = $scope.analyser.frequencyBinCount;
       $scope.canvasBarUnit = $scope.analyser.frequencyBinCount / 6;
       $scope.colors = ['#FF0000','#00FF0C', "#0000FF", "#EFF704", "#7189DE", "#00FFED", "#FF00D0"];
-      for(var i = 0; i <  $scope.analyser.frequencyBinCount; i++) {
+      for(var i = 0; i <  $scope.analyser.frequencyBinCount;) {
         barHeight = $scope.dataArray[i] / 2;
         $scope.canvasBarCtx.fillStyle = $scope.colors[Math.floor(i / $scope.canvasBarUnit)];
         $scope.canvasBarCtx.fillRect(x,$scope.canvasBarHeight-barHeight,barWidth,barHeight);
         x += barWidth;
+        i+= 30;
       }
-
     }
     function buildGraph() {
         var sources = [];
@@ -162,12 +161,12 @@ angular.module('frontendApp')
       $scope.setFrequency();
       $scope.setFrequencyType();
       $scope.setQuality();
+      $scope.timeout;
       $scope.samples.forEach(function(s) {
       // First parameter is the delay before playing the sample
       // second one is the offset in the song, in seconds, can be 2.3456
       // very high precision !
-        s.start(0, 0);
-
+        s.start($scope.playTrackTime);
       });
       draw();
       drawBar();
@@ -202,21 +201,6 @@ angular.module('frontendApp')
         $scope.masterVolumeNode.gain.value = $scope.volume * $scope.volume;
       }
     }
-    $scope.save = function() {
-      var formdata = new FormData();
-      formdata.append('name', 'test-test');
-      formdata.append('file', file);
-      $http({
-        method: 'POST',
-        url: 'http://localhost:4000/samples/upload',
-        data: formdata
-      }).success(function(data) {
-          console.log(data);
-        })
-        .error(function(err) {
-          console.log(err);
-        });
-    }
 
     $scope.changeDelay = function() {
       if( $scope.delay != undefined) {
@@ -228,6 +212,16 @@ angular.module('frontendApp')
         $scope.gainNode.gain.value = $scope.song.gain;
       }
     }
+    $scope.stopTrack = function() {
+      clearTimeout($scope.timeout);
+      $scope.samples.forEach(function(s) {
+        s.stop();
+        s.currentTime = $scope.playTrackTime;
+      })
+    }
 
+    $scope.timeout = setTimeout(function() {
+        $scope.playTrackTime++;
+    }, 1000);
 
   }]);
