@@ -8,8 +8,9 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('MainCtrl', function () {
+  .controller('MainCtrl', function (audioPlayer) {
 
+    var context = audioPlayer.initAudio();
 
 
   });
