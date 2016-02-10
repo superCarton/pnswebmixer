@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, $uibModal, PatternFactory) {
+  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, $uibModal, PatternFactory, audioPlayer) {
 
     /******************* STORAGE ******************/
     $scope.$storage = $localStorage;
@@ -46,11 +46,7 @@ angular.module('frontendApp')
     var biquadFilter;
 
     function initAudioContext() {
-      var audioContext = window.AudioContext || window.webkitAudioContext;
-      var ctx = new audioContext();
-      if (ctx === undefined) {
-        throw new Error('AudioContext is not supported. :(');
-      }
+      var ctx = audioPlayer.initAudio();
       biquadFilter = ctx.createBiquadFilter();
       $scope.setFrequency;
       return ctx;
@@ -357,7 +353,9 @@ angular.module('frontendApp')
         dryGainNode.gain.value = sendGain;
       }
       voice.connect(dryGainNode);
-      dryGainNode.connect(masterGainNode);
+      dryGainNode.connect($rootScope.analyser);
+
+      $rootScope.analyser.connect(masterGainNode);
 
       voice.start(noteTime, 0);
     }

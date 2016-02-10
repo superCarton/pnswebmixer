@@ -22,8 +22,6 @@
   <div class="cross-fade"> CrossFade: <input type="range" min="0" max="100" value="50"  ng-model="song.quality" ng-change="changeVolume()"></div>
   <div class="song-feedback">Feedback : <input type="range" min="0" max="5" step="0.1" ng-model="song.gain" ng-init="song.gain=0.5" ng-change="changeGain()"></div>
   <div class="song-delay">Delay : <input type="range" min="0" max="5" step="0.1"  ng-model="song.delay" ng-init="song.delay=0" ng-change="changeDelay()"></div>
-<canvas id="song-visualize"></canvas>
-  <canvas id="song-visualize-bar"></canvas>
   <button type="button" class="btn btn-default" ng-click="save()">Save</button>
 </div>
 
