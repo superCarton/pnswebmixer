@@ -112,10 +112,9 @@ angular.module('frontendApp')
           false, false, false, false, false]);
         $scope.$storage.tracks.push("assets/loops/" + data);
         $scope.$storage.songSettings.push({
-          frequency:0,
-          quality:0,
-          gain:0,
-          delay:0
+          frequency:1000,
+          gain:0.8,
+          delay:0.5
         });
 
       } else {
@@ -391,6 +390,7 @@ angular.module('frontendApp')
       var voice = context.createBufferSource();
       var filter = context.createBiquadFilter();
       var delay = context.createDelay();
+      var feedback = context.createGain();
 
       voice.buffer = buffer;
 
@@ -402,10 +402,11 @@ angular.module('frontendApp')
       var maxValue = context.sampleRate / 2;
       var unitRate = (maxValue - minValue) / 100;
       var currentRate = unitRate * $scope.$storage.songSettings[index].frequency + minValue;
-      filter.frequency.value = currentRate;
-      filter.Q.value = $scope.$storage.songSettings[index].quality;
+      filter.frequency.value = $scope.$storage.songSettings[index].frequency;
+      //filter.Q.value = $scope.$storage.songSettings[index].quality;
 
       delay.delayTime.value = $scope.$storage.songSettings[index].delay;
+      feedback.gain.value = $scope.$storage.songSettings[index].gain;
 
       // Connect to dry mix
       var dryGainNode = context.createGain();
@@ -416,12 +417,25 @@ angular.module('frontendApp')
         dryGainNode.gain.value = sendGain;
       }
 
-      voice.connect(dryGainNode);
-      dryGainNode.connect(filter);
+      // Effect connection
+      delay.connect(feedback);
+      feedback.connect(filter);
       filter.connect(delay);
-      delay.connect($rootScope.analyser);
-      $rootScope.analyser.connect(masterGainNode);
-      masterGainNode.connect(context.destination);
+
+      // Input
+      voice.connect(dryGainNode);
+
+      // Output
+      dryGainNode.connect(delay);
+      dryGainNode.connect(masterGainNode);
+      //delay.connect(masterGainNode);
+
+      // Analyzer
+      masterGainNode.connect($rootScope.analyser);
+      $rootScope.analyser.connect(context.destination);
+
+      //delay.connect(context.destination);
+      //masterGainNode.connect(context.destination);
 
       voice.start(noteTime, 0);
     }
