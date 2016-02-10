@@ -29,7 +29,7 @@ suite('Commentary business unit test', function(){
     });
 
     suiteTeardown(function(done){
-        console.log('Excuting suite teardown :');
+        console.log('    Excuting suite teardown :');
         async.eachSeries(handler_id, function(id, seriesCallback){
             (function(objectId){
                 commentary.remove(objectId, function(){
@@ -44,7 +44,7 @@ suite('Commentary business unit test', function(){
                     handler_id = null;
                     sample_id = null;
                     body = null;
-                    console.log('success');
+                    console.log('    success');
                     done()
                 })
             }

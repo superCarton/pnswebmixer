@@ -41,6 +41,29 @@ angular.module('frontendApp')
       });
     };
 
+    $scope.deleteAll = function () {
+      if ($('#play').hasClass('playing')) {
+        $scope.stopBeat();
+      }
+      if ($scope.$storage.tracks.length > 0) {
+        $uibModal.open({
+          templateUrl: 'views/deleteModal.html',
+          controller: 'PatternMakerCtrl',
+          backdrop: 'static'
+        })
+      } else {
+        $uibModal.open({
+          templateUrl: 'views/emptyDeleteModal.html',
+          controller: 'PatternMakerCtrl',
+          backdrop: 'static'
+        })
+      }
+    }
+
+    $scope.deleteAllYes = function () {
+      $scope.resetStorage();
+    }
+
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
@@ -69,11 +92,6 @@ angular.module('frontendApp')
 
       console.log("sounds finished loading");
       buffers = bufferList;
-
-      for (var i = 0; i < buffers.length; i++) {
-        $scope.$storage.volumes[i] = $("#vol-" + i).val();
-      }
-
       $("#play").attr("disabled", false);
     }
 
@@ -89,6 +107,7 @@ angular.module('frontendApp')
           "false", "false", "false", "false", "false", "false", "false", "false"]);
         $scope.$storage.muteMatrix.push(false);
         $scope.$storage.soloMatrix.push(false);
+        $scope.$storage.volumes.push(0.5);
         $scope.$storage.playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
           false, false, false, false, false]);
         $scope.$storage.tracks.push("assets/loops/" + data);
@@ -98,11 +117,11 @@ angular.module('frontendApp')
           gain:0,
           delay:0
         });
-        console.log($scope.$storage.songSettings);
 
-      } else { // drag a pattern
+      } else {
 
-        $scope.$storage.tracks = [];
+        $rootScope.resetStorage();
+
         $scope.$storage.songSettings = data.song_settings.slice();
         $scope.$storage.droppedObjects1 = data.loops.slice();
         $scope.$storage.switchMatrix = data.beatmaking.slice();
@@ -119,21 +138,28 @@ angular.module('frontendApp')
     };
 
     function scanElements() {
+
       // Switch Matrix
       for (var i = 0; i < $scope.$storage.switchMatrix.length; i++) {
         for (var j = 0; j < $scope.$storage.switchMatrix[i].length; j++) {
           if ($scope.$storage.switchMatrix[i][j] == 'true') {
             $('#b' + i + j)["data-active"] = "true";
-            $('#b' + i + j).toggleClass("fa-circle");
-            $('#b' + i + j).toggleClass("fa-circle-thin");
+            $('#b' + i + j).addClass("fa-circle");
+            $('#b' + i + j).removeClass("fa-circle-thin");
+          } else {
+            $('#b' + i + j)["data-active"] = "false";
+            $('#b' + i + j).removeClass("fa-circle");
+            $('#b' + i + j).addClass("fa-circle-thin");
           }
         }
       }
 
       // Mute Matrix
-      for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
-        if ($scope.$storage.muteMatrix[i]) {
-          $("#mute-" + i).toggleClass("mute");
+      if ($scope.$storage.soloMatrix.indexOf(true) == -1) {
+        for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+          if ($scope.$storage.muteMatrix[i]) {
+            $("#mute-" + i).toggleClass("mute");
+          }
         }
       }
 
@@ -142,6 +168,11 @@ angular.module('frontendApp')
         if ($scope.$storage.soloMatrix[i]) {
           $("#solo-" + i).toggleClass("solo");
         }
+      }
+
+      // Volumes
+      for (var i = 0; i < $scope.$storage.volumes.length; i++) {
+        $("#vol-" + i).val($scope.$storage.volumes[i]);
       }
     }
 
@@ -162,8 +193,7 @@ angular.module('frontendApp')
       }
       $("#mute-" + index).toggleClass("mute");
 
-      $scope.$storage.muteMatrix[index] ? $scope.$storage.volumes[index] = 0 : $scope.$storage.volumes[index] = $("#vol-" + index).val();
-
+      $scope.$storage.muteMatrix[index] ? $scope.$storage.volumes[index] = 0 : $scope.$storage.volumes[index] = parseFloat($("#vol-" + index).val());
     };
 
     $scope.toggleSolo = function (index) {
@@ -181,14 +211,17 @@ angular.module('frontendApp')
       }
 
       for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
-        $scope.$storage.muteMatrix[i] ? $scope.$storage.volumes[i] = 0 : $scope.$storage.volumes[i] = $("#vol-" + i).val()
+        $scope.$storage.muteMatrix[i] ? $scope.$storage.volumes[i] = 0 : $scope.$storage.volumes[i] = parseFloat($("#vol-" + i).val())
       }
+
+      console.log($scope.$storage.volumes[index]);
     };
 
     $scope.changeVolume = function (index) {
       if (!$scope.$storage.muteMatrix[index]) {
-        $scope.$storage.volumes[index] = $("#vol-" + index).val();
+        $scope.$storage.volumes[index] = parseFloat($("#vol-" + index).val());
       }
+      console.log($scope.$storage.volumes);
     };
 
     /***************** DELETE TRACK ***********/
@@ -200,6 +233,7 @@ angular.module('frontendApp')
       $scope.$storage.muteMatrix.splice(index, 1);
       $scope.$storage.soloMatrix.splice(index, 1);
       $scope.$storage.switchMatrix.splice(index, 1);
+      $scope.$storage.volumes.splice(index, 1);
       loadAllSoundSamples();
     };
 
@@ -522,5 +556,4 @@ angular.module('frontendApp')
       });
     }
 
-  })
-;
+  });

@@ -27,6 +27,10 @@ angular.module('frontendApp')
 
         console.log("Déjà connecté");
 
+        // load the patters
+        $rootScope.getAllPatterns();
+        $rootScope.getMyPatterns();
+
         $scope.logoutMenuOn = true;
         $scope.loginMenuOn = false;
         $scope.registerMenuOn = false;
@@ -46,6 +50,9 @@ angular.module('frontendApp')
       } else {
 
         console.log("Non connecté");
+
+        // load the patters
+        $rootScope.getAllPatterns();
 
         $scope.logoutMenuOn = false;
         $scope.loginMenuOn = true;

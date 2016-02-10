@@ -130,7 +130,7 @@
 .play-stop-buttons button
 {
   background-image:linear-gradient(lightgrey, #424242);
-  width: 60px;
+  width: 40px;
   border-radius: 5px;
   border: 1px solid black;
 }
@@ -140,7 +140,7 @@
   text-decoration: none;
 }
 
-.play-stop-buttons #stop:active {
+.play-stop-buttons #stop:active, .play-stop-buttons #clear-all:active {
   background-image:radial-gradient(lightgrey, #424242);
   text-decoration: none;
 }

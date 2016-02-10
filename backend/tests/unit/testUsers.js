@@ -20,9 +20,9 @@ suite('Users business unit test,', function () {
     });
 
     suiteTeardown(function DropUserIfExist(done) {
-        console.log('Excuting suite teardown :');
+        console.log('    Excuting suite teardown :');
         user.deleteAccount(body, function (result) {
-            console.log(result.status);
+            console.log('    '+result.status);
             done()
         })
     });

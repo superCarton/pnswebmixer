@@ -9,7 +9,7 @@ var samples = require('../business/samples');
 
 router.get('/collection', getAllFiles);
 router.post('/upload', saveFile);
-router.get('/download/:encoding/:_id', download);
+router.get('/download/:encoding/:file_name', download);
 router.delete('/drop', removeAll);
 router.delete('/remove/:_id', removeOne);
 

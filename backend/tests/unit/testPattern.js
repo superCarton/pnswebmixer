@@ -22,7 +22,7 @@ suite('Pattern business tests', function () {
     });
 
     suiteTeardown(function (done) {
-        console.log('Executing suite teardown :');
+        console.log('    Executing suite teardown :');
         body = null;
         async.each(patternId, function (id, callback) {
                 pattern.remove(id, function (result) {
@@ -39,7 +39,7 @@ suite('Pattern business tests', function () {
                     console.log(err)
                 }
                 patternId = null;
-                console.log('success');
+                console.log('    success');
                 done()
             })
     });
@@ -52,7 +52,6 @@ suite('Pattern business tests', function () {
             pattern.save(body, function (result) {
                 if (result.status == 'success') {
                     patternId.push(result.value._id);
-                    console.log(patternId);
                 }
                 assert.equal(result.status, 'fail');
                 assert.equal(result.value, 'you need to be authenticated');
