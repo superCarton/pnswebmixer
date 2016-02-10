@@ -61,6 +61,11 @@
   border: 2px solid black ;
 }
 
+.name:hover
+{
+  cursor: pointer;
+}
+
 .delete
 {
   font-size: small;

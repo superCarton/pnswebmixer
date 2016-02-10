@@ -165,7 +165,7 @@ angular.module('frontendApp')
           $rootScope.currentPatternName = name;
 
           // open the modal
-          var modalInstance = $uibModal.open({
+          $uibModal.open({
             templateUrl: 'views/comment.html',
             controller: 'AllcommentsCtrl',
             size: 'lg'
@@ -178,12 +178,12 @@ angular.module('frontendApp')
       } else {
 
         // open the modal
-        var modalInstance = $uibModal.open({
+        $uibModal.open({
           templateUrl: 'views/not_connected_comment.html',
           controller: 'AllcommentsCtrl',
           size: 'lg'
         });
 
       }
-    };
+    }
   });
