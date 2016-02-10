@@ -8,20 +8,43 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($rootScope, $scope, PatternFactory) {
+  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, PatternFactory) {
+
+    /******************* STORAGE ******************/
+    $scope.$storage = $localStorage;
+    setTimeout(scanElements, 10);
+    setTimeout(loadAllSoundSamples, 10);
+
+    $scope.$storage = $localStorage.$default({
+      tracks: [],
+      volumes: [],
+      tempo: 120,
+      droppedObjects1: [],
+      muteMatrix: [],
+      soloMatrix: [],
+      switchMatrix: [],
+      playingLoops: []
+    });
+
+    $rootScope.resetStorage = function () {
+      $localStorage.$reset({
+        tracks: [],
+        volumes: [],
+        tempo: 120,
+        droppedObjects1: [],
+        muteMatrix: [],
+        soloMatrix: [],
+        switchMatrix: [],
+        playingLoops: []
+      });
+    }
 
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
     var trackVolumeNodes = [];
     var biquadFilter;
-    $scope.tracks = [];
-    var volumes = [];
-    var tempo;
 
-    $scope.init = function() {
-
-    }
     function initAudioContext() {
       var audioContext = window.AudioContext || window.webkitAudioContext;
       var ctx = new audioContext();
@@ -34,12 +57,9 @@ angular.module('frontendApp')
     }
 
     function loadAllSoundSamples() {
-
-      tempo = document.getElementById("myTempo").value;
-
-        $("#play").attr("disabled", true);
+      $("#play").attr("disabled", true);
       var bufferLoader;
-      var tracks = $scope.tracks;
+      var tracks = $scope.$storage.tracks;
       bufferLoader = new BufferLoader(
         context,
         tracks,
@@ -52,96 +72,66 @@ angular.module('frontendApp')
 
       console.log("sounds finished loading");
       buffers = bufferList;
-/*
-      $("#play").attr("disabled", false);
-    }
 
-    function buildGraph(bufferList) {
-      var sources = [];
-      // Create a single gain node for master volume
-      masterVolumeNode = context.createGain();
-      //console.log("in build graph, bufferList.size = " + bufferList.length);
-
-      bufferList.forEach(function (sample, i) {
-        // create 8 samples for each sample
-        sources[i] = [];
-        trackVolumeNodes[i] = [];
-        for (var j = 0; j < 16; j++) {
-          // each sound sample is the  source of a graph
-          sources[i][j] = context.createBufferSource();
-          sources[i][j].buffer = sample;
-          // connect each sound sample to a vomume node
-          trackVolumeNodes[i][j] = context.createGain();
-          // Connect the sound sample to its volume node
-          sources[i][j].connect(trackVolumeNodes[i][j]);
-          // Connects all track volume nodes a single master volume node
-          trackVolumeNodes[i][j].connect(masterVolumeNode);
-          // Connect the master volume to the Biquad Filter
-          masterVolumeNode.connect(biquadFilter);
-          //Connect the Biquad Filter to the speakers
-          biquadFilter.connect(context.destination);
-
-          trackVolumeNodes[i][j].gain.value = $("#vol-" + i).val();
-
-          // Checking for mute loop
-          if (muteMatrix[i]) {
-            trackVolumeNodes[i][j].gain.value = 0;
-          }
-
-        }
-      });
-      samples = sources;
-    }
-
-    function stopAllTracks() {
-      for (var i = 0; i < samples.length; i++) {
-        for (var j = 0; j < 16; j++) {
-          // destroy the nodes
-          if (playingLoops[i][j]) {
-            samples[i][j].stop(0);
-            playingLoops[i][j] = false;
-          }
-        }
-      }
-    }
-
-    function playFrom() {
-      masterVolumeNode.gain.value = 1;
-      for (var i = 0; i < samples.length; i++) {
-        for (var j = 0; j < 16; j++) {
-          if (switchMatrix[i][j] == "true") {
-            samples[i][j].start(context.currentTime + (computeDelay(j) / 1000), 0);
-            playingLoops[i][j] = true;
-          }
-        }
-*/
-      for (var i=0; i<buffers.length; i++){
-        volumes[i] = $("#vol-" + i).val();
+      for (var i = 0; i < buffers.length; i++) {
+        $scope.$storage.volumes[i] = $("#vol-" + i).val();
       }
       $("#play").attr("disabled", false);
     }
 
     /*********************    DRAG N DROP    **************************/
 
-    $scope.droppedObjects1 = [];
-
     $scope.onDropComplete1 = function (data) {
-      var index = $scope.droppedObjects1.indexOf(data);
-      if (index == -1) {
-        $scope.droppedObjects1.push(data);
+      if (typeof data === 'string') {
+        $scope.$storage.droppedObjects1.push(data);
+        $scope.$storage.switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
+          "false", "false", "false", "false", "false", "false", "false", "false"]);
+        $scope.$storage.muteMatrix.push(false);
+        $scope.$storage.soloMatrix.push(false);
+        $scope.$storage.playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
+          false, false, false, false, false]);
+        $scope.$storage.tracks.push("assets/loops/" + data);
+      } else {
+        $scope.$storage.tracks = [];
+        $scope.$storage.droppedObjects1 = data.loops.slice();
+        $scope.$storage.switchMatrix = data.beatmaking.slice();
+        $scope.$storage.volumes = data.volumes_samples.slice();
+        $scope.$storage.muteMatrix = data.mute_samples.slice();
+        $scope.$storage.soloMatrix = data.solo_samples.slice();
+        $scope.$storage.droppedObjects1.forEach(function (s) {
+          $scope.$storage.tracks.push("assets/loops/" + s);
+        });
+        setTimeout(scanElements, 10);
       }
-      $scope.tracks = [];
-      switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
-        "false", "false", "false", "false", "false", "false", "false", "false"]);
-      muteMatrix.push(false);
-      soloMatrix.push(false);
-      playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
-        false, false, false, false, false]);
-      $scope.droppedObjects1.forEach(function (s) {
-        $scope.tracks.push("assets/loops/" + s);
-      });
       $scope.stopBeat();
       loadAllSoundSamples();
+    }
+
+    function scanElements() {
+      // Switch Matrix
+      for (var i = 0; i < $scope.$storage.switchMatrix.length; i++) {
+        for (var j = 0; j < $scope.$storage.switchMatrix[i].length; j++) {
+          if ($scope.$storage.switchMatrix[i][j] == 'true') {
+            $('#b' + i + j)["data-active"] = "true";
+            $('#b' + i + j).toggleClass("fa-circle");
+            $('#b' + i + j).toggleClass("fa-circle-thin");
+          }
+        }
+      }
+
+      // Mute Matrix
+      for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+        if ($scope.$storage.muteMatrix[i]) {
+          $("#mute-" + i).toggleClass("mute");
+        }
+      }
+
+      // Solo Matrix
+      for (var i = 0; i < $scope.$storage.soloMatrix.length; i++) {
+        if ($scope.$storage.soloMatrix[i]) {
+          $("#solo-" + i).toggleClass("solo");
+        }
+      }
     }
 
 
@@ -150,77 +140,58 @@ angular.module('frontendApp')
     $scope.lightsIDs = ["light-1", "light-2", "light-3", "light-4", "light-5", "light-6", "light-7", "light-8",
       "light-9", "light-10", "light-11", "light-12", "light-13", "light-14", "light-15", "light-16"];
 
-    var isPlaying = false;
-
     /******************* MUTE + SOLO + VOLUME *****************/
 
-    var muteMatrix = [];
-    var soloMatrix = [];
-
     $scope.toggleMute = function (index) {
-      if (soloMatrix[index]) {
-        muteMatrix[index] = false;
+
+      if ($scope.$storage.soloMatrix[index]) {
+        $scope.$storage.muteMatrix[index] = false;
       } else {
-        muteMatrix[index] = !muteMatrix[index];
+        $scope.$storage.muteMatrix[index] = !$scope.$storage.muteMatrix[index];
       }
       $("#mute-" + index).toggleClass("mute");
 
-      if (isPlaying) {
-        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-          muteMatrix[index] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + index).val()
-        })
-      }
+      $scope.$storage.muteMatrix[index] ? $scope.$storage.volumes[index] = 0 : $scope.$storage.volumes[index] = $("#vol-" + index).val();
 
-    }
+    };
 
     $scope.toggleSolo = function (index) {
-      soloMatrix[index] = !soloMatrix[index];
+      $scope.$storage.soloMatrix[index] = !$scope.$storage.soloMatrix[index];
       $("#solo-" + index).toggleClass("solo");
 
-      if (soloMatrix.indexOf(true) != -1) {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          soloMatrix[i] ? muteMatrix[i] = false : muteMatrix[i] = true
+      if ($scope.$storage.soloMatrix.indexOf(true) != -1) {
+        for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+          $scope.$storage.soloMatrix[i] ? $scope.$storage.muteMatrix[i] = false : $scope.$storage.muteMatrix[i] = true
         }
       } else {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          $("#mute-" + i).hasClass("mute") ? muteMatrix[i] = true : muteMatrix[i] = false
+        for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+          $("#mute-" + i).hasClass("mute") ? $scope.$storage.muteMatrix[i] = true : $scope.$storage.muteMatrix[i] = false
         }
       }
 
-      if (isPlaying) {
-        for (var i = 0; i < muteMatrix.length; i++) {
-          trackVolumeNodes[i].forEach(function (trackVolumeNode) {
-            muteMatrix[i] ? trackVolumeNode.gain.value = 0 : trackVolumeNode.gain.value = $("#vol-" + i).val()
-          })
-        }
+      for (var i = 0; i < $scope.$storage.muteMatrix.length; i++) {
+        $scope.$storage.muteMatrix[i] ? $scope.$storage.volumes[i] = 0 : $scope.$storage.volumes[i] = $("#vol-" + i).val()
       }
-    }
+    };
 
     $scope.changeVolume = function (index) {
-      if (isPlaying && !muteMatrix[index]) {
-
-        volumes[i] = $("#vol-" + index).val();
-        trackVolumeNodes[index].forEach(function (trackVolumeNode) {
-          trackVolumeNode.gain.value = $("#vol-" + index).val();
-        })
+      if (!$scope.$storage.muteMatrix[index]) {
+        $scope.$storage.volumes[index] = $("#vol-" + index).val();
       }
-    }
+    };
 
     /***************** DELETE TRACK ***********/
     $scope.deleteLoop = function (index) {
       $scope.stopBeat();
-      $scope.droppedObjects1.splice(index, 1);
-      $scope.tracks.splice(index, 1);
-      muteMatrix.splice(index, 1);
-      soloMatrix.splice(index, 1);
-      switchMatrix.splice(index, 1);
+      $scope.$storage.droppedObjects1.splice(index, 1);
+      $scope.$storage.tracks.splice(index, 1);
+      $scope.$storage.muteMatrix.splice(index, 1);
+      $scope.$storage.soloMatrix.splice(index, 1);
+      $scope.$storage.switchMatrix.splice(index, 1);
       loadAllSoundSamples();
-    }
+    };
 
     /************* BEATMAKING ****************/
-
-    var switchMatrix = [];
-    var playingLoops = [];
 
     $scope.toggleButton = function (event) {
       var obj = event.currentTarget;
@@ -233,28 +204,28 @@ angular.module('frontendApp')
 
       if (obj.getAttribute("data-active") == "false") {
         obj.setAttribute("data-active", "true");
-        switchMatrix[index_song][index_bit] = "true";
+        $scope.$storage.switchMatrix[index_song][index_bit] = "true";
       } else {
         obj.setAttribute("data-active", "false");
-        switchMatrix[index_song][index_bit] = "false";
+        $scope.$storage.switchMatrix[index_song][index_bit] = "false";
       }
-    }
+    };
 
     /************ SAVE **********/
 
     $scope.pattern_title = '';
     var dialog;
-    $rootScope.user_id = "vincent";
 
     $scope.save_pattern = function (name) {
-      if (name != "") {
-        if ($rootScope.user_id == "") {
+      if (name != '') {
+        if ($rootScope.user_id == '') {
+
+          // ERREUR SI PAS CONNECTE
           dialog = new BootstrapDialog({
             title: "Erreur",
             message: "Vous devez être connecté à votre compte pour pouvoir sauvegarder votre pattern !",
           });
           dialog.realize();
-          //dialog.getModalHeader().css('background-color', '#f0b054');
           dialog.getModalHeader().css('background-color', '#d9534f');
           dialog.getModalHeader().css('color', '#ffffff');
           dialog.getModalHeader().css('border-top-left-radius', '6px');
@@ -267,14 +238,19 @@ angular.module('frontendApp')
           var json_to_send = {
             name: name,
             user_id: $rootScope.user_id,
-            loops: $scope.tracks,
-            beatmaking: switchMatrix
+            loops: $scope.$storage.droppedObjects1,
+            beatmaking: $scope.$storage.switchMatrix,
+            volumes_samples: $scope.$storage.volumes,
+            mute_samples: $scope.$storage.muteMatrix,
+            solo_samples: $scope.$storage.soloMatrix
           };
 
           PatternFactory.savePattern(json_to_send).then(function (data) {
-            console.log(data);
+
+            // SAUVEGARDE REUSSIE
+
+            // On affiche une modal
             dialog = new BootstrapDialog({
-              size: BootstrapDialog.SIZE_SMALL,
               title: "Sauvegarde réussie",
               message: "Votre pattern " + name.bold() + " a bien été enregistré !",
             });
@@ -284,10 +260,17 @@ angular.module('frontendApp')
             dialog.getModalHeader().css('border-top-left-radius', '6px');
             dialog.getModalHeader().css('border-top-right-radius', '6px');
             dialog.open();
+
+            // On get tous les patterns pour faire apparaitre le nouveau
+            $rootScope.getAllPatterns();
+            $rootScope.getMyPatterns();
+
           }, function (err) {
-            console.log(err);
+
+            // SAUVEGARDE ECHOUEE
+
+            // On affiche une modal
             dialog = new BootstrapDialog({
-              size: BootstrapDialog.SIZE_SMALL,
               title: "Echec de la sauvegarde",
               message: "Votre pattern " + name.bold() + " n'a pas été enregistré...",
             });
@@ -301,13 +284,13 @@ angular.module('frontendApp')
           });
         }
       }
-    }
+    };
 
 
     /******* TEMPO ********/
 
-    // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
-    // représente le nombre de blocks pour 1 temps
+// 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
+// représente le nombre de blocks pour 1 temps
     var pulsation = 4;
 
     /**
@@ -316,7 +299,7 @@ angular.module('frontendApp')
      * @returns {number} the delay in sec
      */
     function computeDelay(i) {
-      return i * ((60000 / pulsation) / tempo);
+      return i * ((60000 / pulsation) / $scope.$storage.tempo);
     }
 
     /******* CHRIS WILSON OVERLAY ******/
@@ -333,12 +316,12 @@ angular.module('frontendApp')
      */
     function advanceNote() {
 
-      noteTime += computeDelay(1)/1000;
+      noteTime += computeDelay(1) / 1000;
 
       rhythmIndex++;
 
       // set light on at the correct index
-      animateLight(rhythmIndex-1);
+      animateLight(rhythmIndex - 1);
 
       if (rhythmIndex == LOOP_LENTGH) {
 
@@ -368,7 +351,7 @@ angular.module('frontendApp')
       // Connect to dry mix
       var dryGainNode = context.createGain();
 
-      if (muteMatrix[i]) {
+      if ($scope.$storage.muteMatrix[rhythmIndex]) {
         dryGainNode.gain.value = 0;
       } else {
         dryGainNode.gain.value = sendGain;
@@ -397,11 +380,11 @@ angular.module('frontendApp')
         var contextPlayTime = noteTime + currentTime;
 
         // iterate on notes at rhythm index
-        for (var i=0; i<$scope.tracks.length; i++){
+        for (var i = 0; i < $scope.$storage.tracks.length; i++) {
 
           // we have to schedule the song
-          if (switchMatrix[i][rhythmIndex] == "true"){
-            playNote(buffers[i], volumes[i], noteTime);
+          if ($scope.$storage.switchMatrix[i][rhythmIndex] == "true") {
+            playNote(buffers[i], $scope.$storage.volumes[i], noteTime);
           }
         }
 
@@ -450,9 +433,6 @@ angular.module('frontendApp')
 
       // disable play button
       $("#play").attr("disabled", true);
-
-      isPlaying = true;
-
       $("#play").toggleClass("playing");
 
       handlePlay();
@@ -469,7 +449,6 @@ angular.module('frontendApp')
       handleStop();
 
       if ($("#play").hasClass("playing")) {
-        isPlaying = false;
         $("#play").toggleClass("playing");
         $scope.lightsIDs.forEach(function (light) {
           if ($('#' + light).hasClass("fa-circle")) {
@@ -483,19 +462,20 @@ angular.module('frontendApp')
      * Callback for change tempo
      * Update the value of the tempo
      */
-    $scope.changeTempo = function(){
-      tempo = document.getElementById("myTempo").value;
+    $scope.changeTempo = function () {
+      $scope.$storage.tempo = document.getElementById("myTempo").value;
     };
 
     /****** Frequency ********/
-    $scope.setFrequency = function() {
+    $scope.setFrequency = function () {
       var minValue = 40;
       var maxValue = context.sampleRate / 2;
       var unitRate = (maxValue - minValue) / 100;
-      var currentRate = unitRate *  $scope.song.frequency + minValue;
-      if( biquadFilter.frequency != undefined) {
+      var currentRate = unitRate * $scope.song.frequency + minValue;
+      if (biquadFilter.frequency != undefined) {
         biquadFilter.frequency.value = currentRate;
       }
     }
 
-  });
+  })
+;

@@ -5,7 +5,6 @@
 var mongoose = require('../connector/mongodb');
 var async = require('async');
 
-const userDescription = 'http://localhost:4000/users/description/';
 const viewComments = 'http://localhost:4000/commentary/view/';
 const removePath = 'http://localhost:4000/commentary/remove/';
 
@@ -39,11 +38,13 @@ function writeCommentary(body, sample_id, callback) {
                         } else {
                             result.remove_topic = removePath + result._id;
                             result.contents[0].remove_commentary = removePath + result._id + '/' + result.contents[0]._id;
-                            result.save(function (err, final_result) {
+                            result.save(function (err) {
                                 if (err) {
                                     callback({status: 'fail', value: err})
                                 } else {
-                                    callback({status: 'success', value: final_result})
+                                    viewCommentary(sample_id, function(result){
+                                        callback(result)
+                                    })
                                 }
                             })
                         }

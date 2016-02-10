@@ -9,17 +9,19 @@
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css"/>
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="styles/mainTrack.css">
-  <link rel="stylesheet" href="styles/songSetting.css"/>
+  <link rel="stylesheet" href="styles/songSetting.css">
   <link rel="stylesheet" href="styles/loops.css">
   <link rel="stylesheet" href="styles/patternMaker.css">
   <link rel="stylesheet" href="styles/login.css">
   <link rel="stylesheet" href="styles/equalizer.css">
+  <link rel="stylesheet" href="styles/patterns.css">
    <!-- endbuild -->
 </head>
 <body ng-app="frontendApp">
@@ -33,18 +35,6 @@
   <div ng-view=""></div>
 </div>
 
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-<script>
-  !function (A, n, g, u, l, a, r) {
-    A.GoogleAnalyticsObject = l, A[l] = A[l] || function () {
-        (A[l].q = A[l].q || []).push(arguments)
-      }, A[l].l = +new Date, a = n.createElement(g),
-      r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
-  }(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-  ga('create', 'UA-XXXXX-X');
-  ga('send', 'pageview');
-</script>
 
 <!-- build:js(.) scripts/vendor.js -->
 <!-- bower:js -->
@@ -60,6 +50,8 @@
 <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 <script src="bower_components/ngDraggable/ngDraggable.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -74,9 +66,6 @@
 <script src="scripts/controllers/equalizer.js"></script>
 <script src="scripts/controllers/allcomments.js"></script>
 <script src="scripts/controllers/login.js"></script>
-
-<!-- Ajouts manuels Bower -->
-<script src="bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.js"></script>
 
 <!-- Services -->
 <script src="scripts/services/samples.js"></script>

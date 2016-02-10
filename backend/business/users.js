@@ -4,8 +4,6 @@
 
 var mongoose = require('../connector/mongodb');
 
-const url = 'http://localhost:4000/users/description/';
-
 function getAllUsers(callback) {
     User.find(function (err, result) {
         if (err) {
@@ -29,23 +27,16 @@ function createAccount(body, callback) {
                         first_name: body.first_name,
                         birth_date: body.birth_date,
                         email: body.email,
-                        password: body.password
+                        password: body.password,
+                        last_connection: new Date()
                     });
-                    user.save(function (err, user) {
+                    user.save(function (err, userSaved) {
                         if (err) {
                             callback({status: 'fail', value: err})
                         } else {
-                            user.description = url + user._id;
-                            user.save(function (err, new_user) {
-                                var result = new_user;
-                                if (err) {
-                                    callback({status: 'fail', value: err})
-                                } else {
-                                    // Whaaaat the fuuuuck ??
-                                    delete result.password;
-                                    callback({status: 'success', value: result})
-                                }
-                            })
+                            // Whaaaat the fuuuuck ??
+                            delete userSaved.password;
+                            callback({status: 'success', value: userSaved})
                         }
                     })
                 } else {
@@ -82,7 +73,13 @@ function connection(body, callback) {
                     callback({status: 'fail', value: 'wrong email or password'})
                 } else {
                     delete user.password;
-                    callback({status: 'success', value: user})
+                    callback({status: 'success', value: user});
+                    user.last_connection = new Date();
+                    user.save(function(err){
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
                 }
             }
         })
@@ -142,7 +139,8 @@ var userSchema = mongoose.Schema({
         path: String,
         email: String,
         password: String,
-        description: String
+        description: String,
+        last_connection: Date
     }
 );
 var User = mongoose.model('users', userSchema);

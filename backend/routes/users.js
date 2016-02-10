@@ -21,13 +21,14 @@ function getAllUsers(req, res) {
 }
 
 function createAccount(req, res){
-    console.log((new Date()).toString() + ' : Create account');
+    console.log('['+(new Date()).toString() + '] : Create account');
     users.createAccount(req.body, function(result){
         res.send(result)
     })
 }
 
 function connection(req, res){
+    console.log('['+(new Date()).toString()+'] : Sign Up');
     users.connection(req.body, function(result){
         res.send(result)
     })
