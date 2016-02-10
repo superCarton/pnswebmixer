@@ -1,6 +1,12 @@
 .songSettings {
-  height: 550px;
   padding:10px;
+}
+.songSettings h4 {
+  margin:auto;
+  margin-bottom: 10px;
+}
+.songSettings .set {
+  margin-left:10px;
 }
 
 i.fa-play-circle.reglage-play,
@@ -27,19 +33,24 @@ select.frequency-ctrl {
 div.cross-fade {
   display: none;
 }
-canvas#song-visualize {
-  height: 200px;
-  width: 400px;
-  border: 1px solid black;
-}
+
 .fa-pause.reglagesong-pause {
   display: none;
 }
-canvas#song-visualize-bar {
-  border: 1px solid black;
-  width: 400px;
-  height: 200px;
+canvas#song-visualize {
+  height: 100px;
+  width: 350px;
+  border: 1px solid grey;
+  margin-right:5px;
+  margin-top: 5px;
 }
+canvas#song-visualize-bar {
+  width: 350px;
+  height: 100px;
+  border: 1px solid grey;
+  margin-top: 5px;
+}
+
 /*
 canvas#song-visualize,
 canvas#song-visualize-bar {

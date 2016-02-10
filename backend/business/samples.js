@@ -44,7 +44,7 @@ function saveFile(body, file, callback) {
 function download(params, callback) {
     var sample;
     try {
-        sample = fs.readFileSync(__dirname + '/../uploads/' + params._id + '.' + params.encoding);
+        sample = fs.readFileSync(__dirname + '/../uploads/' + params.file_name + '.' + params.encoding);
     } catch (error) {
         sample = 'fail'
     }
@@ -113,7 +113,7 @@ function removeOneFile(file, callback) {
 function findById(sample_id, callback) {
     Sample.findOne({_id: sample_id}, function (err, result) {
         if (err) {
-            callback({status: 'success', value: err})
+            callback({status: 'fail', value: err})
         } else if (result == null) {
             callback({status: 'fail', value: 'no match sample'})
         } else {
@@ -129,9 +129,6 @@ var sampleSchema = mongoose.Schema({
         encoding: String
     }
 );
-sampleSchema.methods.ok = function () {
-    console.log('file ' + this.name + ' successfuly save with path : ' + this.path);
-};
 var Sample = mongoose.model('samples', sampleSchema);
 
 module.exports = {

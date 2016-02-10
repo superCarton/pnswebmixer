@@ -7,9 +7,10 @@
  */
 angular.module('frontendApp')
   .factory("audioPlayer", ['$http', function($http) {
-  var obj = {
+    var context;
+
+    var obj = {
     initAudio : function() {
-      var context;
       function initAudioContext() {
         // Initialise the Audio Context
         // There can be only one!
