@@ -1,27 +1,10 @@
-<div ng-init="init()">
-    <h4>Réglages sur le son</h4>
-  <my-test>
-  <i class="fa fa-play" ng-click="playTrack()" ng-model="playTrackTime" ></i>
-  <i class="fa fa-pause reglagesong-pause" ng-click="stopTrack()" ng-model="stopTrackModel" ></i>
-  </my-test>
-  Volume: <input type="range" min="0" max="100" value="50" id="song-volume"  ng-model="song.volume" ng-change="changeVolume()">
-<div class="song-frequency">
-    Frequency:
-              <select class="form-control frequency-ctrl" ng-init="frequency.type='lowpass'" ng-model = "frequency.type" ng-change="frequencyType()">
-                <option >lowpass</option>
-                <option>highpass</option>
-                <option>bandpass</option>
-                <option>lowshelf</option>
-                <option>highshelf</option>
-                <option>peaking</option>
-                <option>notch</option>
-                <option>allpass</option>
-              </select>
-              <input type="range" min="0" max="100" value="50" ng-model="song.frequency" ng-init = "song.frequency=50" ng-change="setFrequency()"> Frenquency
-              <input type="range" min="1" max="100" ng-model="song.quality" ng-init="song.quality=1" ng-change="setQuality()"> Quality</div>
-  <div class="cross-fade"> CrossFade: <input type="range" min="0" max="100" value="50"  ng-model="song.quality" ng-change="changeVolume()"></div>
-  <div class="song-feedback">Feedback : <input type="range" min="0" max="5" step="0.1" ng-model="song.gain" ng-init="song.gain=0.5" ng-change="changeGain()"></div>
-  <div class="song-delay">Delay : <input type="range" min="0" max="5" step="0.1"  ng-model="song.delay" ng-init="song.delay=0" ng-change="changeDelay()"></div>
-  <button type="button" class="btn btn-default" ng-click="save()">Save</button>
+<div ng-init="init()" class="songSettings">
+    <h4>Song settings</h4>
+  <div class="song-frequency">
+    <div><input type="range" min="0" max="100" ng-model="frequency"  ng-change="setFrequency()">Frenquency</div>
+    <div><input type="range" min="1" max="100" ng-model="quality"  ng-change="setQuality()">Quality</div>
+   <!-- <div><input type="range" min="0" max="5" step="0.1" ng-model="gain" ng-init="song.gain=0.5" ng-change="changeGain()">Feedback</div> -->
+    <div><input type="range" min="0" max="5" step="0.1"  ng-model="delay" ng-change="changeDelay()">Delay</div>
+  </div>
 </div>
 

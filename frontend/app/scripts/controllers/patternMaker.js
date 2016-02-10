@@ -18,6 +18,7 @@ angular.module('frontendApp')
     $scope.$storage = $localStorage.$default({
       tracks: [],
       volumes: [],
+      songSettings: [],
       tempo: 120,
       droppedObjects1: [],
       muteMatrix: [],
@@ -30,6 +31,7 @@ angular.module('frontendApp')
       $localStorage.$reset({
         tracks: [],
         volumes: [],
+        songSettings: [],
         tempo: 120,
         droppedObjects1: [],
         muteMatrix: [],
@@ -37,12 +39,11 @@ angular.module('frontendApp')
         switchMatrix: [],
         playingLoops: []
       });
-    }
+    };
 
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
-    var trackVolumeNodes = [];
     var biquadFilter;
 
     function initAudioContext() {
@@ -72,13 +73,17 @@ angular.module('frontendApp')
       for (var i = 0; i < buffers.length; i++) {
         $scope.$storage.volumes[i] = $("#vol-" + i).val();
       }
+
       $("#play").attr("disabled", false);
     }
 
     /*********************    DRAG N DROP    **************************/
 
     $scope.onDropComplete1 = function (data) {
+
+      // drag a loop
       if (typeof data === 'string') {
+
         $scope.$storage.droppedObjects1.push(data);
         $scope.$storage.switchMatrix.push(["false", "false", "false", "false", "false", "false", "false", "false",
           "false", "false", "false", "false", "false", "false", "false", "false"]);
@@ -87,8 +92,18 @@ angular.module('frontendApp')
         $scope.$storage.playingLoops.push([false, false, false, false, false, false, false, false, false, false, false,
           false, false, false, false, false]);
         $scope.$storage.tracks.push("assets/loops/" + data);
-      } else {
+        $scope.$storage.songSettings.push({
+          frequency:0,
+          quality:0,
+          gain:0,
+          delay:0
+        });
+        console.log($scope.$storage.songSettings);
+
+      } else { // drag a pattern
+
         $scope.$storage.tracks = [];
+        $scope.$storage.songSettings = [];
         $scope.$storage.droppedObjects1 = data.loops.slice();
         $scope.$storage.switchMatrix = data.beatmaking.slice();
         $scope.$storage.volumes = data.volumes_samples.slice();
@@ -96,12 +111,18 @@ angular.module('frontendApp')
         $scope.$storage.soloMatrix = data.solo_samples.slice();
         $scope.$storage.droppedObjects1.forEach(function (s) {
           $scope.$storage.tracks.push("assets/loops/" + s);
+          $scope.$storage.songSettings.push({
+            frequency:0,
+            quality:0,
+            gain:0,
+            delay:0
+          });
         });
         setTimeout(scanElements, 10);
       }
       $scope.stopBeat();
       loadAllSoundSamples();
-    }
+    };
 
     function scanElements() {
       // Switch Matrix
@@ -181,6 +202,7 @@ angular.module('frontendApp')
       $scope.stopBeat();
       $scope.$storage.droppedObjects1.splice(index, 1);
       $scope.$storage.tracks.splice(index, 1);
+      $scope.$storage.songSettings.splice(index, 1);
       $scope.$storage.muteMatrix.splice(index, 1);
       $scope.$storage.soloMatrix.splice(index, 1);
       $scope.$storage.switchMatrix.splice(index, 1);
@@ -334,15 +356,27 @@ angular.module('frontendApp')
      * @param sendGain the gain
      * @param noteTime the delay to play the song
      */
-    function playNote(buffer, sendGain, noteTime) {
+    function playNote(buffer, sendGain, noteTime, index) {
 
       // Create the note
       var voice = context.createBufferSource();
+      var filter = context.createBiquadFilter();
+      var delay = context.createDelay();
+
       voice.buffer = buffer;
 
       masterGainNode = context.createGain();
       masterGainNode.gain.value = 1;
-      masterGainNode.connect(context.destination);
+
+      // frequency
+      var minValue = 40;
+      var maxValue = context.sampleRate / 2;
+      var unitRate = (maxValue - minValue) / 100;
+      var currentRate = unitRate * $scope.$storage.songSettings[index].frequency + minValue;
+      filter.frequency.value = currentRate;
+      filter.Q.value = $scope.$storage.songSettings[index].quality;
+
+      delay.delayTime.value = $scope.$storage.songSettings[index].delay;
 
       // Connect to dry mix
       var dryGainNode = context.createGain();
@@ -352,10 +386,13 @@ angular.module('frontendApp')
       } else {
         dryGainNode.gain.value = sendGain;
       }
-      voice.connect(dryGainNode);
-      dryGainNode.connect($rootScope.analyser);
 
+      voice.connect(dryGainNode);
+      dryGainNode.connect(filter);
+      filter.connect(delay);
+      delay.connect($rootScope.analyser);
       $rootScope.analyser.connect(masterGainNode);
+      masterGainNode.connect(context.destination);
 
       voice.start(noteTime, 0);
     }
@@ -382,7 +419,7 @@ angular.module('frontendApp')
 
           // we have to schedule the song
           if ($scope.$storage.switchMatrix[i][rhythmIndex] == "true") {
-            playNote(buffers[i], $scope.$storage.volumes[i], noteTime);
+            playNote(buffers[i], $scope.$storage.volumes[i], noteTime, i);
           }
         }
 
@@ -434,7 +471,7 @@ angular.module('frontendApp')
       $("#play").toggleClass("playing");
 
       handlePlay();
-    }
+    };
 
     /**
      * Callback for stop button
@@ -454,7 +491,7 @@ angular.module('frontendApp')
           }
         });
       }
-    }
+    };
 
     /**
      * Callback for change tempo
@@ -473,7 +510,7 @@ angular.module('frontendApp')
       if (biquadFilter.frequency != undefined) {
         biquadFilter.frequency.value = currentRate;
       }
-    }
+    };
 
 
     /*********************** EFFECTS ***************************/
@@ -481,11 +518,12 @@ angular.module('frontendApp')
     $scope.openEffects = function (loopIndex) {
 
       $rootScope.loopEffectId = loopIndex;
+      $rootScope.songSet = $scope.$storage.songSettings[loopIndex];
 
       $uibModal.open({
         templateUrl: 'views/songSettings.html',
         controller: 'SongSettingsCtrl',
-        size: 'lg'
+        size: 'sm'
       });
     }
 

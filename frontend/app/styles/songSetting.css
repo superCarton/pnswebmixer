@@ -1,6 +1,12 @@
 .songSettings {
-  height: 550px;
   padding:10px;
+}
+.songSettings h4 {
+  margin:auto;
+  margin-bottom: 10px;
+}
+.songSettings .set {
+  margin-left:10px;
 }
 
 i.fa-play-circle.reglage-play,
