@@ -114,7 +114,8 @@ angular.module('frontendApp')
         $scope.$storage.songSettings.push({
           frequency:1000,
           gain:0.8,
-          delay:0.5
+          delay:0.5,
+          active: false
         });
 
       } else {
@@ -193,6 +194,7 @@ angular.module('frontendApp')
       $("#mute-" + index).toggleClass("mute");
 
       $scope.$storage.muteMatrix[index] ? $scope.$storage.volumes[index] = 0 : $scope.$storage.volumes[index] = parseFloat($("#vol-" + index).val());
+      console.log($scope.$storage.volumes);
     };
 
     $scope.toggleSolo = function (index) {
@@ -213,7 +215,7 @@ angular.module('frontendApp')
         $scope.$storage.muteMatrix[i] ? $scope.$storage.volumes[i] = 0 : $scope.$storage.volumes[i] = parseFloat($("#vol-" + i).val())
       }
 
-      console.log($scope.$storage.volumes[index]);
+      console.log($scope.$storage.volumes);
     };
 
     $scope.changeVolume = function (index) {
@@ -233,6 +235,7 @@ angular.module('frontendApp')
       $scope.$storage.soloMatrix.splice(index, 1);
       $scope.$storage.switchMatrix.splice(index, 1);
       $scope.$storage.volumes.splice(index, 1);
+      scanElements();
       loadAllSoundSamples();
     };
 
@@ -386,57 +389,61 @@ angular.module('frontendApp')
      */
     function playNote(buffer, sendGain, noteTime, index) {
 
-      // Create the note
+      /********************** CREATING NODES *************************/
+
+      // Create input node
       var voice = context.createBufferSource();
+
+      // Create node for individual volumes
+      var dryGainNode = context.createGain();
+
+      // Create effects
       var filter = context.createBiquadFilter();
       var delay = context.createDelay();
       var feedback = context.createGain();
 
-      voice.buffer = buffer;
-
+      // Create master volume node
       masterGainNode = context.createGain();
+
+      /********************** GETTING VALUES *************************/
+
+      voice.buffer = buffer;
       masterGainNode.gain.value = 1;
 
-      // frequency
-      var minValue = 40;
-      var maxValue = context.sampleRate / 2;
-      var unitRate = (maxValue - minValue) / 100;
-      var currentRate = unitRate * $scope.$storage.songSettings[index].frequency + minValue;
-      filter.frequency.value = $scope.$storage.songSettings[index].frequency;
-      //filter.Q.value = $scope.$storage.songSettings[index].quality;
+      // Get values for individual volumes
+      $scope.$storage.muteMatrix[rhythmIndex] ? dryGainNode.gain.value = 0 : dryGainNode.gain.value = sendGain
 
+      // Get effects values
+      filter.frequency.value = $scope.$storage.songSettings[index].frequency;
       delay.delayTime.value = $scope.$storage.songSettings[index].delay;
       feedback.gain.value = $scope.$storage.songSettings[index].gain;
 
-      // Connect to dry mix
-      var dryGainNode = context.createGain();
+      /************************* CONNECTIONS ***************************/
 
-      if ($scope.$storage.muteMatrix[rhythmIndex]) {
-        dryGainNode.gain.value = 0;
-      } else {
-        dryGainNode.gain.value = sendGain;
-      }
+      // Input connection
+      voice.connect(dryGainNode);
 
-      // Effect connection
+      // Effect loop conection
       delay.connect(feedback);
       feedback.connect(filter);
       filter.connect(delay);
 
-      // Input
-      voice.connect(dryGainNode);
+      // If the effect loop is on, we insert it into the chain
+      if($scope.$storage.songSettings[index].active) {
+        dryGainNode.connect(delay);
+        delay.connect(masterGainNode);
+      }
 
-      // Output
-      dryGainNode.connect(delay);
+      // Individual volumes connection to Master Volume
       dryGainNode.connect(masterGainNode);
-      //delay.connect(masterGainNode);
 
-      // Analyzer
+      // Master Volume connection to Analyzer
       masterGainNode.connect($rootScope.analyser);
+
+      // Analyzer connection to main Output
       $rootScope.analyser.connect(context.destination);
 
-      //delay.connect(context.destination);
-      //masterGainNode.connect(context.destination);
-
+      // PLAY SOUND
       voice.start(noteTime, 0);
     }
 
@@ -542,17 +549,6 @@ angular.module('frontendApp')
      */
     $scope.changeTempo = function () {
       $scope.$storage.tempo = document.getElementById("myTempo").value;
-    };
-
-    /****** Frequency ********/
-    $scope.setFrequency = function () {
-      var minValue = 40;
-      var maxValue = context.sampleRate / 2;
-      var unitRate = (maxValue - minValue) / 100;
-      var currentRate = unitRate * $scope.song.frequency + minValue;
-      if (biquadFilter.frequency != undefined) {
-        biquadFilter.frequency.value = currentRate;
-      }
     };
 
 

@@ -19,7 +19,12 @@ angular.module('frontendApp')
       $scope.quality= $rootScope.songSet.quality;
       $scope.delay = $rootScope.songSet.delay;
       $scope.gain = $rootScope.songSet.gain;
+      $scope.active = $rootScope.songSet.active;
     };
+
+    $scope.toggleActive = function () {
+      $rootScope.songSet.active = !$rootScope.songSet.active;
+    }
 
     $scope.setFrequency = function() {
       $rootScope.songSet.frequency = $scope.frequency;

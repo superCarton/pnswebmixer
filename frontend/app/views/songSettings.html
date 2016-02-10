@@ -1,10 +1,12 @@
 <div ng-init="init()" class="songSettings">
-    <h4>Song settings</h4>
+  <h4>DELAY</h4>
+  <p>
+    <input type="checkbox" ng-model="active" ng-change="toggleActive()"> Active effect
+  </p>
   <div class="song-frequency">
-    <div><input type="range" min="0" max="1" step="0.05"  ng-model="delay" ng-change="changeDelay()">Delay time</div>
-    <div><input type="range" min="0" max="0.95" step="0.05" ng-model="gain" ng-change="changeGain()">Feedback</div>
-    <div><input type="range" min="0" max="4000" step="100" ng-model="frequency"  ng-change="setFrequency()">Frenquency</div>
-    <!--<div><input type="range" min="1" max="100" ng-model="quality"  ng-change="setQuality()">Quality</div>-->
+    <div><input type="range" min="0" max="1" step="0.05" ng-model="delay" ng-change="changeDelay()"> Delay time</div>
+    <div><input type="range" min="0" max="0.95" step="0.05" ng-model="gain" ng-change="changeGain()"> Feedback</div>
+    <div><input type="range" min="0" max="4000" step="100" ng-model="frequency" ng-change="setFrequency()"> Frenquency</div>
   </div>
 </div>
 
