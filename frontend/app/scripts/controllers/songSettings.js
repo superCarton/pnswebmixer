@@ -86,7 +86,7 @@ angular.module('frontendApp')
     function drawBar() {
 
       requestAnimationFrame(drawBar);
-      $scope.analyser.getByteTimeDomainData($scope.dataArray);
+      $scope.analyser.getByteFrequencyData($scope.dataArray);
       $scope.canvasBarCtx.fillStyle = 'rgb(0, 0, 0)';
       $scope.canvasBarCtx.fillRect(0, 0, $scope.canvasBarWidth, $scope.canvasBarHeight);
       var barWidth = ($scope.canvasBarWidth / $scope.analyser.frequencyBinCount);
