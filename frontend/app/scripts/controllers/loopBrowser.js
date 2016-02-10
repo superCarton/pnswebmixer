@@ -99,18 +99,18 @@ angular.module('frontendApp')
     function playFrom(index, startTime) {
       masterVolumeNode.gain.value = 1;
       samples[index].start(0, startTime);
-    };
+    }
 
     function stop(index) {
       samples[index].stop(0);
-    };
+    }
 
     function splitLoopsNames(arr) {
       arr.forEach(function (part, index) {
         var tmp = arr[index].split("/")[2];
         arr[index] = tmp;
       });
-    };
+    }
 
 
     /************************* GET PATTERNS **************************/
@@ -123,7 +123,7 @@ angular.module('frontendApp')
       }, function (err) {
         console.log(err);
       });
-    }
+    };
 
     // Get only my patterns
     $rootScope.getMyPatterns = function () {
@@ -135,13 +135,13 @@ angular.module('frontendApp')
           console.log(err);
         });
       }
-    }
+    };
 
     $rootScope.clearAllPatterns = function () {
       console.log("CLEAR PATTERNS");
       $scope.myPatterns = [];
       $scope.patternsByUsers = [];
-    }
+    };
 
 
     /******************** COMMENTS ON PATTERNS ***********************/
@@ -150,6 +150,37 @@ angular.module('frontendApp')
       content: 'Hello, World!',
       templateUrl: 'commentTemplate.html',
       title: 'Ecrire un commentaire'
+    };
+
+    $scope.sendRate = function(id, mark){
+      if ($rootScope.connected && mark != undefined) {
+
+        var json = {
+          user_id: $rootScope.user_id,
+          pattern_id: id,
+          mark: mark
+        };
+        PatternFactory.giveAMark(json).then(function (result) {
+          $scope.patternsByUsers.forEach(function(pattern){
+            if (pattern._id == result.value._id){
+              pattern.global_mark = result.value.global_mark
+            }
+          });
+        }, function (err) {
+          console.log(err);
+        })
+      }
+    };
+
+    $scope.myRate = function (array){
+      var ret = 0;
+      array.forEach(function(json){
+        if (json.user_id == $rootScope.user_id){
+          console.log(json.mark);
+          ret = json.mark;
+        }
+      });
+      return ret;
     };
 
     // when there is a click on a comment button

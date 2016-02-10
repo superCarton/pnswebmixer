@@ -90,6 +90,8 @@ function giveANote(pattern_id, user_id, mark, callback) {
     Pattern.findOne({_id: pattern_id}, function (err, pattern) {
         if (err) {
             callback({status: 'fail', value: err})
+        } else if (pattern == null) {
+            callback({status: 'fail', value: 'pattern is not existing'})
         } else {
             if (pattern.personal_mark != undefined) {
                 var global_mark = 0;
@@ -101,7 +103,7 @@ function giveANote(pattern_id, user_id, mark, callback) {
                     }
                     global_mark += items.mark;
                 });
-                if (!finded){
+                if (!finded) {
                     pattern.personal_mark.push({user_id: user_id, mark: mark});
                     global_mark += mark
                 }
@@ -124,6 +126,7 @@ function giveANote(pattern_id, user_id, mark, callback) {
                     }
                 })
             }
+
         }
     })
 }

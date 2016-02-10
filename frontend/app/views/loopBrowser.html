@@ -14,7 +14,10 @@
       <tbody>
       <tr ng-repeat="pattern in patternsByUsers" ng-drag="true" ng-drag-data="pattern" data-allow-transform="true" class="ng-binding" draggable="false">
         <td>{{pattern.name}}</td>
-       <!-- <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
+        <td>{{pattern.global_mark.toFixed(1)}}</td>
+        <td><uib-rating ng-model="rate" max="5" ng-init="rate = myRate(pattern.personal_mark)" aria-labelledby="default-rating" ng-click="sendRate(pattern._id, rate)"></uib-rating></td>
+
+       <!-- myRate(pattern.personal_mark) <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
         <td><button type="button" class="btn btn-default" ng-click="open(pattern._id, pattern.name)">Commenter</button></td>
       </tr>
       </tbody>
@@ -25,6 +28,7 @@
       <tbody>
       <tr ng-repeat="myPattern in myPatterns" ng-drag="true" ng-drag-data="myPattern" data-allow-transform="true" class="ng-binding" draggable="false">
         <td>{{myPattern.name}}</td>
+        <td>{{myPattern.global_mark.toFixed(1)}}</td>
         <!-- <td><button uib-popover-template="dynamicPopover.templateUrl" popover-title="{{dynamicPopover.title}}" type="button" class="btn btn-default">Commenter</button></td> -->
         <td><button type="button" class="btn btn-default" ng-click="open(myPattern._id, myPattern.name)">Commenter</button></td>
       </tr>

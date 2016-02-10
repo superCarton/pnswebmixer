@@ -15,12 +15,14 @@ router.delete('/remove/:patternId', remove);
 router.delete('/drop', drop);
 
 function collection(req, res) {
+    console.log('[' + (new Date()).toString() + '] : Get all patterns');
     pattern.collection(function (result) {
         res.send(result)
     })
 }
 
 function getUserPattern(req, res) {
+    console.log('[' + (new Date()).toString() + '] : Get user patterns');
     pattern.getUserPattern(req.params.userId, function (result) {
         res.send(result)
     })
