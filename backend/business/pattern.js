@@ -12,13 +12,13 @@ function savePattern(body, callback) {
             user_id: body.user_id,
             name: body.name,
             loops: body.loops,
+            song_settings: body.song_settings,
             beatmaking: [],
             volumes_samples: body.volumes_samples,
             mute_samples: body.mute_samples,
             solo_samples: body.solo_samples
         });
         var iterator = 0;
-        console.log(pattern.beatmaking);
         body.beatmaking.forEach(function (beat) {
             pattern.beatmaking.push([]);
             beat.forEach(function (string) {
@@ -141,6 +141,12 @@ var patternSchema = mongoose.Schema({
     personal_mark: [{
         user_id: mongoose.Schema.Types.ObjectId,
         mark: Number
+    }],
+    song_settings: [{
+        frequency: Number,
+        quality: Number,
+        gain: Number,
+        delay: Number
     }]
 });
 
