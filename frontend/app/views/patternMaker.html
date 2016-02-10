@@ -16,7 +16,7 @@
       <input id="vol-{{$index}}" ng-model="tools.volume" ng-change="changeVolume($index)" type="range" min="0" max="1"
              value="0.5" step="0.01">
     </div>
-    <div class="col-xs-1 section name" ng-click="openEffects($index)">{{obj}}</div>
+    <div class="col-xs-1 section name" ng-click="openEffects($index)"><i class="fa fa-cog"></i>   {{obj}}</div>
     <div class="col-xs-8 section step-sequencer">
     <span ng-repeat="button in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" class="step-sequencer-button"><i
       id="b{{$parent.$index}}{{button}}"

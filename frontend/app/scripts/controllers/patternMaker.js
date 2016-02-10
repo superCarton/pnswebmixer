@@ -117,8 +117,12 @@ angular.module('frontendApp')
           gain:0,
           delay:0
         });
+
       } else {
+
         $rootScope.resetStorage();
+
+        $scope.$storage.songSettings = data.song_settings.slice();
         $scope.$storage.droppedObjects1 = data.loops.slice();
         $scope.$storage.switchMatrix = data.beatmaking.slice();
         $scope.$storage.volumes = data.volumes_samples.slice();
@@ -126,12 +130,6 @@ angular.module('frontendApp')
         $scope.$storage.soloMatrix = data.solo_samples.slice();
         $scope.$storage.droppedObjects1.forEach(function (s) {
           $scope.$storage.tracks.push("assets/loops/" + s);
-          $scope.$storage.songSettings.push({
-            frequency:0,
-            quality:0,
-            gain:0,
-            delay:0
-          });
         });
         setTimeout(scanElements, 10);
       }
@@ -290,7 +288,8 @@ angular.module('frontendApp')
             beatmaking: $scope.$storage.switchMatrix,
             volumes_samples: $scope.$storage.volumes,
             mute_samples: $scope.$storage.muteMatrix,
-            solo_samples: $scope.$storage.soloMatrix
+            solo_samples: $scope.$storage.soloMatrix,
+            song_settings: $scope.$storage.songSettings
           };
 
           PatternFactory.savePattern(json_to_send).then(function (data) {
