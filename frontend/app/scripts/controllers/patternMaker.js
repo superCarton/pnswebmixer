@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, PatternFactory) {
+  .controller('PatternMakerCtrl', function ($rootScope, $localStorage, $scope, $uibModal, PatternFactory) {
 
     /******************* STORAGE ******************/
     $scope.$storage = $localStorage;
@@ -287,7 +287,7 @@ angular.module('frontendApp')
     };
 
 
-    /******* TEMPO ********/
+    /************************** TEMPO ****************************/
 
 // 1 = noire, 2 = croche, 4 = double croche, 8 = triple croche, 16 = quadruple croche
 // représente le nombre de blocks pour 1 temps
@@ -302,7 +302,7 @@ angular.module('frontendApp')
       return i * ((60000 / pulsation) / $scope.$storage.tempo);
     }
 
-    /******* CHRIS WILSON OVERLAY ******/
+    /********************** CHRIS WILSON OVERLAY ********************************/
 
     var context = initAudioContext(); // Init audio context
     var noteTime, startTime, timeoutId, rhythmIndex = 0;
@@ -475,6 +475,20 @@ angular.module('frontendApp')
       if (biquadFilter.frequency != undefined) {
         biquadFilter.frequency.value = currentRate;
       }
+    }
+
+
+    /*********************** EFFECTS ***************************/
+
+    $scope.openEffects = function (loopIndex) {
+
+      $rootScope.loopEffectId = loopIndex;
+
+      $uibModal.open({
+        templateUrl: 'views/songSettings.html',
+        controller: 'SongSettingsCtrl',
+        size: 'lg'
+      });
     }
 
   })
