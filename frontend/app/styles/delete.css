@@ -1,0 +1,16 @@
+.delete-modal
+{
+  padding: 20px;
+  text-align: center;
+}
+
+.delete-modal button
+{
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.yes-no-btn
+{
+  margin-top: 10px;
+}

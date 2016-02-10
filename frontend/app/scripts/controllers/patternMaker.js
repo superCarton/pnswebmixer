@@ -39,6 +39,29 @@ angular.module('frontendApp')
       });
     }
 
+    $scope.deleteAll = function () {
+      if ($('#play').hasClass('playing')) {
+        $scope.stopBeat();
+      }
+      if ($scope.$storage.tracks.length > 0) {
+        $uibModal.open({
+          templateUrl: 'views/deleteModal.html',
+          controller: 'PatternMakerCtrl',
+          backdrop: 'static'
+        })
+      } else {
+        $uibModal.open({
+          templateUrl: 'views/emptyDeleteModal.html',
+          controller: 'PatternMakerCtrl',
+          backdrop: 'static'
+        })
+      }
+    }
+
+    $scope.deleteAllYes = function () {
+      $scope.resetStorage();
+    }
+
     /****************      WEB AUDIO     ******************/
 
     var buffers = []; // audio buffers decoded
@@ -201,6 +224,7 @@ angular.module('frontendApp')
       $scope.$storage.muteMatrix.splice(index, 1);
       $scope.$storage.soloMatrix.splice(index, 1);
       $scope.$storage.switchMatrix.splice(index, 1);
+      $scope.$storage.volumes.splice(index, 1);
       loadAllSoundSamples();
     };
 
