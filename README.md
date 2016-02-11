@@ -57,7 +57,7 @@ npm install
 
 ## Utilisation
 
-**Lancement du serveur** avec grunt. Cette commande permet également de relancer
+**Lancement** du serveur avec **grunt**. Cette commande permet également de relancer
 automatiquement le serveur en cas de modification d'un fichier nécessaire à son
 fonctionnement.
 ```
