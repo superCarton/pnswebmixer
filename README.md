@@ -6,7 +6,7 @@ Projet regroupant les matières client et server sides. Il s'agit d'une applicat
 
 # Installation de Node.js, MongoDB, Grunt & Bower
 
-**Node.js**:
+**Node.js** :
   - Depuis les pacquets Ubuntu:
 ```
 sudo apt-get install nodejs
@@ -20,7 +20,7 @@ sudo apt-get upgrade
 sudo apt-get update
 ```
 
-**MongoDB**:
+**MongoDB** :
   - Depuis les pacquets Ubuntu:
 ```
 sudo apt-get install mongodb
@@ -35,13 +35,14 @@ tar -xvzf (archive-version).jar
 ./(path to folder)/bin/mongod
 ```
 
-**Client Grunt**: Install grunt en global (utilisable sur tous les
-projets node).
+**Client Grunt** :</br>
+Install grunt en global.
 ```
 sudo npm install -g grunt-cli
 ```
 
-**Client Bower**: Install bower en global (utilisable sur tous les projets web).
+**Client Bower** :</br>
+Install bower en global.
 ```
 sudo npm install -g bower
 ```
