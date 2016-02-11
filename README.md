@@ -35,14 +35,12 @@ tar -xvzf (archive-version).jar
 ./(path to folder)/bin/mongod
 ```
 
-**Client Grunt** :</br>
-Install grunt en global.
+**Client Grunt** : Install grunt en global.
 ```
 sudo npm install -g grunt-cli
 ```
 
-**Client Bower** :</br>
-Install bower en global.
+**Client Bower** : Install bower en global.
 ```
 sudo npm install -g bower
 ```
