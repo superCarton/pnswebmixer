@@ -1,7 +1,7 @@
 Polytech Web Sequencer
 ======================
 
-Projet regroupant les matières client et server sides. Il s'agit d'une application web musicale sous la forme d'un séquenceur. Il permet à l'utilisateur d'intéragir avec des échantillons, de modifier leur tempo, leur fréquence etc... et d'enregistrer le résultat en ligne. L'ensemble des patterns est disponible pour tous les utilisateurs qui peuvent alors laisser leurs avis et/ou leur attribuer une note.
+<p><span class="tabulation">Projet regroupant les matières client et server sides. Il s'agit d'une application web musicale sous la forme d'un séquenceur. Il permet à l'utilisateur d'intéragir avec des échantillons, de modifier leur tempo, leur fréquence etc... et d'enregistrer le résultat en ligne. L'ensemble des patterns est disponible pour tous les utilisateurs qui peuvent alors laisser leurs avis et/ou leur attribuer une note.</span></p>
 
 
 # Installation de Node.js, MongoDB, Grunt & Bower
